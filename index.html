@@ -1540,8 +1540,22 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
         }
 
         const data = await res.json();
-        const content = data?.choices?.[0]?.message?.content;
-        if (!content) throw new Error('No story returned from the API.');
+        console.log('[Groq] raw response:', data);
+        // robust content extraction (chat vs completion, gpt-oss reasoning)
+        const rawContent =
+          data?.choices?.[0]?.message?.content ??
+          data?.choices?.[0]?.text ??
+          data?.choices?.[0]?.delta?.content ??
+          null;
+        if (!rawContent) {
+          // surface full payload for debugging
+          const preview = JSON.stringify(data).slice(0, 800);
+          console.error('[Groq] missing content, full data:', data);
+          if (data?.error) throw new Error(`Groq error: ${JSON.stringify(data.error).slice(0, 600)}`);
+          if (!data?.choices?.length) throw new Error(`No story returned — empty choices. Raw: ${preview}`);
+          throw new Error(`No story returned — content empty. Raw: ${preview}`);
+        }
+        const content = rawContent;
 
         const divIdx = content.indexOf('---');
         const title = divIdx !== -1
