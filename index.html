@@ -1501,15 +1501,19 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
         const headers = { 'Content-Type': 'application/json' };
         if (groqKey) headers['x-groq-api-key'] = groqKey;
 
+        // gpt-oss works best with low reasoning effort for story generation
+        const groqBody = {
+          model: 'openai/gpt-oss-20b',
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.6,
+          max_completion_tokens: 2048,
+          top_p: 0.95,
+          reasoning_effort: 'low'
+        };
         let res = await fetch(API_URL, {
           method: 'POST',
           headers,
-          body: JSON.stringify({
-            model: 'openai/gpt-oss-20b',
-            messages: [{ role: 'user', content: prompt }],
-            max_tokens: 2000,
-            temperature: 0.85
-          })
+          body: JSON.stringify(groqBody)
         });
 
         // Fallback: if /api/generate not available (e.g. opening index.html directly without Vercel),
@@ -1521,12 +1525,7 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${groqKey}`
             },
-            body: JSON.stringify({
-              model: 'openai/gpt-oss-20b',
-              messages: [{ role: 'user', content: prompt }],
-              max_tokens: 2000,
-              temperature: 0.85
-            })
+            body: JSON.stringify(groqBody)
           });
         }
 

@@ -10,9 +10,8 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Groq API key missing. Add it in the UI or configure GROQ_API_KEY on the server.' });
   }
 
-  const { model, messages, max_tokens, temperature } = req.body;
-  // don't forward groqApiKey to upstream
-  if (req.body.groqApiKey) delete req.body.groqApiKey;
+  // forward all Groq params (support both max_tokens and max_completion_tokens, reasoning, etc.)
+  const { groqApiKey: _omit, ...forwardBody } = req.body;
 
   const upstream = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
@@ -20,7 +19,7 @@ module.exports = async function handler(req, res) {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`,
     },
-    body: JSON.stringify({ model, messages, max_tokens, temperature }),
+    body: JSON.stringify(forwardBody),
   });
 
   const data = await upstream.json();
