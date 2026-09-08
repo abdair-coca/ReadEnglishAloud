@@ -1501,19 +1501,41 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
         const headers = { 'Content-Type': 'application/json' };
         if (groqKey) headers['x-groq-api-key'] = groqKey;
 
-        const res = await fetch(API_URL, {
+        let res = await fetch(API_URL, {
           method: 'POST',
           headers,
           body: JSON.stringify({
-            model: 'llama-3.1-8b-instant',
+            model: 'openai/gpt-oss-20b',
             messages: [{ role: 'user', content: prompt }],
             max_tokens: 2000,
             temperature: 0.85
           })
         });
 
+        // Fallback: if /api/generate not available (e.g. opening index.html directly without Vercel),
+        // call Groq directly from the browser using the user-provided key
+        if (!res.ok && res.status === 404 && groqKey) {
+          res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${groqKey}`
+            },
+            body: JSON.stringify({
+              model: 'openai/gpt-oss-20b',
+              messages: [{ role: 'user', content: prompt }],
+              max_tokens: 2000,
+              temperature: 0.85
+            })
+          });
+        }
+
         if (!res.ok) {
           const errText = await res.text();
+          // surface model deprecation clearly
+          if (errText.includes('model_not_found') || errText.includes('does not exist')) {
+            throw new Error(`Modelo no disponible (deprecated en Groq 16/08/2026). Actualizado a openai/gpt-oss-20b — recargá y reintentá. Detalle: ${errText}`);
+          }
           throw new Error(`API error ${res.status}: ${errText}`);
         }
 
