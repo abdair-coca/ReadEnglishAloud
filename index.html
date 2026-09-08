@@ -391,6 +391,147 @@
       box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
     }
 
+    /* Groq API Key field */
+    .api-key-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .api-key-input {
+      flex: 1;
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      padding-right: 38px;
+      border-radius: 9px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .api-key-input::placeholder {
+      color: var(--muted);
+      font-size: 0.80rem;
+    }
+
+    .api-key-input:focus {
+      border-color: var(--accent);
+      background: rgba(139, 92, 246, 0.07);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    .api-key-input.has-key {
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+
+    .api-key-toggle {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.95rem;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.15s;
+      outline: none;
+    }
+
+    .api-key-toggle:hover {
+      background: var(--accent-glow);
+      color: var(--accent-hi);
+    }
+
+    .api-key-hint {
+      margin-top: 7px;
+      font-size: 0.70rem;
+      line-height: 1.5;
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .api-key-hint a {
+      color: var(--accent-hi);
+      text-decoration: none;
+    }
+
+    .api-key-hint a:hover {
+      text-decoration: underline;
+    }
+
+    .api-key-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.70rem;
+      font-weight: 600;
+    }
+
+    .api-key-status.saved {
+      color: #34d399;
+    }
+
+    .api-key-status.empty {
+      color: var(--muted);
+    }
+
+    .api-key-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .api-key-btn {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      outline: none;
+    }
+
+    .api-key-btn:hover {
+      border-color: var(--accent-hi);
+      color: var(--text);
+    }
+
+    .api-key-btn.save {
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    .api-key-btn.save:hover {
+      opacity: 0.92;
+    }
+
+    .api-key-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
     /* Generate button */
     .generate-btn {
       position: relative;
@@ -1002,7 +1143,7 @@
     <div class="header-right">
       <div class="live-badge">
         <div class="live-dot"></div>
-        Cerebras AI
+        Groq AI
       </div>
     </div>
   </header>
@@ -1086,6 +1227,25 @@
             style="text-transform:none;letter-spacing:0;font-weight:400;font-size:0.85em;color:var(--border-soft)">optional</span>
         </div>
         <input id="topic-input" class="topic-input" type="text" placeholder="e.g. friendship, the ocean, a lost key…">
+      </div>
+
+      <!-- Groq API Key -->
+      <div>
+        <div class="s-label">Groq API Key</div>
+        <div class="api-key-wrap">
+          <input id="groq-key-input" class="api-key-input" type="password" placeholder="gsk_••••••••••••••••"
+            autocomplete="off" spellcheck="false">
+          <button class="api-key-toggle" id="groq-key-toggle" type="button" title="Show / hide" aria-label="Show or hide API key">👁️</button>
+        </div>
+        <div class="api-key-hint">
+          <span id="groq-key-status" class="api-key-status empty">● No guardada</span>
+          <span>·</span>
+          <a href="https://console.groq.com/keys" target="_blank" rel="noopener">Crear key en Groq</a>
+        </div>
+        <div class="api-key-actions">
+          <button class="api-key-btn save" id="groq-key-save" type="button" onclick="saveGroqKey()">Guardar</button>
+          <button class="api-key-btn" id="groq-key-clear" type="button" onclick="clearGroqKey()">Borrar</button>
+        </div>
       </div>
 
       <!-- Generate -->
@@ -1174,6 +1334,7 @@
   <script>
     // ── Config ─────────────────────────────────────────────────
     const API_URL = '/api/generate';
+    const GROQ_KEY_LS = 'groq_api_key';
 
     // ── State ──────────────────────────────────────────────────
     let selectedGenre = 'Adventure';
@@ -1183,6 +1344,86 @@
     let highlightMode = false;
     let ttsActive = false;
     let ttsUtterance = null;
+
+    // ── Groq API Key — localStorage ────────────────────────────
+    function getGroqKey() {
+      try { return (localStorage.getItem(GROQ_KEY_LS) || '').trim(); } catch { return ''; }
+    }
+
+    function setGroqKeyStatus() {
+      const has = !!getGroqKey();
+      const dot = document.getElementById('groq-key-status');
+      const inp = document.getElementById('groq-key-input');
+      if (!dot || !inp) return;
+      if (has) {
+        dot.textContent = '● Guardada ✓';
+        dot.className = 'api-key-status saved';
+        inp.classList.add('has-key');
+      } else {
+        dot.textContent = '● No guardada';
+        dot.className = 'api-key-status empty';
+        inp.classList.remove('has-key');
+      }
+      const clearBtn = document.getElementById('groq-key-clear');
+      if (clearBtn) clearBtn.disabled = !has && !inp.value.trim();
+    }
+
+    function saveGroqKey() {
+      const inp = document.getElementById('groq-key-input');
+      const val = (inp.value || '').trim();
+      if (!val) { setError('Pegá tu Groq API key (empieza con gsk_...)'); return; }
+      if (!val.startsWith('gsk_')) {
+        setError('La key de Groq suele empezar con gsk_ — verificá que esté bien copiada.');
+        // still save? save anyway
+      } else {
+        setError('');
+      }
+      try { localStorage.setItem(GROQ_KEY_LS, val); } catch {}
+      setGroqKeyStatus();
+      // feedback
+      const btn = document.getElementById('groq-key-save');
+      const prev = btn.textContent;
+      btn.textContent = 'Guardada ✓';
+      setTimeout(() => { btn.textContent = prev; }, 1400);
+    }
+
+    function clearGroqKey() {
+      try { localStorage.removeItem(GROQ_KEY_LS); } catch {}
+      const inp = document.getElementById('groq-key-input');
+      if (inp) inp.value = '';
+      setGroqKeyStatus();
+      setError('');
+    }
+
+    // init key from storage + eye toggle wiring
+    (function initGroqKeyField() {
+      document.addEventListener('DOMContentLoaded', () => {
+        const inp = document.getElementById('groq-key-input');
+        const toggle = document.getElementById('groq-key-toggle');
+        const saved = getGroqKey();
+        if (inp && saved) inp.value = saved;
+        setGroqKeyStatus();
+        if (inp) {
+          inp.addEventListener('input', setGroqKeyStatus);
+          inp.addEventListener('keydown', e => { if (e.key === 'Enter') saveGroqKey(); });
+        }
+        if (toggle && inp) {
+          toggle.addEventListener('click', () => {
+            const isPw = inp.type === 'password';
+            inp.type = isPw ? 'text' : 'password';
+            toggle.textContent = isPw ? '🙈' : '👁️';
+          });
+        }
+      });
+      // if DOM already ready (script at bottom), run immediately too
+      const inpImmediate = document.getElementById('groq-key-input');
+      if (inpImmediate) {
+        const savedImmediate = getGroqKey();
+        if (savedImmediate) inpImmediate.value = savedImmediate;
+        // defer status paint to next tick to ensure dot exists
+        setTimeout(setGroqKeyStatus, 0);
+      }
+    })();
 
     // ── Option wiring ──────────────────────────────────────────
     document.querySelectorAll('#genre-grid .genre-tile').forEach(btn => {
@@ -1249,13 +1490,22 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
       document.getElementById('gen-icon').textContent = '⏳';
 
       try {
+        // auto-save typed key if user never pressed Guardar
+        const typedKey = (document.getElementById('groq-key-input')?.value || '').trim();
+        const storedKey = getGroqKey();
+        const groqKey = typedKey || storedKey;
+        if (typedKey && typedKey !== storedKey) {
+          try { localStorage.setItem(GROQ_KEY_LS, typedKey); } catch {}
+          setGroqKeyStatus();
+        }
+        const headers = { 'Content-Type': 'application/json' };
+        if (groqKey) headers['x-groq-api-key'] = groqKey;
+
         const res = await fetch(API_URL, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers,
           body: JSON.stringify({
-            model: 'llama3.1-8b',
+            model: 'llama-3.1-8b-instant',
             messages: [{ role: 'user', content: prompt }],
             max_tokens: 2000,
             temperature: 0.85
