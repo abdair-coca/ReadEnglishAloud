@@ -42,6 +42,8 @@
       --mark-soft: rgba(255, 205, 41, 0.22);
       --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       --serif: "Literata", Georgia, "Times New Roman", serif;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-stamp: cubic-bezier(0.2, 0.9, 0.25, 1);
     }
 
     html {
@@ -989,8 +991,35 @@
 
       .entry-sheet.stamped,
       .press-ring,
-      .cursor {
-        animation: none;
+      .cursor,
+      .big-seal,
+      .press-seal,
+      .press-shock,
+      .entry-loading h3,
+      #tts-btn.on::after {
+        animation: none !important;
+      }
+
+      .entry-sheet.stamped .seal-row .seal,
+      .entry-sheet.stamped .entry-title,
+      .entry-sheet.stamped #story-text p,
+      .entry-sheet.stamped .sheet-tools,
+      .entry-sheet.stamped .route-wrap {
+        opacity: 1 !important;
+        animation: reduced-fade 140ms ease-out both !important;
+        animation-delay: 0ms !important;
+        clip-path: none !important;
+        transform: none !important;
+        filter: none !important;
+      }
+
+      .entry-sheet.stamped::after {
+        display: none !important;
+      }
+
+      @keyframes reduced-fade {
+        from { opacity: 0; }
+        to { opacity: 1; }
       }
 
       .stamp,
@@ -1000,6 +1029,358 @@
       .sheet-btn {
         transition: none;
       }
+    }
+
+    /* ── MINIMALIST DISTILL + SPECTACULAR STAMP MOTION ───────────
+       World preserved: customs desk / entry sheet. Noise removed,
+       one authored focal moment: The Stamp Drop (max show, ~780ms).
+       Materials: transform + opacity + clip-path + blur + shadow.
+       No layout props animated. ----------------------------------- */
+    .brand-tag {
+      display: none;
+    }
+
+    .desk {
+      gap: 28px;
+      padding: 28px 20px 40px;
+    }
+
+    .perf {
+      height: 1px;
+      background: none;
+      background-color: var(--ink-line-soft);
+      margin: 6px 0 0;
+      opacity: 0.8;
+    }
+
+    .stamp {
+      background: transparent;
+    }
+
+    .counter {
+      padding: 56px 48px 80px;
+    }
+
+    .entry-idle {
+      padding: 64px 32px;
+      gap: 16px;
+      box-shadow: 0 18px 40px -24px rgba(16, 20, 48, 0.35);
+    }
+
+    .big-seal {
+      width: 76px;
+      height: 76px;
+      animation: seal-float 6s ease-in-out infinite;
+      transform-origin: 50% 50%;
+    }
+
+    @keyframes seal-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .idle-tools .tool-chip {
+      background: transparent;
+      border-color: transparent;
+      width: 28px;
+      height: 28px;
+    }
+
+    .size-bar {
+      background: transparent;
+      padding: 8px 32px;
+    }
+
+    a {
+      text-underline-offset: 3px;
+    }
+
+    /* Press feedback — smallest change that proves cause/result */
+    .stamp, .visa, .ticket, .issue-btn, .sheet-btn, .key-btn {
+      transition: transform 0.12s var(--ease-out), background 0.16s ease, color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .stamp:active, .visa:active, .ticket:active {
+      transform: scale(0.96);
+    }
+
+    .issue-btn:active:not(:disabled) {
+      transform: translateY(0) scale(0.97);
+    }
+
+    .sheet-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* Loading: stamp press loop (replaces lonely spinner) */
+    .press-stage {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .press-seal {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--ink-900);
+      border: 2px solid var(--stamp-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--paper-100);
+      font-family: var(--serif);
+      font-weight: 800;
+      font-size: 1.4rem;
+      animation: press-drop 1.15s var(--ease-stamp) infinite;
+      box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.65);
+      will-change: transform;
+    }
+
+    .press-shock {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: 2px solid var(--stamp-600);
+      opacity: 0;
+      animation: press-shock 1.15s var(--ease-out) infinite;
+      pointer-events: none;
+    }
+
+    @keyframes press-drop {
+      0% { transform: translateY(-14px) scale(1.08); }
+      38% { transform: translateY(0) scale(1); }
+      62% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-14px) scale(1.08); }
+    }
+
+    @keyframes press-shock {
+      0% { opacity: 0; transform: scale(0.55); }
+      38% { opacity: 0.55; transform: scale(1); }
+      62% { opacity: 0; transform: scale(1.18); }
+      100% { opacity: 0; transform: scale(0.55); }
+    }
+
+    .entry-loading h3 {
+      color: var(--text-ink);
+      animation: stamp-breathe 1.6s var(--ease-out) infinite;
+    }
+
+    @keyframes stamp-breathe {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.62; }
+    }
+
+    /* FOCAL: The Stamp Drop — sheet slams, seal slams, ink reveals */
+    .entry-sheet {
+      position: relative;
+    }
+
+    .entry-sheet.stamped {
+      animation: sheet-drop 520ms var(--ease-out) both;
+      transform-origin: 50% 0%;
+      will-change: transform, opacity, filter;
+    }
+
+    @keyframes sheet-drop {
+      from {
+        opacity: 0;
+        transform: translateY(-18px) scale(1.03) rotate(-0.5deg);
+        filter: blur(10px);
+        box-shadow: 0 0 0 0 rgba(16, 20, 48, 0);
+      }
+      60% {
+        opacity: 1;
+        transform: translateY(2px) scale(1) rotate(0deg);
+        filter: blur(0);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+        filter: blur(0);
+      }
+    }
+
+    .entry-sheet.stamped::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      border: 2px solid var(--stamp-600);
+      opacity: 0;
+      pointer-events: none;
+      animation: sheet-shock 620ms var(--ease-out) both;
+      animation-delay: 120ms;
+    }
+
+    @keyframes sheet-shock {
+      0% { opacity: 0.5; transform: scale(0.985); }
+      100% { opacity: 0; transform: scale(1.02); }
+    }
+
+    .entry-sheet.stamped .seal-row .seal {
+      opacity: 0;
+      animation: seal-slam 380ms var(--ease-stamp) both;
+      animation-delay: calc(140ms + var(--i, 0) * 60ms);
+      will-change: transform, opacity, filter;
+    }
+
+    @keyframes seal-slam {
+      from {
+        opacity: 0;
+        transform: scale(2.1);
+        filter: blur(6px);
+      }
+      60% {
+        opacity: 1;
+        transform: scale(0.96);
+        filter: blur(0);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+      }
+    }
+
+    .entry-sheet.stamped .entry-title {
+      opacity: 0;
+      animation: title-wipe 520ms var(--ease-out) both;
+      animation-delay: 260ms;
+      will-change: clip-path, transform, filter;
+    }
+
+    @keyframes title-wipe {
+      from {
+        opacity: 0;
+        clip-path: inset(0 0 100% 0);
+        transform: translateY(12px);
+        filter: blur(6px);
+      }
+      to {
+        opacity: 1;
+        clip-path: inset(0 0 0% 0);
+        transform: none;
+        filter: blur(0);
+      }
+    }
+
+    .entry-sheet.stamped .sheet-tools {
+      opacity: 0;
+      animation: tools-in 400ms var(--ease-out) both;
+      animation-delay: 200ms;
+    }
+
+    @keyframes tools-in {
+      from { opacity: 0; transform: translateY(-8px); filter: blur(4px); }
+      to { opacity: 1; transform: none; filter: blur(0); }
+    }
+
+    .entry-sheet.stamped #story-text p {
+      opacity: 0;
+      animation: para-rise 560ms var(--ease-out) both;
+      animation-delay: calc(340ms + var(--i, 0) * 70ms);
+      will-change: transform, opacity, filter;
+    }
+
+    @keyframes para-rise {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+        filter: blur(5px);
+        clip-path: inset(0 0 12% 0);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+        filter: blur(0);
+        clip-path: inset(0 0 0% 0);
+      }
+    }
+
+    .entry-sheet.stamped .route-wrap {
+      opacity: 0;
+      animation: route-in 420ms var(--ease-out) both;
+      animation-delay: 480ms;
+    }
+
+    @keyframes route-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* TTS live pulse + copy pop — bounded, state-only */
+    .sheet-btn.on {
+      animation: tool-pop 220ms var(--ease-out) both;
+    }
+
+    @keyframes tool-pop {
+      0% { transform: scale(0.88); }
+      100% { transform: scale(1); }
+    }
+
+    #tts-btn.on {
+      position: relative;
+    }
+
+    #tts-btn.on::after {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 12px;
+      border: 1.5px solid var(--stamp-600);
+      opacity: 0.7;
+      animation: tts-ring 1.4s var(--ease-out) infinite;
+      pointer-events: none;
+    }
+
+    @keyframes tts-ring {
+      0% { opacity: 0.65; transform: scale(0.96); }
+      70% { opacity: 0; transform: scale(1.08); }
+      100% { opacity: 0; transform: scale(0.96); }
+    }
+
+    /* Key progressive disclosure */
+    .key-details {
+      border: 1px solid var(--ink-line-soft);
+      border-radius: 9px;
+      padding: 4px 0;
+    }
+
+    .key-details summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-paper-soft);
+    }
+
+    .key-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .key-details summary::after {
+      content: "+";
+      font-size: 1rem;
+      line-height: 1;
+      color: var(--stamp-on-ink);
+    }
+
+    .key-details[open] summary::after {
+      content: "–";
+    }
+
+    .key-details .key-body {
+      padding: 6px 12px 12px;
     }
 
     @media print {
@@ -1154,23 +1535,28 @@
       </div>
 
       <div class="desk-group">
-        <label class="desk-label" for="groq-key-input">Groq API Key</label>
-        <div class="key-wrap">
-          <input id="groq-key-input" class="field" type="password" placeholder="gsk_••••••••••••••••"
-            autocomplete="off" spellcheck="false">
-          <button class="key-toggle" id="groq-key-toggle" type="button" title="Show / hide" aria-label="Show or hide API key" aria-pressed="false">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></svg>
-          </button>
-        </div>
-        <div class="key-hint">
-          <span id="groq-key-status" class="key-status empty" role="status">● No guardada</span>
-          <span aria-hidden="true">·</span>
-          <a href="https://console.groq.com/keys" target="_blank" rel="noopener">Crear key en Groq</a>
-        </div>
-        <div class="key-actions">
-          <button class="key-btn save" id="groq-key-save" type="button" onclick="saveGroqKey()">Guardar</button>
-          <button class="key-btn" id="groq-key-clear" type="button" onclick="clearGroqKey()">Borrar</button>
-        </div>
+        <details class="key-details" id="key-details">
+          <summary>Groq API Key <span id="groq-key-status-mini" class="key-status empty" role="status"></span></summary>
+          <div class="key-body">
+            <label class="desk-label" for="groq-key-input" style="margin-bottom:8px">Groq API Key</label>
+            <div class="key-wrap">
+              <input id="groq-key-input" class="field" type="password" placeholder="gsk_••••••••••••••••"
+                autocomplete="off" spellcheck="false">
+              <button class="key-toggle" id="groq-key-toggle" type="button" title="Show / hide" aria-label="Show or hide API key" aria-pressed="false">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></svg>
+              </button>
+            </div>
+            <div class="key-hint">
+              <span id="groq-key-status" class="key-status empty" role="status">● No guardada</span>
+              <span aria-hidden="true">·</span>
+              <a href="https://console.groq.com/keys" target="_blank" rel="noopener">Crear key en Groq</a>
+            </div>
+            <div class="key-actions">
+              <button class="key-btn save" id="groq-key-save" type="button" onclick="saveGroqKey()">Guardar</button>
+              <button class="key-btn" id="groq-key-clear" type="button" onclick="clearGroqKey()">Borrar</button>
+            </div>
+          </div>
+        </details>
         <div class="perf" aria-hidden="true"></div>
       </div>
 
@@ -1223,7 +1609,10 @@
 
         <!-- Loading -->
         <div class="entry-loading" id="loading-state" style="display:none">
-          <div class="press-ring" aria-hidden="true"></div>
+          <div class="press-stage" aria-hidden="true">
+            <div class="press-shock"></div>
+            <div class="press-seal">E</div>
+          </div>
           <div>
             <h3>Stamping your entry…</h3>
             <p>This usually takes a few seconds</p>
@@ -1302,16 +1691,19 @@
     function setGroqKeyStatus() {
       const has = !!getGroqKey();
       const dot = document.getElementById('groq-key-status');
+      const mini = document.getElementById('groq-key-status-mini');
       const inp = document.getElementById('groq-key-input');
       if (!dot || !inp) return;
       if (has) {
         dot.textContent = '● Guardada ✓';
         dot.className = 'key-status saved';
         inp.classList.add('has-key');
+        if (mini) { mini.textContent = '· ✓'; mini.className = 'key-status saved'; }
       } else {
         dot.textContent = '● No guardada';
         dot.className = 'key-status empty';
         inp.classList.remove('has-key');
+        if (mini) { mini.textContent = ''; mini.className = 'key-status empty'; }
       }
       const clearBtn = document.getElementById('groq-key-clear');
       if (clearBtn) clearBtn.disabled = !has && !inp.value.trim();
@@ -1527,28 +1919,37 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
 
         if (!body) throw new Error('Story content is empty.');
 
-        // Show story
+        // Show story — The Stamp Drop: restart choreography on every arrival
         document.getElementById('loading-state').style.display = 'none';
         card.style.display = 'block';
         // restart the stamp-in signature motion on every arrival
+        card.classList.remove('stamped');
         void card.offsetWidth;
+        const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) card.classList.add('reduced');
         card.classList.add('stamped');
+        // release will-change after focal (~900ms) so scroll stays cheap
+        clearTimeout(window._stampT);
+        window._stampT = setTimeout(() => {
+          card.style.willChange = 'auto';
+          card.querySelectorAll('.seal, .entry-title, #story-text p').forEach(n => { n.style.willChange = 'auto'; });
+        }, 950);
         document.getElementById('progress-bar').style.display = 'flex';
 
         const wordCount = body.split(/\s+/).filter(Boolean).length;
         const readMin = Math.max(1, Math.round(wordCount / 200));
 
         document.getElementById('story-meta').innerHTML = `
-          <span class="seal seal-red">${selectedGenre}</span>
-          <span class="seal seal-ink">${selectedLevel}</span>
-          <span class="seal">${selectedLength.split(' ')[0]}</span>
-          <span class="seal">${wordCount} words · ${readMin} min read</span>
+          <span class="seal seal-red" style="--i:0">${selectedGenre}</span>
+          <span class="seal seal-ink" style="--i:1">${selectedLevel}</span>
+          <span class="seal" style="--i:2">${selectedLength.split(' ')[0]}</span>
+          <span class="seal" style="--i:3">${wordCount} words · ${readMin} min read</span>
         `;
         document.getElementById('story-title').textContent = title;
 
         renderStory(body);
         setupScrollProgress();
-        document.getElementById('story-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('story-card').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
 
       } catch (err) {
         document.getElementById('loading-state').style.display = 'none';
@@ -1566,11 +1967,11 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
     function renderStory(text) {
       const el = document.getElementById('story-text');
       const paras = text.split(/\n+/).filter(p => p.trim());
-      el.innerHTML = paras.map(p => {
+      el.innerHTML = paras.map((p, i) => {
         const wrapped = p.trim().split(/(\s+)/).map(w =>
           /\s/.test(w) ? w : `<span class="word">${escapeHtml(w)}</span>`
         ).join('');
-        return `<p>${wrapped}</p>`;
+        return `<p style="--i:${Math.min(i, 8)}">${wrapped}</p>`;
       }).join('');
 
       el.querySelectorAll('.word').forEach(span => {
