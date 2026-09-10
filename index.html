@@ -5,9 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EnglishAloud — AI Story Generator</title>
-  <link rel="icon" href="https://tse4.mm.bing.net/th/id/OIP.X3QeZ9chniVgKv5LPhAo3AHaIl?rs=1&pid=ImgDetMain&o=7&rm=3">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231a2340'/%3E%3Ccircle cx='16' cy='16' r='11.5' fill='none' stroke='%23f6f2e7' stroke-width='1.4' stroke-dasharray='3 2.4'/%3E%3Cpath d='M11 12.5c1.6-1.1 3.4-1.1 5 0 1.6-1.1 3.4-1.1 5 0v8c-1.6-1.1-3.4-1.1-5 0-1.6-1.1-3.4-1.1-5 0z' fill='none' stroke='%23f6f2e7' stroke-width='1.8' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='16' r='15' fill='none' stroke='%23c8102e' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400..800;1,7..72,400..700&display=swap"
     rel="stylesheet">
   <style>
     *,
@@ -19,23 +21,27 @@
     }
 
     :root {
-      --bg: #0b0a18;
-      --surface: #110f22;
-      --card: #18162e;
-      --card-hi: #1e1c38;
-      --border: #252242;
-      --border-soft: #2e2b50;
-      --text: #ece8ff;
-      --text-soft: #b3aed4;
-      --muted: #7a759e;
-      --accent: #8b5cf6;
-      --accent-hi: #a78bfa;
-      --accent-glow: rgba(139, 92, 246, 0.18);
-      --gold: #f59e0b;
-      --gold-hi: #fbbf24;
-      --green: #10b981;
-      --coral: #f43f5e;
-      --highlight: rgba(167, 139, 250, 0.14);
+      --ink-950: #0e1430;
+      --ink-900: #1a2340;
+      --ink-800: #24304f;
+      --ink-line: rgba(244, 241, 230, 0.16);
+      --ink-line-soft: rgba(244, 241, 230, 0.09);
+      --paper-50: #fbf8f0;
+      --paper-100: #f6f2e7;
+      --paper-200: #eae3d0;
+      --paper-300: #d9cdae;
+      --stamp-700: #a00d26;
+      --stamp-600: #c8102e;
+      --stamp-ink-100: rgba(200, 16, 46, 0.14);
+      --stamp-on-ink: #ff8fa3;
+      --text-ink: #222a45;
+      --text-ink-soft: #5f6053;
+      --text-paper: #f4f1e6;
+      --text-paper-soft: #c6cddd;
+      --mark: rgba(255, 205, 41, 0.45);
+      --mark-soft: rgba(255, 205, 41, 0.22);
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --serif: "Literata", Georgia, "Times New Roman", serif;
     }
 
     html {
@@ -43,951 +49,800 @@
     }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      height: 100vh;
-      overflow: hidden;
+      background: var(--paper-200);
+      color: var(--text-ink);
+      font-family: var(--sans);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    /* Ambient orbs */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -240px;
-      left: -240px;
-      width: 680px;
-      height: 680px;
-      background: radial-gradient(circle, rgba(139, 92, 246, 0.09) 0%, transparent 65%);
-      pointer-events: none;
-      z-index: 0;
+    ::selection {
+      background: var(--stamp-600);
+      color: #fff;
     }
 
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -240px;
-      right: -240px;
-      width: 680px;
-      height: 680px;
-      background: radial-gradient(circle, rgba(245, 158, 11, 0.06) 0%, transparent 65%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ── HEADER ─────────────────────────────────────────────── */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 300;
-      height: 62px;
-      background: rgba(11, 10, 24, 0.82);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.05rem;
-      box-shadow: 0 4px 18px rgba(139, 92, 246, 0.35);
-    }
-
-    .logo-wordmark {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.3rem;
-      color: var(--text);
-    }
-
-    .logo-wordmark strong {
-      color: var(--accent-hi);
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .live-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.74rem;
-      color: var(--muted);
-      font-family: 'Inter', sans-serif;
-    }
-
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      background: var(--green);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--green);
-      animation: pulse-dot 2.4s ease infinite;
-    }
-
-    @keyframes pulse-dot {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: .35
-      }
-    }
-
-    /* ── LAYOUT ─────────────────────────────────────────────── */
-    main {
-      flex: 1;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: 312px 1fr;
-      max-width: 1440px;
-      margin: 0 auto;
-      width: 100%;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ── SIDEBAR ────────────────────────────────────────────── */
-    .sidebar {
-      position: sticky;
-      top: 62px;
-      height: calc(100vh - 62px);
-      overflow-y: auto;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      padding: 26px 18px 36px;
-      display: flex;
-      flex-direction: column;
-      gap: 26px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
-    }
-
-    .sidebar::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .sidebar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .sidebar::-webkit-scrollbar-thumb {
-      background: var(--border);
+    :focus-visible {
+      outline: 2px solid var(--stamp-600);
+      outline-offset: 2px;
       border-radius: 4px;
     }
 
-    .s-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.67rem;
-      font-weight: 700;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 12px;
-      font-family: 'Inter', sans-serif;
+    .desk :focus-visible {
+      outline-color: var(--stamp-on-ink);
     }
 
-    .s-label::after {
-      content: '';
-      flex: 1;
+    svg.ic {
+      width: 1.25em;
+      height: 1.25em;
+      flex-shrink: 0;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
       height: 1px;
-      background: linear-gradient(to right, var(--border), transparent);
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
     }
 
-    /* Genre grid */
-    .genre-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-    }
-
-    .genre-tile {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 13px 8px 11px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.18s ease;
+    /* ── CUSTOMS RAIL ─────────────────────────────────────────── */
+    .rail {
+      background: var(--ink-900);
+      color: var(--text-paper);
+      border-bottom: 2px solid var(--stamp-600);
+      padding: 0 32px;
+      height: 62px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 5px;
-      outline: none;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 300;
     }
 
-    .genre-tile .gi {
-      font-size: 1.55rem;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-paper);
+    }
+
+    .brand-seal {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+
+    .brand-word {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: 0.01em;
       line-height: 1;
     }
 
-    .genre-tile .gl {
-      font-size: 0.72rem;
-      font-weight: 500;
-      color: var(--muted);
-      font-family: 'Inter', sans-serif;
-      transition: color 0.18s;
+    .brand-word em {
+      font-style: normal;
+      color: var(--stamp-on-ink);
     }
 
-    .genre-tile:hover {
-      border-color: var(--accent-hi);
-      background: var(--accent-glow);
-    }
-
-    .genre-tile:hover .gl {
-      color: var(--text-soft);
-    }
-
-    .genre-tile.active {
-      background: linear-gradient(145deg, rgba(139, 92, 246, 0.14), rgba(109, 40, 217, 0.2));
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    .genre-tile.active .gl {
-      color: var(--accent-hi);
-    }
-
-    /* Level chips */
-    .level-row {
-      display: flex;
-      gap: 5px;
-    }
-
-    .level-chip {
-      flex: 1;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 8px 4px;
-      border-radius: 8px;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.79rem;
+    .brand-tag {
+      font-size: 0.7rem;
       font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.18s ease;
-      outline: none;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-paper-soft);
+      border: 1px solid var(--ink-line);
+      border-radius: 20px;
+      padding: 3px 10px;
+      white-space: nowrap;
     }
 
-    .level-chip:hover {
-      border-color: var(--accent-hi);
-      color: var(--text);
-    }
-
-    .level-chip.active {
-      background: linear-gradient(135deg, var(--accent), #7c3aed);
-      border-color: transparent;
-      color: #fff;
-      box-shadow: 0 3px 14px rgba(139, 92, 246, 0.4);
-    }
-
-    /* Length options */
-    .length-row {
+    .rail-status {
       display: flex;
-      gap: 7px;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-paper-soft);
+      white-space: nowrap;
     }
 
-    .length-opt {
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #35d07f;
+      box-shadow: 0 0 0 3px rgba(53, 208, 127, 0.18);
+    }
+
+    .status-model {
+      font-variant-numeric: tabular-nums;
+      border: 1px solid var(--ink-line);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 0.7rem;
+    }
+
+    /* ── LAYOUT ───────────────────────────────────────────────── */
+    .layout {
       flex: 1;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 11px 6px;
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 324px 1fr;
+      align-items: start;
+    }
+
+    /* ── DESK (customs desk) ──────────────────────────────────── */
+    .desk {
+      background: var(--ink-900);
+      color: var(--text-paper);
+      padding: 26px 18px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: sticky;
+      top: 62px;
+      max-height: calc(100vh - 62px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--ink-800) transparent;
+    }
+
+    .desk::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .desk::-webkit-scrollbar-thumb {
+      background: var(--ink-800);
+      border-radius: 4px;
+    }
+
+    .desk-group {
+      border: none;
+    }
+
+    .desk-label {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-paper-soft);
+      margin-bottom: 10px;
+    }
+
+    .desk-label .opt {
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+      font-size: 0.72rem;
+      color: rgba(198, 205, 221, 0.6);
+    }
+
+    .perf {
+      height: 9px;
+      background-image: radial-gradient(circle, rgba(244, 241, 230, 0.22) 1.3px, transparent 1.4px);
+      background-size: 10px 9px;
+      background-repeat: repeat-x;
+      background-position: center;
+      margin: 2px 0 0;
+    }
+
+    /* Destination stamps */
+    .stamp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .stamp {
+      background: rgba(244, 241, 230, 0.04);
+      border: 1px solid var(--ink-line);
       border-radius: 10px;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.76rem;
+      padding: 12px 6px 10px;
       cursor: pointer;
-      text-align: center;
-      transition: all 0.18s ease;
+      color: var(--text-paper-soft);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
-      outline: none;
+      gap: 6px;
+      font-family: var(--sans);
+      font-size: 0.74rem;
+      font-weight: 600;
+      transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease, transform 0.16s ease;
     }
 
-    .length-opt .lo-icon {
-      font-size: 1.1rem;
+    .stamp:hover {
+      border-color: var(--stamp-on-ink);
+      color: var(--text-paper);
+      transform: translateY(-1px);
     }
 
-    .length-opt .lo-name {
+    .stamp.active {
+      background: var(--stamp-ink-100);
+      border-color: var(--stamp-600);
+      box-shadow: inset 0 0 0 1px var(--stamp-600);
+      color: var(--text-paper);
+    }
+
+    .stamp.active svg.ic {
+      color: var(--stamp-on-ink);
+    }
+
+    /* Visa chips — one exact scale for every level */
+    .visa-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .visa {
+      flex: 1;
+      background: rgba(244, 241, 230, 0.04);
+      border: 1px solid var(--ink-line);
+      color: var(--text-paper-soft);
+      padding: 9px 4px;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+    }
+
+    .visa:hover {
+      border-color: var(--text-paper-soft);
+      color: var(--text-paper);
+    }
+
+    .visa.active {
+      background: var(--paper-100);
+      border-color: var(--paper-100);
+      color: var(--ink-900);
+      box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.55);
+    }
+
+    /* Duration tickets */
+    .ticket-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .ticket {
+      flex: 1;
+      background: rgba(244, 241, 230, 0.04);
+      border: 1px dashed rgba(244, 241, 230, 0.28);
+      color: var(--text-paper-soft);
+      padding: 11px 6px 10px;
+      border-radius: 10px;
+      font-family: var(--sans);
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease;
+    }
+
+    .ticket:hover {
+      border-color: var(--stamp-on-ink);
+      color: var(--text-paper);
+    }
+
+    .ticket.active {
+      background: var(--stamp-ink-100);
+      border-style: solid;
+      border-color: var(--stamp-600);
+      color: var(--text-paper);
+    }
+
+    .ticket .t-name {
       font-weight: 700;
       font-size: 0.8rem;
     }
 
-    .length-opt .lo-sub {
-      font-size: 0.64rem;
-      color: var(--border-soft);
+    .ticket.active .t-name {
+      color: var(--stamp-on-ink);
     }
 
-    .length-opt:hover {
-      border-color: var(--gold);
-      color: var(--text-soft);
+    .ticket .t-sub {
+      font-size: 0.7rem;
+      font-variant-numeric: tabular-nums;
+      color: rgba(198, 205, 221, 0.65);
     }
 
-    .length-opt.active {
-      background: linear-gradient(145deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.2));
-      border-color: var(--gold);
-      color: var(--gold-hi);
-      box-shadow: 0 3px 14px rgba(245, 158, 11, 0.15);
+    .ticket.active .t-sub {
+      color: rgba(255, 143, 163, 0.75);
     }
 
-    .length-opt.active .lo-sub {
-      color: rgba(251, 191, 36, 0.6);
-    }
-
-    /* Topic input */
-    .topic-wrap {
-      position: relative;
-    }
-
-    .topic-input {
+    /* Fields */
+    .field {
       width: 100%;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
+      background: var(--ink-950);
+      border: 1px solid var(--ink-line);
+      color: var(--text-paper);
       padding: 10px 14px;
       border-radius: 9px;
-      font-family: 'Lora', serif;
-      font-size: 0.87rem;
+      font-family: var(--serif);
+      font-size: 0.9rem;
+      caret-color: var(--stamp-on-ink);
       outline: none;
-      transition: all 0.2s;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
     }
 
-    .topic-input::placeholder {
-      color: var(--muted);
+    .field::placeholder {
+      color: #8f96ad;
+      font-style: italic;
     }
 
-    .topic-input:focus {
-      border-color: var(--accent);
-      background: rgba(139, 92, 246, 0.07);
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    .field:focus {
+      border-color: var(--stamp-600);
+      box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.25);
     }
 
-    /* Groq API Key field */
-    .api-key-wrap {
+    .key-wrap {
       position: relative;
       display: flex;
       align-items: center;
-      gap: 6px;
     }
 
-    .api-key-input {
-      flex: 1;
-      width: 100%;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 14px;
-      padding-right: 38px;
-      border-radius: 9px;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.82rem;
-      outline: none;
-      transition: all 0.2s;
+    .key-wrap .field {
+      font-family: var(--sans);
+      font-size: 0.84rem;
+      padding-right: 42px;
     }
 
-    .api-key-input::placeholder {
-      color: var(--muted);
-      font-size: 0.80rem;
+    .key-wrap .field.has-key {
+      border-color: rgba(53, 208, 127, 0.45);
     }
 
-    .api-key-input:focus {
-      border-color: var(--accent);
-      background: rgba(139, 92, 246, 0.07);
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-    }
-
-    .api-key-input.has-key {
-      border-color: rgba(16, 185, 129, 0.35);
-    }
-
-    .api-key-toggle {
+    .key-toggle {
       position: absolute;
       right: 6px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      font-size: 0.95rem;
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 6px;
-      transition: all 0.15s;
-      outline: none;
+      background: transparent;
+      border: none;
+      border-radius: 7px;
+      color: var(--text-paper-soft);
+      cursor: pointer;
     }
 
-    .api-key-toggle:hover {
-      background: var(--accent-glow);
-      color: var(--accent-hi);
+    .key-toggle:hover {
+      background: rgba(244, 241, 230, 0.1);
+      color: var(--text-paper);
     }
 
-    .api-key-hint {
-      margin-top: 7px;
-      font-size: 0.70rem;
-      line-height: 1.5;
-      color: var(--muted);
-      font-family: 'Inter', sans-serif;
+    .key-hint {
+      margin-top: 8px;
+      font-size: 0.72rem;
+      color: var(--text-paper-soft);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
-    .api-key-hint a {
-      color: var(--accent-hi);
+    .key-hint a {
+      color: var(--stamp-on-ink);
       text-decoration: none;
-    }
-
-    .api-key-hint a:hover {
-      text-decoration: underline;
-    }
-
-    .api-key-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.70rem;
       font-weight: 600;
     }
 
-    .api-key-status.saved {
-      color: #34d399;
+    .key-hint a:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
-    .api-key-status.empty {
-      color: var(--muted);
+    .key-status {
+      font-weight: 700;
     }
 
-    .api-key-actions {
+    .key-status.saved {
+      color: #4ade80;
+    }
+
+    .key-actions {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       margin-top: 8px;
     }
 
-    .api-key-btn {
+    .key-btn {
       flex: 1;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text-soft);
-      padding: 7px 10px;
+      background: transparent;
+      border: 1px solid var(--ink-line);
+      color: var(--text-paper);
+      padding: 8px 10px;
       border-radius: 8px;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.76rem;
+      font-family: var(--sans);
+      font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s;
-      outline: none;
+      transition: border-color 0.15s ease, background 0.15s ease;
     }
 
-    .api-key-btn:hover {
-      border-color: var(--accent-hi);
-      color: var(--text);
+    .key-btn:hover {
+      border-color: var(--text-paper-soft);
     }
 
-    .api-key-btn.save {
-      background: linear-gradient(135deg, var(--accent), #7c3aed);
-      border-color: transparent;
+    .key-btn.save {
+      background: var(--stamp-600);
+      border-color: var(--stamp-600);
       color: #fff;
     }
 
-    .api-key-btn.save:hover {
-      opacity: 0.92;
+    .key-btn.save:hover {
+      background: var(--stamp-700);
     }
 
-    .api-key-btn:disabled {
+    .key-btn:disabled {
       opacity: 0.45;
       cursor: not-allowed;
     }
 
-    /* Generate button */
-    .generate-btn {
-      position: relative;
-      overflow: hidden;
+    /* The stamp button */
+    .issue-btn {
       width: 100%;
       padding: 14px 18px;
       border: none;
       border-radius: 11px;
-      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 60%, #6d28d9 100%);
+      background: var(--stamp-600);
       color: #fff;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.92rem;
+      font-family: var(--sans);
+      font-size: 0.94rem;
       font-weight: 700;
       letter-spacing: 0.02em;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 24px rgba(139, 92, 246, 0.35);
-      transition: all 0.2s ease;
-      outline: none;
+      gap: 10px;
+      box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.65);
+      transition: background 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
     }
 
-    .generate-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 60%, #7c3aed 100%);
-      opacity: 0;
-      transition: opacity 0.2s;
+    .issue-btn:hover:not(:disabled) {
+      background: var(--stamp-700);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.65);
     }
 
-    .generate-btn:hover:not(:disabled)::before {
-      opacity: 1;
-    }
-
-    .generate-btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.5);
-    }
-
-    .generate-btn:active {
+    .issue-btn:active:not(:disabled) {
       transform: translateY(0);
     }
 
-    .generate-btn:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .generate-btn span {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Shimmer while loading */
-    @keyframes shimmer {
-      0% {
-        transform: translateX(-120%)
-      }
-
-      100% {
-        transform: translateX(120%)
-      }
-    }
-
-    .generate-btn.loading::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
-      animation: shimmer 1.4s ease infinite;
+    .issue-btn:disabled {
+      opacity: 0.6;
+      cursor: wait;
     }
 
     .error-banner {
-      background: rgba(244, 63, 94, 0.1);
-      border: 1px solid rgba(244, 63, 94, 0.28);
-      color: #fb7185;
+      background: rgba(200, 16, 46, 0.14);
+      border: 1px solid var(--stamp-600);
+      color: #ffd9de;
       padding: 12px 14px;
       border-radius: 9px;
-      font-size: 0.83rem;
+      font-size: 0.84rem;
       line-height: 1.55;
       display: none;
     }
 
-    /* ── READING AREA ────────────────────────────────────────── */
-    .reading-area {
-      overflow-y: auto;
-      padding: 44px 56px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
+    /* ── SHEET SIDE ───────────────────────────────────────────── */
+    .counter {
+      padding: 40px 48px 72px;
+      min-height: calc(100vh - 62px);
     }
 
-    .reading-area::-webkit-scrollbar {
-      width: 6px;
+    .sheet {
+      max-width: 780px;
+      margin: 0 auto;
     }
 
-    .reading-area::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .reading-area::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 4px;
-    }
-
-    /* ── EMPTY STATE ─────────────────────────────────────────── */
-    .empty-state {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
+    /* Entry states */
+    .entry-idle {
+      background: var(--paper-50);
+      border-radius: 14px;
+      box-shadow: 0 18px 45px -22px rgba(16, 20, 48, 0.4);
+      padding: 72px 40px;
       text-align: center;
-      padding: 60px 20px;
-    }
-
-    .empty-orb {
-      width: 96px;
-      height: 96px;
-      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-      border-radius: 50%;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      font-size: 2.6rem;
-      box-shadow: 0 20px 64px rgba(139, 92, 246, 0.35), 0 0 0 1px rgba(139, 92, 246, 0.2);
-      animation: float 3.2s ease-in-out infinite;
+      gap: 18px;
     }
 
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0)
-      }
-
-      50% {
-        transform: translateY(-14px)
-      }
+    .big-seal {
+      width: 104px;
+      height: 104px;
     }
 
-    .empty-state h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.1rem;
-      color: var(--text);
+    .entry-idle h2 {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 2.2rem;
+      line-height: 1.15;
+      color: var(--text-ink);
+      text-wrap: balance;
     }
 
-    .empty-state p {
-      color: var(--text-soft);
-      font-size: 0.96rem;
+    .entry-idle p {
+      font-family: var(--serif);
+      font-size: 1.02rem;
       line-height: 1.75;
-      max-width: 390px;
-      font-family: 'Lora', serif;
+      color: var(--text-ink-soft);
+      max-width: 40ch;
     }
 
-    .empty-state p strong {
-      color: var(--accent-hi);
-      font-style: normal;
+    .entry-idle p strong {
+      color: var(--stamp-700);
     }
 
-    .empty-feats {
+    .idle-tools {
+      list-style: none;
       display: flex;
-      gap: 16px;
-      margin-top: 4px;
+      gap: 10px 22px;
       flex-wrap: wrap;
       justify-content: center;
+      margin-top: 6px;
     }
 
-    .empty-feat {
+    .idle-tools li {
       display: flex;
       align-items: center;
-      gap: 7px;
-      font-size: 0.78rem;
-      color: var(--muted);
-      font-family: 'Inter', sans-serif;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-ink-soft);
     }
 
-    .feat-icon {
-      width: 30px;
-      height: 30px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+    .idle-tools .tool-chip {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--paper-300);
+      border-radius: 9px;
+      background: var(--paper-100);
       display: flex;
       align-items: center;
       justify-content: center;
+      color: var(--ink-900);
+    }
+
+    .entry-loading {
+      background: var(--paper-50);
+      border-radius: 14px;
+      box-shadow: 0 18px 45px -22px rgba(16, 20, 48, 0.4);
+      padding: 88px 40px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .press-ring {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 3px solid var(--paper-300);
+      border-top-color: var(--stamp-600);
+      animation: press 0.9s linear infinite;
+    }
+
+    @keyframes press {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .entry-loading h3 {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      color: var(--text-ink);
+    }
+
+    .entry-loading p {
+      color: var(--text-ink-soft);
       font-size: 0.88rem;
     }
 
-    /* ── LOADING STATE ───────────────────────────────────────── */
-    .loading-state {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 28px;
-      padding: 80px;
-    }
-
-    .spin-ring {
-      width: 58px;
-      height: 58px;
-      position: relative;
-    }
-
-    .spin-ring::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      animation: spin 0.85s linear infinite;
-    }
-
-    .spin-ring::after {
-      content: '';
-      position: absolute;
-      inset: 9px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      border-bottom-color: var(--gold);
-      animation: spin 0.55s linear infinite reverse;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg)
-      }
-    }
-
-    .loading-text {
-      text-align: center;
-    }
-
-    .loading-text h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.25rem;
-      color: var(--text);
-      margin-bottom: 7px;
-    }
-
-    .loading-text p {
-      color: var(--muted);
-      font-size: 0.84rem;
-    }
-
-    /* ── STORY CARD ──────────────────────────────────────────── */
-    .story-card {
-      background: var(--card);
-      border: 1px solid var(--border-soft);
-      border-radius: 16px;
+    /* Entry sheet */
+    .entry-sheet {
+      background: var(--paper-50);
+      border: 1px solid var(--paper-300);
+      border-radius: 14px;
+      box-shadow: 0 24px 55px -24px rgba(16, 20, 48, 0.45);
       overflow: hidden;
-      animation: fadeUp 0.5s ease both;
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border);
-      margin-bottom: 0;
     }
 
-    @keyframes fadeUp {
+    .entry-sheet.stamped {
+      animation: stamp-in 0.32s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+      transform-origin: 50% 0%;
+    }
+
+    @keyframes stamp-in {
       from {
         opacity: 0;
-        transform: translateY(22px)
+        transform: scale(1.05) rotate(-0.6deg);
       }
 
       to {
         opacity: 1;
-        transform: translateY(0)
+        transform: none;
       }
     }
 
-    .story-header {
-      padding: 28px 36px 24px;
-      background: linear-gradient(145deg, #1c1a35, #161430);
-      border-bottom: 1px solid var(--border);
+    .seal-head {
+      padding: 24px 32px 20px;
+      border-bottom: 2px dashed var(--paper-300);
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 20px;
+      gap: 18px;
       flex-wrap: wrap;
     }
 
-    .story-meta {
+    .seal-row {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
       margin-bottom: 12px;
     }
 
-    .badge {
-      font-size: 0.68rem;
-      font-family: 'Inter', sans-serif;
+    .seal {
+      font-size: 0.7rem;
       font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.07em;
       text-transform: uppercase;
+      padding: 4px 11px;
+      border-radius: 20px;
+      border: 1.5px solid var(--ink-900);
+      color: var(--ink-900);
+      background: transparent;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
-    .badge-genre {
-      background: rgba(139, 92, 246, 0.12);
-      color: var(--accent-hi);
-      border: 1px solid rgba(139, 92, 246, 0.28);
+    .seal-red {
+      border-color: var(--stamp-600);
+      color: var(--stamp-700);
+      box-shadow: inset 0 0 0 1px rgba(200, 16, 46, 0.35);
     }
 
-    .badge-level {
-      background: rgba(16, 185, 129, 0.12);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.28);
+    .seal-ink {
+      background: var(--ink-900);
+      border-color: var(--ink-900);
+      color: var(--paper-100);
     }
 
-    .badge-length {
-      background: rgba(245, 158, 11, 0.12);
-      color: var(--gold-hi);
-      border: 1px solid rgba(245, 158, 11, 0.28);
+    .entry-title {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 2rem;
+      line-height: 1.2;
+      color: var(--text-ink);
+      text-wrap: balance;
     }
 
-    .badge-info {
-      background: rgba(244, 63, 94, 0.10);
-      color: #fb7185;
-      border: 1px solid rgba(244, 63, 94, 0.25);
-    }
-
-    .story-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.85rem;
-      line-height: 1.22;
-      color: var(--text);
-    }
-
-    .story-tools {
+    .sheet-tools {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-shrink: 0;
     }
 
-    .tool-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
+    .sheet-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--paper-300);
+      background: var(--paper-100);
+      color: var(--ink-900);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.95rem;
-      transition: all 0.15s;
-      outline: none;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
     }
 
-    .tool-btn:hover {
-      border-color: var(--accent-hi);
-      color: var(--accent-hi);
-      background: var(--accent-glow);
+    .sheet-btn:hover {
+      border-color: var(--ink-900);
     }
 
-    .tool-btn.on {
-      background: var(--accent-glow);
-      border-color: var(--accent);
-      color: var(--accent-hi);
+    .sheet-btn.on {
+      background: var(--ink-900);
+      border-color: var(--ink-900);
+      color: var(--paper-100);
     }
 
-    /* Font size bar */
-    .font-bar {
-      padding: 10px 36px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.02);
+    .size-bar {
+      padding: 10px 32px;
+      border-bottom: 1px solid var(--paper-200);
+      background: var(--paper-100);
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .font-bar label {
-      font-size: 0.72rem;
-      color: var(--muted);
+    .size-bar label {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--text-ink-soft);
       white-space: nowrap;
     }
 
-    .font-bar input[type=range] {
+    .size-bar input[type="range"] {
       flex: 1;
-      max-width: 140px;
-      accent-color: var(--accent);
+      max-width: 150px;
+      accent-color: var(--stamp-600);
       cursor: pointer;
     }
 
-    .font-bar .fs-val {
-      font-size: 0.72rem;
-      color: var(--muted);
+    .size-bar .fs-val {
+      font-size: 0.74rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-ink-soft);
       min-width: 24px;
     }
 
-    /* Story body */
-    .story-body {
-      padding: 36px 36px 48px;
-      max-height: 60vh;
-      overflow-y: auto;
-      padding: 8px;
+    .entry-body {
+      padding: 34px 32px 46px;
     }
 
     #story-text {
-      font-family: 'Lora', Georgia, serif;
-      font-size: 1.1rem;
-      line-height: 2;
-      color: #cdc8ec;
+      font-family: var(--serif);
+      font-size: 1.125rem;
+      line-height: 1.95;
+      color: var(--text-ink);
+      max-width: 68ch;
     }
 
     #story-text p {
       margin-bottom: 1.4em;
-      text-align: justify;
-      hyphens: auto;
     }
 
     #story-text p:first-child::first-letter {
-      font-family: 'Playfair Display', serif;
-      font-size: 3.5em;
+      font-family: var(--serif);
+      font-size: 3.4em;
+      font-weight: 800;
       float: left;
-      line-height: 0.76;
-      margin: 0.07em 0.1em 0 0;
-      color: var(--accent-hi);
-      font-weight: 700;
+      line-height: 0.8;
+      margin: 0.06em 0.12em 0 0;
+      color: var(--stamp-700);
     }
 
-    /* Highlight mode */
     .highlight-mode .word {
       cursor: pointer;
       border-radius: 3px;
       padding: 0 1px;
-      transition: background 0.1s;
     }
 
     .highlight-mode .word:hover {
-      background: var(--highlight);
+      background: var(--mark-soft);
     }
 
     .word.highlighted {
-      background: rgba(245, 158, 11, 0.2);
+      background: var(--mark);
     }
 
-    /* Blinking cursor while generating */
     .cursor {
       display: inline-block;
       width: 2px;
       height: 1em;
-      background: var(--accent);
+      background: var(--stamp-600);
       vertical-align: text-bottom;
       margin-left: 2px;
       animation: blink 0.9s step-end infinite;
@@ -995,121 +850,181 @@
 
     @keyframes blink {
       50% {
-        opacity: 0
+        opacity: 0;
       }
     }
 
-    /* ── PROGRESS BAR ────────────────────────────────────────── */
-    .progress-wrap {
+    /* Route progress */
+    .route-wrap {
       position: sticky;
       bottom: 0;
-      background: rgba(11, 10, 24, 0.9);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border);
-      padding: 9px 36px;
+      background: var(--paper-100);
+      border-top: 1px solid var(--paper-300);
+      padding: 12px 32px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-top: auto;
+      gap: 14px;
     }
 
-    .progress-track {
+    .route-track {
       flex: 1;
-      height: 3px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
+      height: 4px;
+      border-radius: 3px;
+      background: repeating-linear-gradient(90deg, var(--paper-300) 0 8px, transparent 8px 14px);
+      position: relative;
     }
 
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--gold));
-      border-radius: 2px;
-      transition: width 0.12s;
-      width: 0%;
+    .route-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      border-radius: 3px;
+      background: var(--ink-900);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 0.12s linear;
     }
 
-    .progress-label {
-      font-size: 0.7rem;
-      color: var(--muted);
-      font-family: 'Inter', sans-serif;
+    .route-fill::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: -7px;
+      border-left: 9px solid var(--stamp-600);
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+    }
+
+    .route-label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-ink-soft);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    .route-done {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--stamp-700);
       white-space: nowrap;
     }
 
-    /* ── RESPONSIVE ─────────────────────────────────────────── */
+    /* ── RESPONSIVE ───────────────────────────────────────────── */
     @media (max-width: 960px) {
-      body {
-        height: auto;
-        overflow: visible;
-        overflow-x: hidden;
-      }
-
-      main {
+      .layout {
         grid-template-columns: 1fr;
       }
 
-      .sidebar {
+      .desk {
         position: static;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-        padding: 22px 16px 28px;
+        max-height: none;
+        border-bottom: 2px solid var(--stamp-600);
       }
 
-      .reading-area {
-        height: auto;
-        padding: 28px 22px 0;
+      .stamp-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .counter {
+        padding: 26px 20px 64px;
+        min-height: auto;
       }
     }
 
     @media (max-width: 600px) {
-      header {
+      .rail {
         padding: 0 16px;
       }
 
-      .genre-grid {
-        grid-template-columns: repeat(4, 1fr);
+      .brand-tag {
+        display: none;
       }
 
-      .story-header {
-        padding: 20px 18px;
+      .stamp-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
 
-      .story-body {
-        padding: 24px 18px 36px;
+      .entry-idle,
+      .entry-loading {
+        padding: 52px 22px;
       }
 
-      .font-bar {
-        padding: 10px 18px;
+      .entry-idle h2 {
+        font-size: 1.75rem;
       }
 
-      .progress-wrap {
-        padding: 9px 18px;
+      .seal-head {
+        padding: 20px 18px 16px;
       }
 
-      .reading-area {
-        padding: 20px 16px 0;
+      .entry-title {
+        font-size: 1.55rem;
+      }
+
+      .entry-body {
+        padding: 26px 18px 36px;
+      }
+
+      .size-bar,
+      .route-wrap {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .counter {
+        padding: 18px 14px 56px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .entry-sheet.stamped,
+      .press-ring,
+      .cursor {
+        animation: none;
+      }
+
+      .stamp,
+      .visa,
+      .ticket,
+      .issue-btn,
+      .sheet-btn {
+        transition: none;
       }
     }
 
     @media print {
-
-      header,
-      .sidebar,
-      .progress-wrap,
-      .story-tools,
-      .font-bar {
+      .rail,
+      .desk,
+      .route-wrap,
+      .sheet-tools,
+      .size-bar {
         display: none !important;
       }
 
-      main {
+      body {
+        background: #fff;
+      }
+
+      .layout {
         grid-template-columns: 1fr;
       }
 
-      .story-card {
+      .counter {
+        padding: 0;
+      }
+
+      .entry-sheet {
         border: none;
-        background: white;
         box-shadow: none;
         border-radius: 0;
       }
@@ -1119,14 +1034,13 @@
         font-size: 12pt;
       }
 
-      .story-title {
+      .entry-title {
         color: #111;
       }
 
-      .badge {
-        border-color: #ccc;
-        color: #555;
-        background: #f5f5f5;
+      .seal {
+        border-color: #999;
+        color: #333;
       }
     }
   </style>
@@ -1134,198 +1048,233 @@
 
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <a class="logo" href="#">
-      <div class="logo-icon">📖</div>
-      <span class="logo-wordmark">English<strong>Aloud</strong></span>
+  <!-- CUSTOMS RAIL -->
+  <header class="rail">
+    <a class="brand" href="#" aria-label="EnglishAloud home">
+      <svg class="brand-seal" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <circle cx="20" cy="20" r="18.5" fill="#c8102e"/>
+        <circle cx="20" cy="20" r="14.5" fill="#1a2340"/>
+        <circle cx="20" cy="20" r="11" stroke="#f6f2e7" stroke-width="1.2" stroke-dasharray="3 2.4"/>
+        <path d="M14 15.5c1.8-1.2 4-1.2 6 0 2-1.2 4.2-1.2 6 0v9c-1.8-1.2-4-1.2-6 0-2-1.2-4.2-1.2-6 0z" stroke="#f6f2e7" stroke-width="1.7" stroke-linejoin="round"/>
+        <path d="M20 15.5v9" stroke="#f6f2e7" stroke-width="1.2"/>
+      </svg>
+      <span class="brand-word">English<em>Aloud</em></span>
+      <span class="brand-tag">Customs desk</span>
     </a>
-    <div class="header-right">
-      <div class="live-badge">
-        <div class="live-dot"></div>
-        Groq AI
-      </div>
+    <div class="rail-status">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span>Groq AI</span>
+      <span class="status-model">gpt-oss-20b</span>
     </div>
   </header>
 
-  <main>
+  <main class="layout">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <!-- DESK -->
+    <aside class="desk" aria-label="Story controls">
 
-      <!-- Genre -->
-      <div>
-        <div class="s-label">Genre</div>
-        <div class="genre-grid" id="genre-grid">
-          <button class="genre-tile active" data-val="Adventure">
-            <span class="gi">🗺️</span><span class="gl">Adventure</span>
+      <div class="desk-group">
+        <div class="desk-label" id="label-genre">Destination</div>
+        <div class="stamp-grid" id="genre-grid" role="group" aria-labelledby="label-genre">
+          <button class="stamp active" data-val="Adventure" aria-pressed="true">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
+            <span>Adventure</span>
           </button>
-          <button class="genre-tile" data-val="Mystery">
-            <span class="gi">🔍</span><span class="gl">Mystery</span>
+          <button class="stamp" data-val="Mystery" aria-pressed="false">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+            <span>Mystery</span>
           </button>
-          <button class="genre-tile" data-val="Science Fiction">
-            <span class="gi">🚀</span><span class="gl">Sci-Fi</span>
+          <button class="stamp" data-val="Science Fiction" aria-pressed="false">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-24 12 12)"/></svg>
+            <span>Sci-Fi</span>
           </button>
-          <button class="genre-tile" data-val="Fantasy">
-            <span class="gi">🐉</span><span class="gl">Fantasy</span>
+          <button class="stamp" data-val="Fantasy" aria-pressed="false">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V10l3-1.5V12h3V8h4v4h3V7l3 1.5V21"/><path d="M3 21h18"/><path d="M10 21v-3h4v3"/></svg>
+            <span>Fantasy</span>
           </button>
-          <button class="genre-tile" data-val="Slice of Life">
-            <span class="gi">☕</span><span class="gl">Slice of Life</span>
+          <button class="stamp" data-val="Slice of Life" aria-pressed="false">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12v5a4.5 4.5 0 0 1-4.5 4.5h-3A4.5 4.5 0 0 1 4 15z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5c0 1.2-1 1.4-1 2.6M12 3.5c0 1.2-1 1.4-1 2.6"/></svg>
+            <span>Slice of Life</span>
           </button>
-          <button class="genre-tile" data-val="Horror">
-            <span class="gi">👁️</span><span class="gl">Horror</span>
+          <button class="stamp" data-val="Horror" aria-pressed="false">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></svg>
+            <span>Horror</span>
           </button>
-          <button class="genre-tile" data-val="Romance">
-            <span class="gi">🌸</span><span class="gl">Romance</span>
+          <button class="stamp" data-val="Romance" aria-pressed="false">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M12 20S5 15.6 5 10.2A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7 2.6C19 15.6 12 20 12 20z"/></svg>
+            <span>Romance</span>
           </button>
-          <button class="genre-tile" data-val="Historical">
-            <span class="gi">🏛️</span><span class="gl">Historical</span>
+          <button class="stamp" data-val="Historical" aria-pressed="false">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M3.5 9L12 3.5 20.5 9"/><path d="M6 9.5V18M10 9.5V18M14 9.5V18M18 9.5V18M4 18.5h16M3.5 21h17"/></svg>
+            <span>Historical</span>
           </button>
         </div>
+        <div class="perf" aria-hidden="true"></div>
       </div>
 
-      <!-- Level -->
-      <div>
-        <div class="s-label">English Level</div>
-        <div class="level-row" id="level-row">
-          <button class="level-chip" data-val="A1" title="Beginner">A1</button>
-          <button class="level-chip" data-val="A2" title="Elementary">A2</button>
-          <button class="level-chip active" data-val="B1" title="Intermediate">B1</button>
-          <button class="level-chip" data-val="B2" title="Upper-Intermediate">B2</button>
-          <button class="level-chip" data-val="C1" title="Advanced">C1</button>
-          <button class="level-chip" data-val="C2" title="Proficiency">C2</button>
+      <div class="desk-group">
+        <div class="desk-label" id="label-level">Entry visa</div>
+        <div class="visa-row" id="level-row" role="group" aria-labelledby="label-level">
+          <button class="visa" data-val="A1" title="Beginner" aria-pressed="false">A1</button>
+          <button class="visa" data-val="A2" title="Elementary" aria-pressed="false">A2</button>
+          <button class="visa active" data-val="B1" title="Intermediate" aria-pressed="true">B1</button>
+          <button class="visa" data-val="B2" title="Upper-Intermediate" aria-pressed="false">B2</button>
+          <button class="visa" data-val="C1" title="Advanced" aria-pressed="false">C1</button>
+          <button class="visa" data-val="C2" title="Proficiency" aria-pressed="false">C2</button>
         </div>
+        <div class="perf" aria-hidden="true"></div>
       </div>
 
-      <!-- Length -->
-      <div>
-        <div class="s-label">Story Length</div>
-        <div class="length-row" id="length-row">
-          <button class="length-opt" data-val="short (about 200 words)">
-            <span class="lo-icon">📄</span>
-            <span class="lo-name">Short</span>
-            <span class="lo-sub">~200 words</span>
+      <div class="desk-group">
+        <div class="desk-label" id="label-length">Stay duration</div>
+        <div class="ticket-row" id="length-row" role="group" aria-labelledby="label-length">
+          <button class="ticket" data-val="short (about 200 words)" aria-pressed="false">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/></svg>
+            <span class="t-name">Short</span>
+            <span class="t-sub">~200 words</span>
           </button>
-          <button class="length-opt active" data-val="medium (about 500 words)">
-            <span class="lo-icon">📑</span>
-            <span class="lo-name">Medium</span>
-            <span class="lo-sub">~500 words</span>
+          <button class="ticket active" data-val="medium (about 500 words)" aria-pressed="true">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h7l4 4v11H8z"/><path d="M4 7h7l1.5 1.5V21H4z"/></svg>
+            <span class="t-name">Medium</span>
+            <span class="t-sub">~500 words</span>
           </button>
-          <button class="length-opt" data-val="long (about 1000 words)">
-            <span class="lo-icon">📚</span>
-            <span class="lo-name">Long</span>
-            <span class="lo-sub">~1000 words</span>
+          <button class="ticket" data-val="long (about 1000 words)" aria-pressed="false">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M4 4.5h6.5V20H4zM13.5 4.5H20V20h-6.5z"/><path d="M11.5 4.5V20"/></svg>
+            <span class="t-name">Long</span>
+            <span class="t-sub">~1000 words</span>
           </button>
         </div>
+        <div class="perf" aria-hidden="true"></div>
       </div>
 
-      <!-- Topic -->
-      <div>
-        <div class="s-label">
-          Topic
-          <span
-            style="text-transform:none;letter-spacing:0;font-weight:400;font-size:0.85em;color:var(--border-soft)">optional</span>
-        </div>
-        <input id="topic-input" class="topic-input" type="text" placeholder="e.g. friendship, the ocean, a lost key…">
+      <div class="desk-group">
+        <label class="desk-label" for="topic-input">Purpose <span class="opt">optional</span></label>
+        <input id="topic-input" class="field" type="text" placeholder="e.g. friendship, the ocean, a lost key…">
+        <div class="perf" aria-hidden="true"></div>
       </div>
 
-      <!-- Groq API Key -->
-      <div>
-        <div class="s-label">Groq API Key</div>
-        <div class="api-key-wrap">
-          <input id="groq-key-input" class="api-key-input" type="password" placeholder="gsk_••••••••••••••••"
+      <div class="desk-group">
+        <label class="desk-label" for="groq-key-input">Groq API Key</label>
+        <div class="key-wrap">
+          <input id="groq-key-input" class="field" type="password" placeholder="gsk_••••••••••••••••"
             autocomplete="off" spellcheck="false">
-          <button class="api-key-toggle" id="groq-key-toggle" type="button" title="Show / hide" aria-label="Show or hide API key">👁️</button>
+          <button class="key-toggle" id="groq-key-toggle" type="button" title="Show / hide" aria-label="Show or hide API key" aria-pressed="false">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></svg>
+          </button>
         </div>
-        <div class="api-key-hint">
-          <span id="groq-key-status" class="api-key-status empty">● No guardada</span>
-          <span>·</span>
+        <div class="key-hint">
+          <span id="groq-key-status" class="key-status empty" role="status">● No guardada</span>
+          <span aria-hidden="true">·</span>
           <a href="https://console.groq.com/keys" target="_blank" rel="noopener">Crear key en Groq</a>
         </div>
-        <div class="api-key-actions">
-          <button class="api-key-btn save" id="groq-key-save" type="button" onclick="saveGroqKey()">Guardar</button>
-          <button class="api-key-btn" id="groq-key-clear" type="button" onclick="clearGroqKey()">Borrar</button>
+        <div class="key-actions">
+          <button class="key-btn save" id="groq-key-save" type="button" onclick="saveGroqKey()">Guardar</button>
+          <button class="key-btn" id="groq-key-clear" type="button" onclick="clearGroqKey()">Borrar</button>
         </div>
+        <div class="perf" aria-hidden="true"></div>
       </div>
 
-      <!-- Generate -->
-      <button class="generate-btn" id="gen-btn" onclick="generateStory()">
-        <span id="gen-icon">✨</span>
+      <button class="issue-btn" id="gen-btn" onclick="generateStory()">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5" stroke-dasharray="2.6 2.2"/><path d="M12 9.4v5.2M9.4 12h5.2"/></svg>
         <span id="gen-label">Generate Story</span>
       </button>
 
-      <div class="error-banner" id="error-banner"></div>
+      <div class="error-banner" id="error-banner" role="alert"></div>
 
     </aside>
 
-    <!-- READING AREA -->
-    <section class="reading-area" id="reading-area">
+    <!-- COUNTER -->
+    <section class="counter" id="reading-area" aria-label="Reading area">
 
-      <!-- Empty state -->
-      <div class="empty-state" id="empty-state">
-        <div class="empty-orb">📚</div>
-        <h2>Ready to read?</h2>
-        <p>
-          Choose a genre, your English level, and story length —<br>
-          then press <strong>Generate Story</strong> for a fresh story every time.
-        </p>
-        <div class="empty-feats">
-          <div class="empty-feat">
-            <div class="feat-icon">🔊</div> Read aloud
-          </div>
-          <div class="empty-feat">
-            <div class="feat-icon">🖊️</div> Highlight
-          </div>
-          <div class="empty-feat">
-            <div class="feat-icon">📋</div> Copy text
-          </div>
-          <div class="empty-feat">
-            <div class="feat-icon">🖨️</div> Print
-          </div>
+      <div class="sheet">
+        <!-- Idle entry -->
+        <div class="entry-idle" id="empty-state">
+          <svg class="big-seal" viewBox="0 0 104 104" fill="none" aria-hidden="true">
+            <circle cx="52" cy="52" r="49" fill="#1a2340"/>
+            <circle cx="52" cy="52" r="40" stroke="#f6f2e7" stroke-width="1.6" stroke-dasharray="4 3.2"/>
+            <circle cx="52" cy="52" r="30" stroke="#c8102e" stroke-width="2.4"/>
+            <path d="M38 44c4.4-3 9.2-3 14 0 4.8-3 9.6-3 14 0v20c-4.4-3-9.2-3-14 0-4.8-3-9.6-3-14 0z" stroke="#f6f2e7" stroke-width="2.4" stroke-linejoin="round"/>
+            <path d="M52 44v20" stroke="#f6f2e7" stroke-width="1.6"/>
+          </svg>
+          <h2>Ready to read?</h2>
+          <p>
+            Declare your destination, visa, and stay at the desk —<br>
+            then press <strong>Generate Story</strong> for a fresh entry sheet every time.
+          </p>
+          <ul class="idle-tools">
+            <li>
+              <span class="tool-chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5z"/><path d="M16 9a4.2 4.2 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></span>
+              Read aloud
+            </li>
+            <li>
+              <span class="tool-chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5l3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg></span>
+              Highlight
+            </li>
+            <li>
+              <span class="tool-chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2.5"/></svg></span>
+              Copy text
+            </li>
+            <li>
+              <span class="tool-chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8V3.5h10V8"/><rect x="4" y="8" width="16" height="8" rx="1.5"/><path d="M7 13.5h10V20H7z"/></svg></span>
+              Print
+            </li>
+          </ul>
         </div>
-      </div>
 
-      <!-- Loading -->
-      <div class="loading-state" id="loading-state" style="display:none">
-        <div class="spin-ring"></div>
-        <div class="loading-text">
-          <h3>Crafting your story…</h3>
-          <p>This usually takes a few seconds</p>
-        </div>
-      </div>
-
-      <!-- Story card -->
-      <div class="story-card" id="story-card" style="display:none">
-        <div class="story-header">
+        <!-- Loading -->
+        <div class="entry-loading" id="loading-state" style="display:none">
+          <div class="press-ring" aria-hidden="true"></div>
           <div>
-            <div class="story-meta" id="story-meta"></div>
-            <div class="story-title" id="story-title">—</div>
-          </div>
-          <div class="story-tools">
-            <button class="tool-btn" id="highlight-btn" title="Highlight words" onclick="toggleHighlight()">🖊️</button>
-            <button class="tool-btn" id="tts-btn" title="Read aloud" onclick="toggleTTS()">🔊</button>
-            <button class="tool-btn" id="copy-btn" title="Copy story" onclick="copyStory()">📋</button>
-            <button class="tool-btn" title="Print story" onclick="window.print()">🖨️</button>
+            <h3>Stamping your entry…</h3>
+            <p>This usually takes a few seconds</p>
           </div>
         </div>
 
-        <div class="font-bar">
-          <label>Text size</label>
-          <input type="range" min="14" max="26" value="18" oninput="setFontSize(this.value)">
-          <span class="fs-val" id="font-size-label">18</span>
-        </div>
+        <!-- Entry sheet -->
+        <article class="entry-sheet" id="story-card" style="display:none" aria-live="polite">
+          <div class="seal-head">
+            <div>
+              <div class="seal-row" id="story-meta"></div>
+              <h2 class="entry-title" id="story-title">—</h2>
+            </div>
+            <div class="sheet-tools">
+              <button class="sheet-btn" id="highlight-btn" title="Highlight words" aria-pressed="false" onclick="toggleHighlight()">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5l3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg>
+                <span class="sr-only">Highlight words</span>
+              </button>
+              <button class="sheet-btn" id="tts-btn" title="Read aloud" aria-pressed="false" onclick="toggleTTS()">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5z"/><path d="M16 9a4.2 4.2 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>
+                <span class="sr-only">Read aloud</span>
+              </button>
+              <button class="sheet-btn" id="copy-btn" title="Copy story" onclick="copyStory()">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2.5"/></svg>
+                <span class="sr-only">Copy story</span>
+              </button>
+              <button class="sheet-btn" title="Print story" onclick="window.print()">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8V3.5h10V8"/><rect x="4" y="8" width="16" height="8" rx="1.5"/><path d="M7 13.5h10V20H7z"/></svg>
+                <span class="sr-only">Print story</span>
+              </button>
+            </div>
+          </div>
 
-        <div class="story-body">
-          <div id="story-text"></div>
-        </div>
-      </div>
+          <div class="size-bar">
+            <label for="font-size-range">Text size</label>
+            <input id="font-size-range" type="range" min="14" max="26" value="18" oninput="setFontSize(this.value)">
+            <span class="fs-val" id="font-size-label">18</span>
+          </div>
 
-      <!-- Progress bar -->
-      <div class="progress-wrap" id="progress-bar" style="display:none">
-        <div class="progress-track">
-          <div class="progress-fill" id="progress-fill"></div>
-        </div>
-        <div class="progress-label" id="progress-label">0%</div>
+          <div class="entry-body">
+            <div id="story-text"></div>
+          </div>
+
+          <div class="route-wrap" id="progress-bar" style="display:none">
+            <div class="route-track" aria-hidden="true">
+              <div class="route-fill" id="progress-fill"></div>
+            </div>
+            <span class="route-done" id="route-flag" hidden>Entry logged</span>
+            <div class="route-label" id="progress-label">0%</div>
+          </div>
+        </article>
       </div>
 
     </section>
@@ -1357,11 +1306,11 @@
       if (!dot || !inp) return;
       if (has) {
         dot.textContent = '● Guardada ✓';
-        dot.className = 'api-key-status saved';
+        dot.className = 'key-status saved';
         inp.classList.add('has-key');
       } else {
         dot.textContent = '● No guardada';
-        dot.className = 'api-key-status empty';
+        dot.className = 'key-status empty';
         inp.classList.remove('has-key');
       }
       const clearBtn = document.getElementById('groq-key-clear');
@@ -1409,9 +1358,9 @@
         }
         if (toggle && inp) {
           toggle.addEventListener('click', () => {
-            const isPw = inp.type === 'password';
-            inp.type = isPw ? 'text' : 'password';
-            toggle.textContent = isPw ? '🙈' : '👁️';
+            const show = inp.type === 'password';
+            inp.type = show ? 'text' : 'password';
+            toggle.setAttribute('aria-pressed', String(show));
           });
         }
       });
@@ -1426,26 +1375,38 @@
     })();
 
     // ── Option wiring ──────────────────────────────────────────
-    document.querySelectorAll('#genre-grid .genre-tile').forEach(btn => {
+    document.querySelectorAll('#genre-grid .stamp').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('#genre-grid .genre-tile').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#genre-grid .stamp').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         selectedGenre = btn.dataset.val;
       });
     });
 
-    document.querySelectorAll('#level-row .level-chip').forEach(btn => {
+    document.querySelectorAll('#level-row .visa').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('#level-row .level-chip').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#level-row .visa').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         selectedLevel = btn.dataset.val;
       });
     });
 
-    document.querySelectorAll('#length-row .length-opt').forEach(btn => {
+    document.querySelectorAll('#length-row .ticket').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('#length-row .length-opt').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#length-row .ticket').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         selectedLength = btn.dataset.val;
       });
     });
@@ -1480,14 +1441,14 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
       // UI: show loading
       document.getElementById('empty-state').style.display = 'none';
       document.getElementById('loading-state').style.display = 'flex';
-      document.getElementById('story-card').style.display = 'none';
+      const card = document.getElementById('story-card');
+      card.style.display = 'none';
+      card.classList.remove('stamped');
       document.getElementById('progress-bar').style.display = 'none';
 
       const btn = document.getElementById('gen-btn');
       btn.disabled = true;
-      btn.classList.add('loading');
-      document.getElementById('gen-label').textContent = 'Generating…';
-      document.getElementById('gen-icon').textContent = '⏳';
+      document.getElementById('gen-label').textContent = 'Stamping…';
 
       try {
         // auto-save typed key if user never pressed Guardar
@@ -1568,17 +1529,20 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
 
         // Show story
         document.getElementById('loading-state').style.display = 'none';
-        document.getElementById('story-card').style.display = 'block';
+        card.style.display = 'block';
+        // restart the stamp-in signature motion on every arrival
+        void card.offsetWidth;
+        card.classList.add('stamped');
         document.getElementById('progress-bar').style.display = 'flex';
 
         const wordCount = body.split(/\s+/).filter(Boolean).length;
         const readMin = Math.max(1, Math.round(wordCount / 200));
 
         document.getElementById('story-meta').innerHTML = `
-          <span class="badge badge-genre">${selectedGenre}</span>
-          <span class="badge badge-level">${selectedLevel}</span>
-          <span class="badge badge-length">${selectedLength.split(' ')[0]}</span>
-          <span class="badge badge-info">${wordCount} words · ${readMin} min read</span>
+          <span class="seal seal-red">${selectedGenre}</span>
+          <span class="seal seal-ink">${selectedLevel}</span>
+          <span class="seal">${selectedLength.split(' ')[0]}</span>
+          <span class="seal">${wordCount} words · ${readMin} min read</span>
         `;
         document.getElementById('story-title').textContent = title;
 
@@ -1594,9 +1558,7 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
       } finally {
         isGenerating = false;
         btn.disabled = false;
-        btn.classList.remove('loading');
         document.getElementById('gen-label').textContent = 'Generate Story';
-        document.getElementById('gen-icon').textContent = '✨';
       }
     }
 
@@ -1631,7 +1593,9 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
     // ── Highlight ──────────────────────────────────────────────
     function toggleHighlight() {
       highlightMode = !highlightMode;
-      document.getElementById('highlight-btn').classList.toggle('on', highlightMode);
+      const btn = document.getElementById('highlight-btn');
+      btn.classList.toggle('on', highlightMode);
+      btn.setAttribute('aria-pressed', String(highlightMode));
       document.getElementById('story-text').classList.toggle('highlight-mode', highlightMode);
     }
 
@@ -1646,18 +1610,25 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
       ttsUtterance.rate = 0.88;
       ttsUtterance.onend = () => {
         ttsActive = false;
-        document.getElementById('tts-btn').classList.remove('on');
+        const b = document.getElementById('tts-btn');
+        b.classList.remove('on');
+        b.setAttribute('aria-pressed', 'false');
       };
       speechSynthesis.speak(ttsUtterance);
       ttsActive = true;
-      document.getElementById('tts-btn').classList.add('on');
+      const b = document.getElementById('tts-btn');
+      b.classList.add('on');
+      b.setAttribute('aria-pressed', 'true');
     }
 
     function stopTTS() {
       if ('speechSynthesis' in window) speechSynthesis.cancel();
       ttsActive = false;
       const btn = document.getElementById('tts-btn');
-      if (btn) btn.classList.remove('on');
+      if (btn) {
+        btn.classList.remove('on');
+        btn.setAttribute('aria-pressed', 'false');
+      }
     }
 
     // ── Copy ───────────────────────────────────────────────────
@@ -1667,27 +1638,39 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
       try {
         await navigator.clipboard.writeText(`${title}\n\n${body}`);
         const btn = document.getElementById('copy-btn');
-        btn.textContent = '✅';
-        setTimeout(() => { btn.textContent = '📋'; }, 1600);
+        btn.classList.add('on');
+        setTimeout(() => { btn.classList.remove('on'); }, 1600);
       } catch { alert('Could not copy to clipboard.'); }
     }
 
     // ── Scroll progress ────────────────────────────────────────
     function setupScrollProgress() {
-      const area = document.getElementById('reading-area');
       const fill = document.getElementById('progress-fill');
       const label = document.getElementById('progress-label');
+      const flag = document.getElementById('route-flag');
 
       function update() {
-        const total = area.scrollHeight - area.clientHeight;
-        const pct = total > 0 ? Math.round((area.scrollTop / total) * 100) : 0;
-        fill.style.width = pct + '%';
+        const card = document.getElementById('story-card');
+        if (!card || card.style.display === 'none') return;
+        const y = window.scrollY || document.documentElement.scrollTop || 0;
+        const top = card.getBoundingClientRect().top + y;
+        const total = card.offsetHeight - window.innerHeight + 160;
+        const passed = y + window.innerHeight - top - 120;
+        const pct = total > 0 ? Math.min(100, Math.max(0, Math.round((passed / total) * 100))) : 0;
+        fill.style.transform = 'scaleX(' + pct / 100 + ')';
         label.textContent = pct + '%';
+        const done = pct >= 100;
+        if (flag) flag.hidden = !done;
+        label.style.display = done ? 'none' : '';
       }
 
-      area.removeEventListener('scroll', area._progressHandler);
-      area._progressHandler = update;
-      area.addEventListener('scroll', update);
+      if (window._routeHandler) {
+        window.removeEventListener('scroll', window._routeHandler);
+        window.removeEventListener('resize', window._routeHandler);
+      }
+      window._routeHandler = update;
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
       update();
     }
 
