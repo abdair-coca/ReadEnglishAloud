@@ -2416,6 +2416,16 @@
     }
 
     // ── Generate ───────────────────────────────────────────────
+    async function httpErr(res) {
+      const t = await res.text();
+      try {
+        const j = JSON.parse(t);
+        const d = j.detail || j.error || t;
+        return `${res.status}: ${String(d).slice(0, 300)}`;
+      } catch {
+        return `${res.status}: ${t.slice(0, 300)}`;
+      }
+    }
     async function generateStory() {
       if (isGenerating) return;
       isGenerating = true;
@@ -2485,11 +2495,11 @@
         }
 
         if (!res.ok) {
-          const errText = await res.text();
-          if (errText.includes('model_not_found') || errText.includes('does not exist')) {
+          const info = await httpErr(res);
+          if (info.includes('model_not_found') || info.includes('does not exist')) {
             throw new Error('Modelo no disponible en Groq — recargá y reintentá.');
           }
-          throw new Error(`API error ${res.status}: ${errText.slice(0, 300)}`);
+          throw new Error(`API error ${info}`);
         }
 
         const data = await res.json();
@@ -2768,9 +2778,8 @@
           signal: chatAbort.signal,
         });
         if (!res.ok) {
-          const t = await res.text();
           if (res.status === 404) throw new Error('Chat needs the server — run with `vercel dev`.');
-          throw new Error(res.status === 409 ? 'Already sending — wait a moment.' : `Chat error ${res.status}: ${t.slice(0, 300)}`);
+          throw new Error(res.status === 409 ? 'Already sending — wait a moment.' : `Chat error ${await httpErr(res)}`);
         }
         const data = await res.json();
         pushMessage(story.id, { id: newId(), role: 'assistant', text: (data.reply || '').trim(), created_at: new Date().toISOString() });
@@ -2846,9 +2855,8 @@
           signal: evalAbort.signal,
         });
         if (!res.ok) {
-          const t = await res.text();
           if (res.status === 404) throw new Error('Evaluation needs the server — run with `vercel dev`.');
-          throw new Error(res.status === 409 ? 'Evaluation already running.' : `Evaluation error ${res.status}: ${t.slice(0, 300)}`);
+          throw new Error(res.status === 409 ? 'Evaluation already running.' : `Evaluation error ${await httpErr(res)}`);
         }
         const data = await res.json();
         if (!data.evaluable) {

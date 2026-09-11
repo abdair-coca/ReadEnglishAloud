@@ -60,6 +60,7 @@ module.exports = async function handler(req, res) {
     return res.status(err.status || 502).json({
       error: err.code === 'provider_timeout' ? 'provider timeout' : 'chat failed',
       code: err.code || 'chat_failed',
+      detail: String(err.message || '').slice(0, 500),
     });
   }
 };

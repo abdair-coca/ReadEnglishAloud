@@ -137,7 +137,28 @@ test('evaluate: score range enforced 0-100', () => {
   assert.equal(bad2.ok, false);
 });
 
-// ── JSON recovery ──
+// ── Provider compat: gpt-oss rejects response_format (400) ──
+test('payloads avoid response_format (gpt-oss compat)', async () => {
+  const seen = [];
+  const cap = (content) => async (url, opts) => {
+    seen.push(JSON.parse(opts.body));
+    return { ok: true, status: 200, json: async () => ({ choices: [{ message: { content } }] }) };
+  };
+  const story = 'word '.repeat(60);
+  const h = require('../api/generate');
+  await withFetch(
+    () => h({ method: 'POST', headers: {}, body: { genre: 'Mystery', level: 'B1', length: 'medium', groqApiKey: 'gsk_t' } }, mockRes()),
+    cap(JSON.stringify({ title: 'T', story }))
+  );
+  const he = require('../api/evaluate');
+  const msgs = ['I really think Lily found the hidden map because she was bravely exploring the dark cave for many hours yesterday evening', 'She decided to hide it afterwards since she deeply distrusted the mysterious stranger who had been following her all day long', 'In my personal opinion the ending clearly shows she finally learned to trust herself and her own careful judgment under pressure', 'If I had been there with her I would have asked the villagers for help before entering the dangerous tunnel alone'];
+  await withFetch(
+    () => he({ method: 'POST', headers: {}, body: { story: 'Story. '.repeat(30), userMessages: msgs, groqApiKey: 'gsk_t' } }, mockRes()),
+    cap(JSON.stringify({ score: 80, scores: { comprehension: 85, grammar: 75, vocabulary: 80, communication: 80 }, summary: 's', mistakes: [], recommendations: [] }))
+  );
+  assert.equal(seen.length, 2);
+  assert.ok(seen.every((p) => !('response_format' in p)), 'no response_format in any payload');
+});
 test('parseJsonSafe: fences + surrounding text recovered', () => {
   const r = parseJsonSafe('```json\n{"title":"T","story":"' + 'w '.repeat(50) + '"}\n```');
   assert.equal(r.ok, true);

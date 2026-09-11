@@ -50,13 +50,13 @@ module.exports = async function handler(req, res) {
   try {
     const { story, lesson_focus, userMessages } = v.value;
     const weights = lesson_focus ? CONFIG.rubric.withFocus : CONFIG.rubric.base;
+    // NOTE: no response_format — gpt-oss via Groq rejects json_object with 400.
     const payload = {
       model: CONFIG.model,
       messages: [{ role: 'user', content: evalUser({ story, lesson_focus, userMessages, weights }) }],
       temperature: CONFIG.temperatures.evaluation,
       max_completion_tokens: CONFIG.maxTokens.evaluation,
       top_p: 1,
-      response_format: { type: 'json_object' },
     };
     const data = await callGroq({ apiKey, payload, timeoutMs: CONFIG.timeoutsMs.evaluation, op: 'evaluate' });
     const raw = extractContent(data);
@@ -92,6 +92,7 @@ module.exports = async function handler(req, res) {
     return res.status(err.status || 502).json({
       error: err.code === 'provider_timeout' ? 'provider timeout' : 'evaluation failed',
       code: err.code || 'evaluate_failed',
+      detail: String(err.message || '').slice(0, 500),
     });
   }
 };

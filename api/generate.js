@@ -59,13 +59,14 @@ module.exports = async function handler(req, res) {
       }
       const { genre, level, length, topic, lesson_focus } = v.value;
       const words = LENGTHS[length].words;
+      // NOTE: no response_format — gpt-oss via Groq rejects json_object with 400.
+      // The prompt demands JSON-only; parseJsonSafe recovers fences/prose.
       const payload = {
         model: CONFIG.model,
         messages: [{ role: 'user', content: storyUserPrompt({ genre, level, length, words, topic, lesson_focus }) }],
         temperature: CONFIG.temperatures.story,
         max_completion_tokens: CONFIG.maxTokens.story,
         top_p: 0.95,
-        response_format: { type: 'json_object' },
       };
       const data = await callGroq({ apiKey, payload, timeoutMs: CONFIG.timeoutsMs.story, op: 'story' });
       const raw = extractContent(data);
@@ -100,6 +101,6 @@ module.exports = async function handler(req, res) {
   } catch (err) {
     const status = err.status || 502;
     const code = err.code || 'story_failed';
-    return res.status(status).json({ error: code === 'provider_timeout' ? 'provider timeout' : 'story generation failed', code });
+    return res.status(status).json({ error: code === 'provider_timeout' ? 'provider timeout' : 'story generation failed', code, detail: String(err.message || '').slice(0, 500) });
   }
 };
