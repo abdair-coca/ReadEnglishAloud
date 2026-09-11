@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EnglishAloud — AI Story Generator</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231a2340'/%3E%3Ccircle cx='16' cy='16' r='11.5' fill='none' stroke='%23f6f2e7' stroke-width='1.4' stroke-dasharray='3 2.4'/%3E%3Cpath d='M11 12.5c1.6-1.1 3.4-1.1 5 0 1.6-1.1 3.4-1.1 5 0v8c-1.6-1.1-3.4-1.1-5 0-1.6-1.1-3.4-1.1-5 0z' fill='none' stroke='%23f6f2e7' stroke-width='1.8' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='16' r='15' fill='none' stroke='%23c8102e' stroke-width='2'/%3E%3C/svg%3E">
+  <title>EnglishAloud — AI Stories for Real Progress</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c2a4a'/%3E%3Cpath d='M9 11c2-1.4 4.2-1.4 7 0 2.8-1.4 5-1.4 7 0v10c-2-1.4-4.2-1.4-7 0-2.8-1.4-5-1.4-7 0z' fill='none' stroke='%23f7f3ea' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M16 11v10' stroke='%23e0653a' stroke-width='2'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -21,29 +21,32 @@
     }
 
     :root {
-      --ink-950: #0e1430;
-      --ink-900: #1a2340;
-      --ink-800: #24304f;
-      --ink-line: rgba(244, 241, 230, 0.16);
-      --ink-line-soft: rgba(244, 241, 230, 0.09);
-      --paper-50: #fbf8f0;
-      --paper-100: #f6f2e7;
-      --paper-200: #eae3d0;
-      --paper-300: #d9cdae;
-      --stamp-700: #a00d26;
-      --stamp-600: #c8102e;
-      --stamp-ink-100: rgba(200, 16, 46, 0.14);
-      --stamp-on-ink: #ff8fa3;
-      --text-ink: #222a45;
-      --text-ink-soft: #5f6053;
-      --text-paper: #f4f1e6;
-      --text-paper-soft: #c6cddd;
-      --mark: rgba(255, 205, 41, 0.45);
-      --mark-soft: rgba(255, 205, 41, 0.22);
-      --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --bg: #f4efe6;
+      --bg-soft: #ece5d6;
+      --surface: #fffdf8;
+      --surface-2: #faf6ec;
+      --line: #e4dac6;
+      --line-soft: #ede5d3;
+      --ink: #1c2a4a;
+      --ink-2: #33415e;
+      --muted: #5c6478;
+      --faint: #8a8fa0;
+      --accent: #c8102e;
+      --accent-deep: #a00d26;
+      --accent-soft: #fbe9e6;
+      --coral: #e0653a;
+      --gold: #c98f2d;
+      --green: #2e7d4f;
+      --amber: #c98f2d;
       --serif: "Literata", Georgia, "Times New Roman", serif;
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-stamp: cubic-bezier(0.2, 0.9, 0.25, 1);
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 16px;
+      --r-pill: 999px;
+      --shadow: 0 1px 2px rgba(28, 42, 74, 0.05), 0 12px 32px -16px rgba(28, 42, 74, 0.18);
+      --shadow-sm: 0 1px 2px rgba(28, 42, 74, 0.06), 0 6px 18px -10px rgba(28, 42, 74, 0.16);
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     html {
@@ -51,27 +54,41 @@
     }
 
     body {
-      background: var(--paper-200);
-      color: var(--text-ink);
+      background: var(--bg);
+      color: var(--ink);
       font-family: var(--sans);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
     }
 
     ::selection {
-      background: var(--stamp-600);
+      background: var(--accent);
       color: #fff;
     }
 
     :focus-visible {
-      outline: 2px solid var(--stamp-600);
+      outline: 2px solid var(--accent);
       outline-offset: 2px;
-      border-radius: 4px;
+      border-radius: 6px;
     }
 
-    .desk :focus-visible {
-      outline-color: var(--stamp-on-ink);
+    #story-text, #chat-log, input, textarea {
+      caret-color: var(--accent);
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cfc4ab;
+      border-radius: 8px;
+      border: 2px solid var(--bg);
     }
 
     svg.ic {
@@ -89,597 +106,162 @@
       white-space: nowrap;
     }
 
-    /* ── CUSTOMS RAIL ─────────────────────────────────────────── */
-    .rail {
-      background: var(--ink-900);
-      color: var(--text-paper);
-      border-bottom: 2px solid var(--stamp-600);
-      padding: 0 32px;
-      height: 62px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+    button {
+      font-family: var(--sans);
+    }
+
+    /* ── TOP NAV ──────────────────────────────────────────────── */
+    .topnav {
       position: sticky;
       top: 0;
       z-index: 300;
+      background: rgba(255, 253, 248, 0.92);
+      backdrop-filter: saturate(1.2) blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topnav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       text-decoration: none;
-      color: var(--text-paper);
+      color: var(--ink);
+      margin-right: 20px;
     }
 
-    .brand-seal {
-      width: 36px;
-      height: 36px;
-      flex-shrink: 0;
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bg);
+      font-family: var(--serif);
+      font-weight: 800;
+      font-size: 1rem;
     }
 
     .brand-word {
       font-family: var(--serif);
       font-weight: 700;
-      font-size: 1.3rem;
-      letter-spacing: 0.01em;
-      line-height: 1;
+      font-size: 1.18rem;
+      letter-spacing: -0.01em;
     }
 
     .brand-word em {
       font-style: normal;
-      color: var(--stamp-on-ink);
+      color: var(--accent);
     }
 
-    .brand-tag {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-paper-soft);
-      border: 1px solid var(--ink-line);
-      border-radius: 20px;
-      padding: 3px 10px;
+    .nav-links {
+      display: flex;
+      gap: 4px;
+      margin-left: 8px;
+    }
+
+    .nav-btn {
+      border: none;
+      background: transparent;
+      color: var(--ink-2);
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 9px 16px;
+      border-radius: var(--r-pill);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-btn:hover {
+      background: var(--surface-2);
+      color: var(--ink);
+    }
+
+    .nav-btn[aria-current="page"] {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .nav-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .model-chip {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: var(--r-pill);
+      padding: 4px 11px;
+      font-variant-numeric: tabular-nums;
       white-space: nowrap;
     }
 
-    .rail-status {
+    .key-pill {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.76rem;
-      font-weight: 600;
-      color: var(--text-paper-soft);
-      white-space: nowrap;
-    }
-
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #35d07f;
-      box-shadow: 0 0 0 3px rgba(53, 208, 127, 0.18);
-    }
-
-    .status-model {
-      font-variant-numeric: tabular-nums;
-      border: 1px solid var(--ink-line);
-      border-radius: 6px;
-      padding: 2px 8px;
-      font-size: 0.7rem;
-    }
-
-    /* ── LAYOUT ───────────────────────────────────────────────── */
-    .layout {
-      flex: 1;
-      width: 100%;
-      max-width: 1440px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 324px 1fr;
-      align-items: start;
-    }
-
-    /* ── DESK (customs desk) ──────────────────────────────────── */
-    .desk {
-      background: var(--ink-900);
-      color: var(--text-paper);
-      padding: 26px 18px 36px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      position: sticky;
-      top: 62px;
-      max-height: calc(100vh - 62px);
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--ink-800) transparent;
-    }
-
-    .desk::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .desk::-webkit-scrollbar-thumb {
-      background: var(--ink-800);
-      border-radius: 4px;
-    }
-
-    .desk-group {
-      border: none;
-    }
-
-    .desk-label {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-paper-soft);
-      margin-bottom: 10px;
-    }
-
-    .desk-label .opt {
-      text-transform: none;
-      letter-spacing: 0;
-      font-weight: 400;
-      font-size: 0.72rem;
-      color: rgba(198, 205, 221, 0.6);
-    }
-
-    .perf {
-      height: 9px;
-      background-image: radial-gradient(circle, rgba(244, 241, 230, 0.22) 1.3px, transparent 1.4px);
-      background-size: 10px 9px;
-      background-repeat: repeat-x;
-      background-position: center;
-      margin: 2px 0 0;
-    }
-
-    /* Destination stamps */
-    .stamp-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .stamp {
-      background: rgba(244, 241, 230, 0.04);
-      border: 1px solid var(--ink-line);
-      border-radius: 10px;
-      padding: 12px 6px 10px;
-      cursor: pointer;
-      color: var(--text-paper-soft);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--sans);
-      font-size: 0.74rem;
-      font-weight: 600;
-      transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease, transform 0.16s ease;
-    }
-
-    .stamp:hover {
-      border-color: var(--stamp-on-ink);
-      color: var(--text-paper);
-      transform: translateY(-1px);
-    }
-
-    .stamp.active {
-      background: var(--stamp-ink-100);
-      border-color: var(--stamp-600);
-      box-shadow: inset 0 0 0 1px var(--stamp-600);
-      color: var(--text-paper);
-    }
-
-    .stamp.active svg.ic {
-      color: var(--stamp-on-ink);
-    }
-
-    /* Visa chips — one exact scale for every level */
-    .visa-row {
-      display: flex;
-      gap: 6px;
-    }
-
-    .visa {
-      flex: 1;
-      background: rgba(244, 241, 230, 0.04);
-      border: 1px solid var(--ink-line);
-      color: var(--text-paper-soft);
-      padding: 9px 4px;
-      border-radius: 8px;
-      font-family: var(--sans);
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      text-align: center;
-      transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
-    }
-
-    .visa:hover {
-      border-color: var(--text-paper-soft);
-      color: var(--text-paper);
-    }
-
-    .visa.active {
-      background: var(--paper-100);
-      border-color: var(--paper-100);
-      color: var(--ink-900);
-      box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.55);
-    }
-
-    /* Duration tickets */
-    .ticket-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    .ticket {
-      flex: 1;
-      background: rgba(244, 241, 230, 0.04);
-      border: 1px dashed rgba(244, 241, 230, 0.28);
-      color: var(--text-paper-soft);
-      padding: 11px 6px 10px;
-      border-radius: 10px;
-      font-family: var(--sans);
-      cursor: pointer;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease;
-    }
-
-    .ticket:hover {
-      border-color: var(--stamp-on-ink);
-      color: var(--text-paper);
-    }
-
-    .ticket.active {
-      background: var(--stamp-ink-100);
-      border-style: solid;
-      border-color: var(--stamp-600);
-      color: var(--text-paper);
-    }
-
-    .ticket .t-name {
-      font-weight: 700;
-      font-size: 0.8rem;
-    }
-
-    .ticket.active .t-name {
-      color: var(--stamp-on-ink);
-    }
-
-    .ticket .t-sub {
-      font-size: 0.7rem;
-      font-variant-numeric: tabular-nums;
-      color: rgba(198, 205, 221, 0.65);
-    }
-
-    .ticket.active .t-sub {
-      color: rgba(255, 143, 163, 0.75);
-    }
-
-    /* Fields */
-    .field {
-      width: 100%;
-      background: var(--ink-950);
-      border: 1px solid var(--ink-line);
-      color: var(--text-paper);
-      padding: 10px 14px;
-      border-radius: 9px;
-      font-family: var(--serif);
-      font-size: 0.9rem;
-      caret-color: var(--stamp-on-ink);
-      outline: none;
-      transition: border-color 0.16s ease, box-shadow 0.16s ease;
-    }
-
-    .field::placeholder {
-      color: #8f96ad;
-      font-style: italic;
-    }
-
-    .field:focus {
-      border-color: var(--stamp-600);
-      box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.25);
-    }
-
-    .key-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .key-wrap .field {
-      font-family: var(--sans);
-      font-size: 0.84rem;
-      padding-right: 42px;
-    }
-
-    .key-wrap .field.has-key {
-      border-color: rgba(53, 208, 127, 0.45);
-    }
-
-    .key-toggle {
-      position: absolute;
-      right: 6px;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
-      border: none;
-      border-radius: 7px;
-      color: var(--text-paper-soft);
-      cursor: pointer;
-    }
-
-    .key-toggle:hover {
-      background: rgba(244, 241, 230, 0.1);
-      color: var(--text-paper);
-    }
-
-    .key-hint {
-      margin-top: 8px;
-      font-size: 0.72rem;
-      color: var(--text-paper-soft);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .key-hint a {
-      color: var(--stamp-on-ink);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .key-hint a:hover {
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    .key-status {
-      font-weight: 700;
-    }
-
-    .key-status.saved {
-      color: #4ade80;
-    }
-
-    .key-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .key-btn {
-      flex: 1;
-      background: transparent;
-      border: 1px solid var(--ink-line);
-      color: var(--text-paper);
-      padding: 8px 10px;
-      border-radius: 8px;
-      font-family: var(--sans);
+      gap: 7px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: var(--r-pill);
+      padding: 6px 13px;
       font-size: 0.78rem;
       font-weight: 600;
+      color: var(--ink-2);
       cursor: pointer;
-      transition: border-color 0.15s ease, background 0.15s ease;
+      transition: border-color 0.15s ease;
     }
 
-    .key-btn:hover {
-      border-color: var(--text-paper-soft);
+    .key-pill:hover {
+      border-color: var(--ink);
     }
 
-    .key-btn.save {
-      background: var(--stamp-600);
-      border-color: var(--stamp-600);
-      color: #fff;
+    .key-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #c4bba6;
     }
 
-    .key-btn.save:hover {
-      background: var(--stamp-700);
+    .key-dot.saved {
+      background: var(--green);
     }
 
-    .key-btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
+    /* ── VIEWS ────────────────────────────────────────────────── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px 88px;
     }
 
-    /* The stamp button */
-    .issue-btn {
-      width: 100%;
-      padding: 14px 18px;
-      border: none;
-      border-radius: 11px;
-      background: var(--stamp-600);
-      color: #fff;
-      font-family: var(--sans);
-      font-size: 0.94rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.65);
-      transition: background 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
-    }
-
-    .issue-btn:hover:not(:disabled) {
-      background: var(--stamp-700);
-      transform: translateY(-1px);
-      box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.65);
-    }
-
-    .issue-btn:active:not(:disabled) {
-      transform: translateY(0);
-    }
-
-    .issue-btn:disabled {
-      opacity: 0.6;
-      cursor: wait;
-    }
-
-    .error-banner {
-      background: rgba(200, 16, 46, 0.14);
-      border: 1px solid var(--stamp-600);
-      color: #ffd9de;
-      padding: 12px 14px;
-      border-radius: 9px;
-      font-size: 0.84rem;
-      line-height: 1.55;
+    .view {
       display: none;
     }
 
-    /* ── SHEET SIDE ───────────────────────────────────────────── */
-    .counter {
-      padding: 40px 48px 72px;
-      min-height: calc(100vh - 62px);
+    .view.active {
+      display: block;
+      animation: view-in 280ms var(--ease) both;
     }
 
-    .sheet {
-      max-width: 780px;
-      margin: 0 auto;
-    }
-
-    /* Entry states */
-    .entry-idle {
-      background: var(--paper-50);
-      border-radius: 14px;
-      box-shadow: 0 18px 45px -22px rgba(16, 20, 48, 0.4);
-      padding: 72px 40px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .big-seal {
-      width: 104px;
-      height: 104px;
-    }
-
-    .entry-idle h2 {
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: 2.2rem;
-      line-height: 1.15;
-      color: var(--text-ink);
-      text-wrap: balance;
-    }
-
-    .entry-idle p {
-      font-family: var(--serif);
-      font-size: 1.02rem;
-      line-height: 1.75;
-      color: var(--text-ink-soft);
-      max-width: 40ch;
-    }
-
-    .entry-idle p strong {
-      color: var(--stamp-700);
-    }
-
-    .idle-tools {
-      list-style: none;
-      display: flex;
-      gap: 10px 22px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 6px;
-    }
-
-    .idle-tools li {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-ink-soft);
-    }
-
-    .idle-tools .tool-chip {
-      width: 32px;
-      height: 32px;
-      border: 1px solid var(--paper-300);
-      border-radius: 9px;
-      background: var(--paper-100);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--ink-900);
-    }
-
-    .entry-loading {
-      background: var(--paper-50);
-      border-radius: 14px;
-      box-shadow: 0 18px 45px -22px rgba(16, 20, 48, 0.4);
-      padding: 88px 40px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .press-ring {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      border: 3px solid var(--paper-300);
-      border-top-color: var(--stamp-600);
-      animation: press 0.9s linear infinite;
-    }
-
-    @keyframes press {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .entry-loading h3 {
-      font-family: var(--serif);
-      font-size: 1.3rem;
-      color: var(--text-ink);
-    }
-
-    .entry-loading p {
-      color: var(--text-ink-soft);
-      font-size: 0.88rem;
-    }
-
-    /* Entry sheet */
-    .entry-sheet {
-      background: var(--paper-50);
-      border: 1px solid var(--paper-300);
-      border-radius: 14px;
-      box-shadow: 0 24px 55px -24px rgba(16, 20, 48, 0.45);
-      overflow: hidden;
-    }
-
-    .entry-sheet.stamped {
-      animation: stamp-in 0.32s cubic-bezier(0.2, 0.9, 0.25, 1) both;
-      transform-origin: 50% 0%;
-    }
-
-    @keyframes stamp-in {
+    @keyframes view-in {
       from {
         opacity: 0;
-        transform: scale(1.05) rotate(-0.6deg);
+        transform: translateY(10px);
       }
 
       to {
@@ -688,142 +270,682 @@
       }
     }
 
-    .seal-head {
-      padding: 24px 32px 20px;
-      border-bottom: 2px dashed var(--paper-300);
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
+    /* ── CREATE ───────────────────────────────────────────────── */
+    .create-head {
+      max-width: 640px;
+      margin: 8px 0 28px;
     }
 
-    .seal-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+    .create-head h1 {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: clamp(2rem, 4.5vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
       margin-bottom: 12px;
     }
 
-    .seal {
-      font-size: 0.7rem;
+    .create-head h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .create-head p {
+      font-size: 1.02rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .create-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-card {
+      padding: 28px;
+    }
+
+    .field-group {
+      margin-bottom: 26px;
+    }
+
+    .field-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-label {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 0.78rem;
       font-weight: 700;
-      letter-spacing: 0.07em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      padding: 4px 11px;
-      border-radius: 20px;
-      border: 1.5px solid var(--ink-900);
-      color: var(--ink-900);
-      background: transparent;
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
+      color: var(--ink-2);
+      margin-bottom: 12px;
     }
 
-    .seal-red {
-      border-color: var(--stamp-600);
-      color: var(--stamp-700);
-      box-shadow: inset 0 0 0 1px rgba(200, 16, 46, 0.35);
+    .field-label .opt {
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+      color: var(--faint);
     }
 
-    .seal-ink {
-      background: var(--ink-900);
-      border-color: var(--ink-900);
-      color: var(--paper-100);
+    .field-hint {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.55;
     }
 
-    .entry-title {
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: 2rem;
-      line-height: 1.2;
-      color: var(--text-ink);
-      text-wrap: balance;
+    .genre-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
     }
 
-    .sheet-tools {
+    .genre-card {
+      background: var(--surface);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 14px 6px 12px;
+      cursor: pointer;
+      color: var(--ink-2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: border-color 0.15s ease, transform 0.15s var(--ease), box-shadow 0.15s ease;
+    }
+
+    .genre-card:hover {
+      border-color: var(--ink);
+      transform: translateY(-1px);
+    }
+
+    .genre-card.active {
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 1px var(--accent), var(--shadow-sm);
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .genre-card.active svg.ic {
+      color: var(--accent);
+    }
+
+    .genre-card:active {
+      transform: scale(0.97);
+    }
+
+    .chip-row {
       display: flex;
       gap: 8px;
-      flex-shrink: 0;
+      flex-wrap: wrap;
     }
 
-    .sheet-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      border: 1px solid var(--paper-300);
-      background: var(--paper-100);
-      color: var(--ink-900);
+    .chip {
+      border: 1.5px solid var(--line);
+      background: var(--surface);
+      color: var(--ink-2);
+      border-radius: var(--r-pill);
+      padding: 9px 18px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .chip:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .chip.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    .level-desc {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-top: 10px;
+      min-height: 1.4em;
+    }
+
+    .level-desc strong {
+      color: var(--ink);
+    }
+
+    .length-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .length-card {
+      border: 1.5px solid var(--line);
+      background: var(--surface);
+      border-radius: var(--r-md);
+      padding: 13px 10px;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .length-card:hover {
+      border-color: var(--ink);
+    }
+
+    .length-card.active {
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 1px var(--accent);
+      background: #fff;
+    }
+
+    .length-card .t-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--ink);
+    }
+
+    .length-card .t-sub {
+      font-size: 0.76rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .text-field {
+      width: 100%;
+      background: #fff;
+      border: 1.5px solid var(--line);
+      color: var(--ink);
+      padding: 12px 15px;
+      border-radius: var(--r-md);
+      font-family: var(--sans);
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .text-field::placeholder {
+      color: #a8a294;
+    }
+
+    .text-field:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.12);
+    }
+
+    .quick-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .quick-chip {
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--ink-2);
+      border-radius: var(--r-pill);
+      padding: 6px 13px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .quick-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent-deep);
+    }
+
+    .generate-btn {
+      width: 100%;
+      margin-top: 26px;
+      padding: 16px 20px;
+      border: none;
+      border-radius: var(--r-md);
+      background: var(--ink);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      gap: 10px;
+      transition: background 0.15s ease, transform 0.15s var(--ease);
     }
 
-    .sheet-btn:hover {
-      border-color: var(--ink-900);
+    .generate-btn:hover:not(:disabled) {
+      background: var(--accent-deep);
+      transform: translateY(-1px);
     }
 
-    .sheet-btn.on {
-      background: var(--ink-900);
-      border-color: var(--ink-900);
-      color: var(--paper-100);
+    .generate-btn:disabled {
+      opacity: 0.6;
+      cursor: wait;
     }
 
-    .size-bar {
-      padding: 10px 32px;
-      border-bottom: 1px solid var(--paper-200);
-      background: var(--paper-100);
+    .examples-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 18px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .key-details {
+      margin-top: 20px;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--r-md);
+      background: var(--surface-2);
+    }
+
+    .key-details summary {
+      cursor: pointer;
+      list-style: none;
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      padding: 12px 16px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-2);
     }
 
-    .size-bar label {
-      font-size: 0.74rem;
-      font-weight: 600;
-      color: var(--text-ink-soft);
-      white-space: nowrap;
+    .key-details summary::-webkit-details-marker {
+      display: none;
     }
 
-    .size-bar input[type="range"] {
-      flex: 1;
-      max-width: 150px;
-      accent-color: var(--stamp-600);
+    .key-details summary::after {
+      content: "+";
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .key-details[open] summary::after {
+      content: "–";
+    }
+
+    .key-details .key-body {
+      padding: 0 16px 16px;
+    }
+
+    .key-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .key-wrap .text-field {
+      padding-right: 44px;
+      font-size: 0.85rem;
+    }
+
+    .key-toggle {
+      position: absolute;
+      right: 6px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      color: var(--muted);
       cursor: pointer;
     }
 
-    .size-bar .fs-val {
-      font-size: 0.74rem;
-      font-variant-numeric: tabular-nums;
-      color: var(--text-ink-soft);
-      min-width: 24px;
+    .key-toggle:hover {
+      background: var(--line-soft);
+      color: var(--ink);
     }
 
-    .entry-body {
-      padding: 34px 32px 46px;
+    .key-hint {
+      margin-top: 8px;
+      font-size: 0.76rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .key-hint a {
+      color: var(--accent-deep);
+      font-weight: 600;
+    }
+
+    .key-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn-ghost {
+      flex: 1;
+      background: var(--surface);
+      border: 1.5px solid var(--line);
+      color: var(--ink);
+      padding: 9px 12px;
+      border-radius: var(--r-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--ink);
+    }
+
+    .btn-solid {
+      flex: 1;
+      background: var(--accent);
+      border: 1.5px solid var(--accent);
+      color: #fff;
+      padding: 9px 12px;
+      border-radius: var(--r-sm);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-solid:hover {
+      background: var(--accent-deep);
+    }
+
+    .error-toast {
+      position: fixed;
+      top: 74px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      background: var(--ink);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: var(--r-md);
+      font-size: 0.86rem;
+      line-height: 1.5;
+      max-width: min(560px, calc(100vw - 32px));
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s var(--ease);
+      z-index: 500;
+    }
+
+    .error-toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Cover preview */
+    .cover-side {
+      position: sticky;
+      top: 86px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .cover-frame {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid var(--line-soft);
+      box-shadow: var(--shadow);
+      aspect-ratio: 4 / 5;
+      background: var(--surface-2);
+    }
+
+    .cover-frame svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .cover-quote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.25rem;
+      line-height: 1.5;
+      color: var(--ink-2);
+      padding: 0 6px;
+    }
+
+    .cover-quote strong {
+      color: var(--accent-deep);
+      font-style: normal;
+    }
+
+    /* ── READER ───────────────────────────────────────────────── */
+    .reader-back {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .back-btn {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink-2);
+      border-radius: var(--r-pill);
+      padding: 8px 16px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-btn:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .reader-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 5px 12px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink-2);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .badge-accent {
+      border-color: var(--accent);
+      color: var(--accent-deep);
+    }
+
+    .badge-ink {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    .ask-toggle {
+      margin-left: auto;
+      border: none;
+      background: var(--ink);
+      color: #fff;
+      border-radius: var(--r-pill);
+      padding: 10px 20px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s ease;
+    }
+
+    .ask-toggle:hover {
+      background: var(--accent-deep);
+    }
+
+    .ask-toggle[aria-pressed="true"] {
+      background: var(--accent);
+    }
+
+    .reader-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .reader-grid.ask-open {
+      grid-template-columns: minmax(0, 7fr) minmax(300px, 4fr);
+    }
+
+    .story-card {
+      background: var(--surface);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .story-cover {
+      aspect-ratio: 16 / 7;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .story-cover svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .story-head {
+      padding: 30px 36px 0;
+    }
+
+    .story-title {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+      text-wrap: balance;
+      margin: 14px 0 6px;
+    }
+
+    .story-tools {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 14px 36px;
+      border-bottom: 1px solid var(--line-soft);
+      flex-wrap: wrap;
+    }
+
+    .tool-btn {
+      min-width: 38px;
+      height: 38px;
+      padding: 0 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink-2);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    .tool-btn:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .tool-btn.on {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    .font-ctl {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .font-ctl input[type="range"] {
+      width: 110px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .story-body {
+      padding: 30px 36px 44px;
     }
 
     #story-text {
       font-family: var(--serif);
       font-size: 1.125rem;
-      line-height: 1.95;
-      color: var(--text-ink);
+      line-height: 1.8;
+      color: #232c47;
       max-width: 68ch;
     }
 
     #story-text p {
-      margin-bottom: 1.4em;
+      margin-bottom: 1.35em;
     }
 
     #story-text p:first-child::first-letter {
-      font-family: var(--serif);
-      font-size: 3.4em;
+      font-size: 3.2em;
       font-weight: 800;
       float: left;
-      line-height: 0.8;
+      line-height: 0.82;
       margin: 0.06em 0.12em 0 0;
-      color: var(--stamp-700);
+      color: var(--accent-deep);
     }
 
     .highlight-mode .word {
@@ -833,154 +955,875 @@
     }
 
     .highlight-mode .word:hover {
-      background: var(--mark-soft);
+      background: #fbe3b0;
     }
 
     .word.highlighted {
-      background: var(--mark);
+      background: #fbd98a;
     }
 
-    .cursor {
-      display: inline-block;
-      width: 2px;
-      height: 1em;
-      background: var(--stamp-600);
-      vertical-align: text-bottom;
-      margin-left: 2px;
-      animation: blink 0.9s step-end infinite;
-    }
-
-    @keyframes blink {
-      50% {
-        opacity: 0;
-      }
-    }
-
-    /* Route progress */
-    .route-wrap {
-      position: sticky;
-      bottom: 0;
-      background: var(--paper-100);
-      border-top: 1px solid var(--paper-300);
-      padding: 12px 32px;
+    .progress-thin {
+      border-top: 1px solid var(--line-soft);
+      padding: 14px 36px;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
+      background: var(--surface-2);
     }
 
-    .route-track {
+    .progress-track {
       flex: 1;
-      height: 4px;
+      height: 3px;
       border-radius: 3px;
-      background: repeating-linear-gradient(90deg, var(--paper-300) 0 8px, transparent 8px 14px);
+      background: var(--line);
       position: relative;
     }
 
-    .route-fill {
+    .progress-fill {
       position: absolute;
       left: 0;
       top: 0;
       bottom: 0;
       width: 100%;
       border-radius: 3px;
-      background: var(--ink-900);
+      background: var(--accent);
       transform: scaleX(0);
       transform-origin: left center;
-      transition: transform 0.12s linear;
     }
 
-    .route-fill::after {
-      content: "";
-      position: absolute;
-      right: -1px;
-      top: -7px;
-      border-left: 9px solid var(--stamp-600);
-      border-top: 6px solid transparent;
-      border-bottom: 6px solid transparent;
-    }
-
-    .route-label {
-      font-size: 0.74rem;
+    .progress-label {
+      font-size: 0.76rem;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
-      color: var(--text-ink-soft);
-      min-width: 40px;
+      color: var(--muted);
+      min-width: 38px;
       text-align: right;
     }
 
-    .route-done {
-      font-size: 0.72rem;
+    /* Ask AI panel */
+    .ask-panel {
+      display: none;
+    }
+
+    .reader-grid.ask-open .ask-panel {
+      display: block;
+      position: sticky;
+      top: 86px;
+      animation: view-in 250ms var(--ease) both;
+    }
+
+    .chat-card {
+      background: var(--surface);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 110px);
+    }
+
+    .chat-head h3 {
+      font-family: var(--serif);
+      font-size: 1.2rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
+    }
+
+    .chat-head p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin: 4px 0 14px;
+      line-height: 1.5;
+    }
+
+    .chat-log {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+      min-height: 120px;
+    }
+
+    .chat-msg {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      padding: 10px 14px;
+      border-radius: 12px;
+      max-width: 100%;
+    }
+
+    .chat-msg.assistant {
+      background: var(--surface-2);
+      border: 1px solid var(--line-soft);
+      color: var(--ink);
+      border-top-left-radius: 4px;
+    }
+
+    .chat-msg.user {
+      background: var(--ink);
+      color: #fff;
+      align-self: flex-end;
+      border-top-right-radius: 4px;
+      max-width: 92%;
+    }
+
+    .suggest-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .suggest-q {
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--ink-2);
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      line-height: 1.45;
+      transition: border-color 0.15s ease;
+    }
+
+    .suggest-q:hover {
+      border-color: var(--accent);
+      color: var(--accent-deep);
+    }
+
+    .chat-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .chat-row .text-field {
+      font-size: 0.86rem;
+      padding: 10px 13px;
+    }
+
+    .chat-send {
+      border: none;
+      background: var(--ink);
+      color: #fff;
+      border-radius: 10px;
+      padding: 0 18px;
+      font-weight: 700;
+      font-size: 0.86rem;
+      cursor: pointer;
+    }
+
+    .chat-send:hover:not(:disabled) {
+      background: var(--accent-deep);
+    }
+
+    .chat-send:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
+    .eval-zone {
+      margin-top: 12px;
+      border-top: 1px solid var(--line-soft);
+      padding-top: 12px;
+    }
+
+    .eval-btn {
+      width: 100%;
+      border: 1.5px solid var(--ink);
+      background: transparent;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .eval-btn:hover:not(:disabled) {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .eval-btn:disabled {
+      opacity: 0.45;
+      cursor: wait;
+    }
+
+    .eval-btn.gated {
+      border-color: var(--line);
+      color: var(--faint);
+    }
+
+    .eval-hint {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .chat-status {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-top: 8px;
+      min-height: 1.2em;
+    }
+
+    /* Selection toolbar + vocab popover */
+    .sel-bar {
+      position: fixed;
+      z-index: 600;
+      display: none;
+      gap: 2px;
+      background: var(--ink);
+      border-radius: 12px;
+      padding: 5px;
+      box-shadow: var(--shadow);
+      animation: view-in 150ms var(--ease) both;
+    }
+
+    .sel-bar.show {
+      display: flex;
+    }
+
+    .sel-bar button {
+      border: none;
+      background: transparent;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 8px 13px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .sel-bar button:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .vocab-pop {
+      position: fixed;
+      z-index: 600;
+      display: none;
+      width: min(320px, calc(100vw - 32px));
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      animation: view-in 150ms var(--ease) both;
+    }
+
+    .vocab-pop.show {
+      display: block;
+    }
+
+    .vocab-pop .vocab-title {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .vocab-pop .vocab-body {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--ink-2);
+      margin: 8px 0 12px;
+    }
+
+    .vocab-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .vocab-actions button {
+      flex: 1;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 7px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--ink-2);
+      cursor: pointer;
+    }
+
+    .vocab-actions button:hover {
+      border-color: var(--accent);
+      color: var(--accent-deep);
+    }
+
+    /* ── EVALUATION ───────────────────────────────────────────── */
+    .eval-card {
+      margin-top: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow);
+      padding: 32px 36px;
+    }
+
+    .eval-top {
+      display: grid;
+      grid-template-columns: 200px 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .score-ring {
+      text-align: center;
+    }
+
+    .score-ring svg {
+      width: 148px;
+      height: 148px;
+    }
+
+    .score-verdict {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-top: 8px;
+    }
+
+    .score-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.55;
+    }
+
+    .cat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cat-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4px 12px;
+      font-size: 0.84rem;
+    }
+
+    .cat-row .cat-name {
+      font-weight: 600;
+      color: var(--ink-2);
+    }
+
+    .cat-row .cat-val {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cat-bar {
+      grid-column: 1 / -1;
+      height: 5px;
+      border-radius: 4px;
+      background: var(--line-soft);
+      overflow: hidden;
+    }
+
+    .cat-bar span {
+      display: block;
+      height: 100%;
+      border-radius: 4px;
+      background: var(--ink);
+    }
+
+    .cat-bar span.focus {
+      background: var(--accent);
+    }
+
+    .eval-section-title {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0 0 12px;
+    }
+
+    .eval-summary {
+      font-family: var(--serif);
+      font-size: 0.98rem;
+      line-height: 1.7;
+      color: var(--ink-2);
+    }
+
+    .eval-cols {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 28px;
+      margin-top: 24px;
+    }
+
+    .mistake {
+      background: #fff;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--r-md);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+
+    .mistake .m-pair {
+      font-family: var(--serif);
+      font-size: 0.94rem;
+      line-height: 1.6;
+    }
+
+    .mistake del {
+      color: var(--accent-deep);
+      text-decoration-color: rgba(200, 16, 46, 0.5);
+    }
+
+    .mistake ins {
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .mistake .m-arrow {
+      color: var(--faint);
+      margin: 0 6px;
+    }
+
+    .mistake .m-exp {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.55;
+    }
+
+    .mistake .m-cat {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      color: var(--stamp-700);
+      color: var(--accent-deep);
+      background: var(--accent-soft);
+      border-radius: var(--r-pill);
+      padding: 3px 10px;
+    }
+
+    .rec-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rec-list li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.86rem;
+      line-height: 1.6;
+      color: var(--ink-2);
+      background: #fff;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--r-md);
+      padding: 11px 14px;
+    }
+
+    .rec-list svg {
+      color: var(--green);
+      margin-top: 2px;
+    }
+
+    .strength-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .strength-list li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.86rem;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+
+    .strength-list svg {
+      color: var(--green);
+      margin-top: 2px;
+    }
+
+    /* ── LIBRARY ──────────────────────────────────────────────── */
+    .lib-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 8px 0 22px;
+      flex-wrap: wrap;
+    }
+
+    .lib-head h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+      letter-spacing: -0.015em;
+    }
+
+    .lib-head p {
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .lib-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .lib-search {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+
+    .lib-search svg {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--faint);
+    }
+
+    .lib-search .text-field {
+      padding-left: 38px;
+    }
+
+    .lib-filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .lib-filters .chip {
+      padding: 8px 15px;
+      font-size: 0.8rem;
+    }
+
+    .story-row {
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      gap: 18px;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--r-lg);
+      padding: 16px 20px 16px 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s ease, transform 0.15s var(--ease);
+    }
+
+    .story-row:hover {
+      border-color: var(--line);
+      transform: translateY(-1px);
+    }
+
+    .story-thumb {
+      width: 120px;
+      aspect-ratio: 4 / 3;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line-soft);
+    }
+
+    .story-thumb svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .story-row h2 {
+      font-family: var(--serif);
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .story-row .row-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .story-row .row-excerpt {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .row-side {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .row-score {
+      text-align: center;
+      min-width: 64px;
+    }
+
+    .row-score .n {
+      font-family: var(--serif);
+      font-weight: 800;
+      font-size: 1.5rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .row-score .l {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .row-date {
+      font-size: 0.76rem;
+      color: var(--faint);
+      font-variant-numeric: tabular-nums;
       white-space: nowrap;
     }
 
-    /* ── RESPONSIVE ───────────────────────────────────────────── */
-    @media (max-width: 960px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
+    .row-cta {
+      display: flex;
+      gap: 8px;
+    }
 
-      .desk {
-        position: static;
-        max-height: none;
-        border-bottom: 2px solid var(--stamp-600);
-      }
+    .continue-btn {
+      border: none;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      border-radius: var(--r-pill);
+      padding: 9px 18px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
 
-      .stamp-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
+    .continue-btn:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
 
-      .counter {
-        padding: 26px 20px 64px;
-        min-height: auto;
+    .lib-empty-card {
+      background: var(--surface);
+      border: 1px dashed var(--line);
+      border-radius: var(--r-lg);
+      padding: 56px 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .lib-empty-card h3 {
+      font-family: var(--serif);
+      color: var(--ink);
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    /* Reader states */
+    .state-card {
+      background: var(--surface);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 72px 32px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .state-card h2 {
+      font-family: var(--serif);
+      font-size: 1.7rem;
+    }
+
+    .state-card p {
+      color: var(--muted);
+      max-width: 42ch;
+      line-height: 1.65;
+    }
+
+    .press-ring {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 3px solid var(--line);
+      border-top-color: var(--accent);
+      animation: press 0.9s linear infinite;
+    }
+
+    @keyframes press {
+      to {
+        transform: rotate(360deg);
       }
     }
 
-    @media (max-width: 600px) {
-      .rail {
-        padding: 0 16px;
+    /* ── RESPONSIVE ───────────────────────────────────────────── */
+    @media (max-width: 1000px) {
+      .create-grid {
+        grid-template-columns: 1fr;
       }
 
-      .brand-tag {
+      .cover-side {
+        position: static;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .cover-frame {
+        width: 200px;
+        flex-shrink: 0;
+        aspect-ratio: 4 / 3;
+      }
+
+      .reader-grid.ask-open {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .reader-grid.ask-open .ask-panel {
+        position: fixed;
+        inset: auto 0 0 0;
+        z-index: 400;
+        animation: sheet-up 300ms var(--ease) both;
+      }
+
+      @keyframes sheet-up {
+        from {
+          transform: translateY(40px);
+          opacity: 0;
+        }
+
+        to {
+          transform: none;
+          opacity: 1;
+        }
+      }
+
+      .reader-grid.ask-open .chat-card {
+        border-radius: 20px 20px 0 0;
+        max-height: 82vh;
+        border-bottom: none;
+      }
+
+      .eval-top {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .score-ring {
+        grid-column: 1 / -1;
+      }
+
+      .eval-cols {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      main {
+        padding: 24px 14px 72px;
+      }
+
+      .topnav-inner {
+        padding: 0 14px;
+      }
+
+      .model-chip {
         display: none;
       }
 
-      .stamp-grid {
+      .brand-word {
+        font-size: 1.02rem;
+      }
+
+      .key-pill {
+        padding: 6px 10px;
+      }
+
+      #key-pill-label {
+        display: none;
+      }
+
+      .genre-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .entry-idle,
-      .entry-loading {
-        padding: 52px 22px;
+      .form-card {
+        padding: 20px 16px;
       }
 
-      .entry-idle h2 {
-        font-size: 1.75rem;
+      .story-head {
+        padding: 22px 20px 0;
       }
 
-      .seal-head {
-        padding: 20px 18px 16px;
+      .story-tools,
+      .progress-thin {
+        padding-left: 20px;
+        padding-right: 20px;
       }
 
-      .entry-title {
-        font-size: 1.55rem;
+      .story-body {
+        padding: 24px 20px 34px;
       }
 
-      .entry-body {
-        padding: 26px 18px 36px;
+      #story-text {
+        font-size: 1.05rem;
       }
 
-      .size-bar,
-      .route-wrap {
-        padding-left: 18px;
-        padding-right: 18px;
+      .eval-card {
+        padding: 24px 20px;
       }
 
-      .counter {
-        padding: 18px 14px 56px;
+      .eval-top {
+        grid-template-columns: 1fr;
+      }
+
+      .story-row {
+        grid-template-columns: 84px 1fr;
+      }
+
+      .row-side {
+        grid-column: 1 / -1;
+        justify-content: space-between;
+        border-top: 1px solid var(--line-soft);
+        padding-top: 12px;
+      }
+
+      .story-thumb {
+        width: 84px;
+      }
+
+      .cover-side {
+        flex-direction: column;
+      }
+
+      .cover-frame {
+        width: 100%;
       }
     }
 
@@ -989,437 +1832,31 @@
         scroll-behavior: auto;
       }
 
-      .entry-sheet.stamped,
+      .view.active,
       .press-ring,
-      .cursor,
-      .big-seal,
-      .press-seal,
-      .press-shock,
-      .entry-loading h3,
-      #tts-btn.on::after {
+      .reader-grid.ask-open .ask-panel,
+      .sel-bar,
+      .vocab-pop {
         animation: none !important;
       }
 
-      .entry-sheet.stamped .seal-row .seal,
-      .entry-sheet.stamped .entry-title,
-      .entry-sheet.stamped #story-text p,
-      .entry-sheet.stamped .sheet-tools,
-      .entry-sheet.stamped .route-wrap {
-        opacity: 1 !important;
-        animation: reduced-fade 140ms ease-out both !important;
-        animation-delay: 0ms !important;
-        clip-path: none !important;
-        transform: none !important;
-        filter: none !important;
-      }
-
-      .entry-sheet.stamped::after {
-        display: none !important;
-      }
-
-      @keyframes reduced-fade {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-
-      .stamp,
-      .visa,
-      .ticket,
-      .issue-btn,
-      .sheet-btn {
+      .genre-card,
+      .generate-btn,
+      .story-row,
+      .nav-btn {
         transition: none;
       }
     }
 
-    /* ── MINIMALIST DISTILL + SPECTACULAR STAMP MOTION ───────────
-       World preserved: customs desk / entry sheet. Noise removed,
-       one authored focal moment: The Stamp Drop (max show, ~780ms).
-       Materials: transform + opacity + clip-path + blur + shadow.
-       No layout props animated. ----------------------------------- */
-    .brand-tag {
-      display: none;
-    }
-
-    .desk {
-      gap: 28px;
-      padding: 28px 20px 40px;
-    }
-
-    .perf {
-      height: 1px;
-      background: none;
-      background-color: var(--ink-line-soft);
-      margin: 6px 0 0;
-      opacity: 0.8;
-    }
-
-    .stamp {
-      background: transparent;
-    }
-
-    .counter {
-      padding: 56px 48px 80px;
-    }
-
-    .entry-idle {
-      padding: 64px 32px;
-      gap: 16px;
-      box-shadow: 0 18px 40px -24px rgba(16, 20, 48, 0.35);
-    }
-
-    .big-seal {
-      width: 76px;
-      height: 76px;
-      animation: seal-float 6s ease-in-out infinite;
-      transform-origin: 50% 50%;
-    }
-
-    @keyframes seal-float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
-    }
-
-    .idle-tools .tool-chip {
-      background: transparent;
-      border-color: transparent;
-      width: 28px;
-      height: 28px;
-    }
-
-    .size-bar {
-      background: transparent;
-      padding: 8px 32px;
-    }
-
-    a {
-      text-underline-offset: 3px;
-    }
-
-    /* Press feedback — smallest change that proves cause/result */
-    .stamp, .visa, .ticket, .issue-btn, .sheet-btn, .key-btn {
-      transition: transform 0.12s var(--ease-out), background 0.16s ease, color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
-    }
-
-    .stamp:active, .visa:active, .ticket:active {
-      transform: scale(0.96);
-    }
-
-    .issue-btn:active:not(:disabled) {
-      transform: translateY(0) scale(0.97);
-    }
-
-    .sheet-btn:active {
-      transform: scale(0.92);
-    }
-
-    /* Loading: stamp press loop (replaces lonely spinner) */
-    .press-stage {
-      position: relative;
-      width: 96px;
-      height: 96px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .press-seal {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: var(--ink-900);
-      border: 2px solid var(--stamp-600);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--paper-100);
-      font-family: var(--serif);
-      font-weight: 800;
-      font-size: 1.4rem;
-      animation: press-drop 1.15s var(--ease-stamp) infinite;
-      box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.65);
-      will-change: transform;
-    }
-
-    .press-shock {
-      position: absolute;
-      inset: 8px;
-      border-radius: 50%;
-      border: 2px solid var(--stamp-600);
-      opacity: 0;
-      animation: press-shock 1.15s var(--ease-out) infinite;
-      pointer-events: none;
-    }
-
-    @keyframes press-drop {
-      0% { transform: translateY(-14px) scale(1.08); }
-      38% { transform: translateY(0) scale(1); }
-      62% { transform: translateY(0) scale(1); }
-      100% { transform: translateY(-14px) scale(1.08); }
-    }
-
-    @keyframes press-shock {
-      0% { opacity: 0; transform: scale(0.55); }
-      38% { opacity: 0.55; transform: scale(1); }
-      62% { opacity: 0; transform: scale(1.18); }
-      100% { opacity: 0; transform: scale(0.55); }
-    }
-
-    .entry-loading h3 {
-      color: var(--text-ink);
-      animation: stamp-breathe 1.6s var(--ease-out) infinite;
-    }
-
-    @keyframes stamp-breathe {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.62; }
-    }
-
-    /* FOCAL: The Stamp Drop — sheet slams, seal slams, ink reveals */
-    .entry-sheet {
-      position: relative;
-    }
-
-    .entry-sheet.stamped {
-      animation: sheet-drop 520ms var(--ease-out) both;
-      transform-origin: 50% 0%;
-      will-change: transform, opacity, filter;
-    }
-
-    @keyframes sheet-drop {
-      from {
-        opacity: 0;
-        transform: translateY(-18px) scale(1.03) rotate(-0.5deg);
-        filter: blur(10px);
-        box-shadow: 0 0 0 0 rgba(16, 20, 48, 0);
-      }
-      60% {
-        opacity: 1;
-        transform: translateY(2px) scale(1) rotate(0deg);
-        filter: blur(0);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-        filter: blur(0);
-      }
-    }
-
-    .entry-sheet.stamped::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 14px;
-      border: 2px solid var(--stamp-600);
-      opacity: 0;
-      pointer-events: none;
-      animation: sheet-shock 620ms var(--ease-out) both;
-      animation-delay: 120ms;
-    }
-
-    @keyframes sheet-shock {
-      0% { opacity: 0.5; transform: scale(0.985); }
-      100% { opacity: 0; transform: scale(1.02); }
-    }
-
-    .entry-sheet.stamped .seal-row .seal {
-      opacity: 0;
-      animation: seal-slam 380ms var(--ease-stamp) both;
-      animation-delay: calc(140ms + var(--i, 0) * 60ms);
-      will-change: transform, opacity, filter;
-    }
-
-    @keyframes seal-slam {
-      from {
-        opacity: 0;
-        transform: scale(2.1);
-        filter: blur(6px);
-      }
-      60% {
-        opacity: 1;
-        transform: scale(0.96);
-        filter: blur(0);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-        filter: blur(0);
-      }
-    }
-
-    .entry-sheet.stamped .entry-title {
-      opacity: 0;
-      animation: title-wipe 520ms var(--ease-out) both;
-      animation-delay: 260ms;
-      will-change: clip-path, transform, filter;
-    }
-
-    @keyframes title-wipe {
-      from {
-        opacity: 0;
-        clip-path: inset(0 0 100% 0);
-        transform: translateY(12px);
-        filter: blur(6px);
-      }
-      to {
-        opacity: 1;
-        clip-path: inset(0 0 0% 0);
-        transform: none;
-        filter: blur(0);
-      }
-    }
-
-    .entry-sheet.stamped .sheet-tools {
-      opacity: 0;
-      animation: tools-in 400ms var(--ease-out) both;
-      animation-delay: 200ms;
-    }
-
-    @keyframes tools-in {
-      from { opacity: 0; transform: translateY(-8px); filter: blur(4px); }
-      to { opacity: 1; transform: none; filter: blur(0); }
-    }
-
-    .entry-sheet.stamped #story-text p {
-      opacity: 0;
-      animation: para-rise 560ms var(--ease-out) both;
-      animation-delay: calc(340ms + var(--i, 0) * 70ms);
-      will-change: transform, opacity, filter;
-    }
-
-    @keyframes para-rise {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-        filter: blur(5px);
-        clip-path: inset(0 0 12% 0);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-        filter: blur(0);
-        clip-path: inset(0 0 0% 0);
-      }
-    }
-
-    .entry-sheet.stamped .route-wrap {
-      opacity: 0;
-      animation: route-in 420ms var(--ease-out) both;
-      animation-delay: 480ms;
-    }
-
-    @keyframes route-in {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: none; }
-    }
-
-    /* TTS live pulse + copy pop — bounded, state-only */
-    .sheet-btn.on {
-      animation: tool-pop 220ms var(--ease-out) both;
-    }
-
-    @keyframes tool-pop {
-      0% { transform: scale(0.88); }
-      100% { transform: scale(1); }
-    }
-
-    #tts-btn.on {
-      position: relative;
-    }
-
-    #tts-btn.on::after {
-      content: "";
-      position: absolute;
-      inset: -3px;
-      border-radius: 12px;
-      border: 1.5px solid var(--stamp-600);
-      opacity: 0.7;
-      animation: tts-ring 1.4s var(--ease-out) infinite;
-      pointer-events: none;
-    }
-
-    @keyframes tts-ring {
-      0% { opacity: 0.65; transform: scale(0.96); }
-      70% { opacity: 0; transform: scale(1.08); }
-      100% { opacity: 0; transform: scale(0.96); }
-    }
-
-    /* Key progressive disclosure */
-    .key-details {
-      border: 1px solid var(--ink-line-soft);
-      border-radius: 9px;
-      padding: 4px 0;
-    }
-
-    .key-details summary {
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-paper-soft);
-    }
-
-    .key-details summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .key-details summary::after {
-      content: "+";
-      font-size: 1rem;
-      line-height: 1;
-      color: var(--stamp-on-ink);
-    }
-
-    .key-details[open] summary::after {
-      content: "–";
-    }
-
-    .key-details .key-body {
-      padding: 6px 12px 12px;
-    }
-
-    /* ── LOGIC PART 2: chat / evaluate / library (same tokens, no redesign) ── */
-    .lib-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
-    .lib-item {
-      width: 100%; text-align: left; background: rgba(244,241,230,0.04);
-      border: 1px solid var(--ink-line); color: var(--text-paper);
-      border-radius: 8px; padding: 8px 10px; font-size: 0.78rem; cursor: pointer;
-      display: flex; justify-content: space-between; gap: 8px; align-items: baseline;
-    }
-    .lib-item:hover { border-color: var(--text-paper-soft); }
-    .lib-item.active { border-color: var(--stamp-600); }
-    .lib-item .lib-score { font-variant-numeric: tabular-nums; color: var(--stamp-on-ink); font-weight: 700; }
-    .lib-empty { font-size: 0.76rem; color: rgba(198,205,221,0.6); }
-    .suggest-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
-    .suggest-q {
-      background: var(--paper-100); border: 1px solid var(--paper-300); color: var(--ink-900);
-      border-radius: 20px; padding: 7px 13px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
-    }
-    .suggest-q:hover { border-color: var(--ink-900); }
-    .chat-log { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; max-width: 68ch; }
-    .chat-msg { font-family: var(--serif); font-size: 0.95rem; line-height: 1.65; padding: 10px 14px; border-radius: 10px; }
-    .chat-msg.user { background: var(--paper-100); border: 1px solid var(--paper-300); align-self: flex-end; }
-    .chat-msg.assistant { background: var(--ink-900); color: var(--text-paper); align-self: flex-start; }
-    .chat-row { display: flex; gap: 8px; }
-    .chat-row .field { font-family: var(--sans); }
-    .eval-score { font-family: var(--serif); font-size: 2.4rem; font-weight: 800; color: var(--stamp-700); }
-    .eval-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
-    .eval-mistake { border-left: 3px solid var(--stamp-600); padding: 8px 12px; margin: 8px 0; background: var(--paper-100); border-radius: 0 8px 8px 0; }
-    .eval-mistake del { color: var(--stamp-700); }
-    .eval-mistake ins { color: #166534; text-decoration: none; font-weight: 700; }
-    .panel-title { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; margin-bottom: 10px; }
-
     @media print {
-      .rail,
-      .desk,
-      .route-wrap,
-      .sheet-tools,
-      .size-bar {
+      .topnav,
+      .reader-back,
+      .story-tools,
+      .progress-thin,
+      .ask-panel,
+      .sel-bar,
+      .vocab-pop,
+      .eval-card {
         display: none !important;
       }
 
@@ -1427,32 +1864,13 @@
         background: #fff;
       }
 
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .counter {
-        padding: 0;
-      }
-
-      .entry-sheet {
+      .story-card {
         border: none;
         box-shadow: none;
-        border-radius: 0;
       }
 
       #story-text {
         color: #111;
-        font-size: 12pt;
-      }
-
-      .entry-title {
-        color: #111;
-      }
-
-      .seal {
-        border-color: #999;
-        color: #333;
       }
     }
   </style>
@@ -1460,280 +1878,298 @@
 
 <body>
 
-  <!-- CUSTOMS RAIL -->
-  <header class="rail">
-    <a class="brand" href="#" aria-label="EnglishAloud home">
-      <svg class="brand-seal" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-        <circle cx="20" cy="20" r="18.5" fill="#c8102e"/>
-        <circle cx="20" cy="20" r="14.5" fill="#1a2340"/>
-        <circle cx="20" cy="20" r="11" stroke="#f6f2e7" stroke-width="1.2" stroke-dasharray="3 2.4"/>
-        <path d="M14 15.5c1.8-1.2 4-1.2 6 0 2-1.2 4.2-1.2 6 0v9c-1.8-1.2-4-1.2-6 0-2-1.2-4.2-1.2-6 0z" stroke="#f6f2e7" stroke-width="1.7" stroke-linejoin="round"/>
-        <path d="M20 15.5v9" stroke="#f6f2e7" stroke-width="1.2"/>
-      </svg>
-      <span class="brand-word">English<em>Aloud</em></span>
-      <span class="brand-tag">Customs desk</span>
-    </a>
-    <div class="rail-status">
-      <span class="status-dot" aria-hidden="true"></span>
-      <span>Groq AI</span>
-      <span class="status-model">gpt-oss-20b</span>
+  <!-- TOP NAV -->
+  <header class="topnav">
+    <div class="topnav-inner">
+      <a class="brand" href="#" id="brand-home" aria-label="EnglishAloud home">
+        <span class="brand-mark" aria-hidden="true">E</span>
+        <span class="brand-word">English<em>Aloud</em></span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <button class="nav-btn" id="nav-create" aria-current="page" onclick="showView('create')">Create</button>
+        <button class="nav-btn" id="nav-library" aria-current="false" onclick="showView('library')">Library</button>
+      </nav>
+      <div class="nav-right">
+        <span class="model-chip">Groq · gpt-oss-20b</span>
+        <button class="key-pill" id="key-pill" onclick="goToKey()" aria-label="API key settings">
+          <span class="key-dot" id="groq-key-status-mini"></span>
+          <span id="key-pill-label">API key</span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <main class="layout">
+  <div class="error-toast" id="error-banner" role="alert"></div>
 
-    <!-- DESK -->
-    <aside class="desk" aria-label="Story controls">
-
-      <div class="desk-group">
-        <div class="desk-label" id="label-genre">Destination</div>
-        <div class="stamp-grid" id="genre-grid" role="group" aria-labelledby="label-genre">
-          <button class="stamp active" data-val="Adventure" aria-pressed="true">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
-            <span>Adventure</span>
-          </button>
-          <button class="stamp" data-val="Mystery" aria-pressed="false">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-            <span>Mystery</span>
-          </button>
-          <button class="stamp" data-val="Science Fiction" aria-pressed="false">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-24 12 12)"/></svg>
-            <span>Sci-Fi</span>
-          </button>
-          <button class="stamp" data-val="Fantasy" aria-pressed="false">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V10l3-1.5V12h3V8h4v4h3V7l3 1.5V21"/><path d="M3 21h18"/><path d="M10 21v-3h4v3"/></svg>
-            <span>Fantasy</span>
-          </button>
-          <button class="stamp" data-val="Slice of Life" aria-pressed="false">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12v5a4.5 4.5 0 0 1-4.5 4.5h-3A4.5 4.5 0 0 1 4 15z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5c0 1.2-1 1.4-1 2.6M12 3.5c0 1.2-1 1.4-1 2.6"/></svg>
-            <span>Slice of Life</span>
-          </button>
-          <button class="stamp" data-val="Horror" aria-pressed="false">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></svg>
-            <span>Horror</span>
-          </button>
-          <button class="stamp" data-val="Romance" aria-pressed="false">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M12 20S5 15.6 5 10.2A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7 2.6C19 15.6 12 20 12 20z"/></svg>
-            <span>Romance</span>
-          </button>
-          <button class="stamp" data-val="Historical" aria-pressed="false">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M3.5 9L12 3.5 20.5 9"/><path d="M6 9.5V18M10 9.5V18M14 9.5V18M18 9.5V18M4 18.5h16M3.5 21h17"/></svg>
-            <span>Historical</span>
-          </button>
-        </div>
-        <div class="perf" aria-hidden="true"></div>
+  <main>
+    <!-- ══════════ CREATE ══════════ -->
+    <section class="view active" id="view-create" aria-label="Create story">
+      <div class="create-head">
+        <h1>Create your <em>story</em></h1>
+        <p>Generate a personalized story and practice English in a meaningful way. Pick a genre, your level and length — optionally add a lesson focus.</p>
       </div>
 
-      <div class="desk-group">
-        <div class="desk-label" id="label-level">Entry visa</div>
-        <div class="visa-row" id="level-row" role="group" aria-labelledby="label-level">
-          <button class="visa" data-val="A1" title="Beginner" aria-pressed="false">A1</button>
-          <button class="visa" data-val="A2" title="Elementary" aria-pressed="false">A2</button>
-          <button class="visa active" data-val="B1" title="Intermediate" aria-pressed="true">B1</button>
-          <button class="visa" data-val="B2" title="Upper-Intermediate" aria-pressed="false">B2</button>
-          <button class="visa" data-val="C1" title="Advanced" aria-pressed="false">C1</button>
-          <button class="visa" data-val="C2" title="Proficiency" aria-pressed="false">C2</button>
-        </div>
-        <div class="perf" aria-hidden="true"></div>
-      </div>
-
-      <div class="desk-group">
-        <div class="desk-label" id="label-length">Stay duration</div>
-        <div class="ticket-row" id="length-row" role="group" aria-labelledby="label-length">
-          <button class="ticket" data-val="short (about 200 words)" aria-pressed="false">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/></svg>
-            <span class="t-name">Short</span>
-            <span class="t-sub">~200 words</span>
-          </button>
-          <button class="ticket active" data-val="medium (about 500 words)" aria-pressed="true">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h7l4 4v11H8z"/><path d="M4 7h7l1.5 1.5V21H4z"/></svg>
-            <span class="t-name">Medium</span>
-            <span class="t-sub">~500 words</span>
-          </button>
-          <button class="ticket" data-val="long (about 1000 words)" aria-pressed="false">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M4 4.5h6.5V20H4zM13.5 4.5H20V20h-6.5z"/><path d="M11.5 4.5V20"/></svg>
-            <span class="t-name">Long</span>
-            <span class="t-sub">~1000 words</span>
-          </button>
-        </div>
-        <div class="perf" aria-hidden="true"></div>
-      </div>
-
-      <div class="desk-group">
-        <label class="desk-label" for="topic-input">Purpose <span class="opt">optional</span></label>
-        <input id="topic-input" class="field" type="text" placeholder="e.g. friendship, the ocean, a lost key…" maxlength="140">
-        <div class="perf" aria-hidden="true"></div>
-      </div>
-
-      <div class="desk-group">
-        <label class="desk-label" for="focus-input">Lesson focus <span class="opt">optional</span></label>
-        <input id="focus-input" class="field" type="text" placeholder="e.g. Past Perfect, phrasal verbs…" maxlength="80">
-        <div class="perf" aria-hidden="true"></div>
-      </div>
-
-      <div class="desk-group">
-        <details class="key-details" id="key-details">
-          <summary>Groq API Key <span id="groq-key-status-mini" class="key-status empty" role="status"></span></summary>
-          <div class="key-body">
-            <label class="desk-label" for="groq-key-input" style="margin-bottom:8px">Groq API Key</label>
-            <div class="key-wrap">
-              <input id="groq-key-input" class="field" type="password" placeholder="gsk_••••••••••••••••"
-                autocomplete="off" spellcheck="false">
-              <button class="key-toggle" id="groq-key-toggle" type="button" title="Show / hide" aria-label="Show or hide API key" aria-pressed="false">
+      <div class="create-grid">
+        <div class="card form-card">
+          <div class="field-group">
+            <div class="field-label" id="label-genre">Genre</div>
+            <div class="genre-grid" id="genre-grid" role="group" aria-labelledby="label-genre">
+              <button class="genre-card active" data-val="Adventure" aria-pressed="true">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
+                <span>Adventure</span>
+              </button>
+              <button class="genre-card" data-val="Mystery" aria-pressed="false">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+                <span>Mystery</span>
+              </button>
+              <button class="genre-card" data-val="Science Fiction" aria-pressed="false">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-24 12 12)"/></svg>
+                <span>Sci-Fi</span>
+              </button>
+              <button class="genre-card" data-val="Fantasy" aria-pressed="false">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V10l3-1.5V12h3V8h4v4h3V7l3 1.5V21"/><path d="M3 21h18"/><path d="M10 21v-3h4v3"/></svg>
+                <span>Fantasy</span>
+              </button>
+              <button class="genre-card" data-val="Slice of Life" aria-pressed="false">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12v5a4.5 4.5 0 0 1-4.5 4.5h-3A4.5 4.5 0 0 1 4 15z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5c0 1.2-1 1.4-1 2.6M12 3.5c0 1.2-1 1.4-1 2.6"/></svg>
+                <span>Slice of Life</span>
+              </button>
+              <button class="genre-card" data-val="Horror" aria-pressed="false">
                 <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></svg>
+                <span>Horror</span>
+              </button>
+              <button class="genre-card" data-val="Romance" aria-pressed="false">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M12 20S5 15.6 5 10.2A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7 2.6C19 15.6 12 20 12 20z"/></svg>
+                <span>Romance</span>
+              </button>
+              <button class="genre-card" data-val="Historical" aria-pressed="false">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M3.5 9L12 3.5 20.5 9"/><path d="M6 9.5V18M10 9.5V18M14 9.5V18M18 9.5V18M4 18.5h16M3.5 21h17"/></svg>
+                <span>Historical</span>
               </button>
             </div>
-            <div class="key-hint">
-              <span id="groq-key-status" class="key-status empty" role="status">● No guardada</span>
-              <span aria-hidden="true">·</span>
-              <a href="https://console.groq.com/keys" target="_blank" rel="noopener">Crear key en Groq</a>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label" id="label-level">Level (CEFR)</div>
+            <div class="chip-row" id="level-row" role="group" aria-labelledby="label-level">
+              <button class="chip" data-val="A1" aria-pressed="false">A1</button>
+              <button class="chip" data-val="A2" aria-pressed="false">A2</button>
+              <button class="chip active" data-val="B1" aria-pressed="true">B1</button>
+              <button class="chip" data-val="B2" aria-pressed="false">B2</button>
+              <button class="chip" data-val="C1" aria-pressed="false">C1</button>
+              <button class="chip" data-val="C2" aria-pressed="false">C2</button>
             </div>
-            <div class="key-actions">
-              <button class="key-btn save" id="groq-key-save" type="button" onclick="saveGroqKey()">Guardar</button>
-              <button class="key-btn" id="groq-key-clear" type="button" onclick="clearGroqKey()">Borrar</button>
+            <div class="level-desc" id="level-desc"><strong>B1</strong> · Intermediate</div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label" id="label-length">Length</div>
+            <div class="length-row" id="length-row" role="group" aria-labelledby="label-length">
+              <button class="length-card" data-val="short (about 200 words)" aria-pressed="false">
+                <span class="t-name">Short</span>
+                <span class="t-sub">~200 words</span>
+              </button>
+              <button class="length-card active" data-val="medium (about 500 words)" aria-pressed="true">
+                <span class="t-name">Medium</span>
+                <span class="t-sub">~500 words</span>
+              </button>
+              <button class="length-card" data-val="long (about 1000 words)" aria-pressed="false">
+                <span class="t-name">Long</span>
+                <span class="t-sub">~1000 words</span>
+              </button>
             </div>
           </div>
-        </details>
-        <div class="perf" aria-hidden="true"></div>
-      </div>
 
-      <button class="issue-btn" id="gen-btn" onclick="generateStory()">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5" stroke-dasharray="2.6 2.2"/><path d="M12 9.4v5.2M9.4 12h5.2"/></svg>
-        <span id="gen-label">Generate Story</span>
-      </button>
+          <div class="field-group">
+            <label class="field-label" for="focus-input">Lesson Focus <span class="opt">optional</span></label>
+            <input id="focus-input" class="text-field" type="text" placeholder="Past Perfect, phrasal verbs, travel English…" maxlength="80" autocomplete="off">
+            <div class="quick-row" id="focus-quick">
+              <button class="quick-chip" type="button" data-focus="Past Perfect">Past Perfect</button>
+              <button class="quick-chip" type="button" data-focus="Phrasal verbs">Phrasal verbs</button>
+              <button class="quick-chip" type="button" data-focus="Conditionals">Conditionals</button>
+              <button class="quick-chip" type="button" data-focus="Travel vocabulary">Travel vocabulary</button>
+              <button class="quick-chip" type="button" data-focus="Linking words">Linking words</button>
+            </div>
+            <div class="field-hint">The story will naturally include this topic, and the evaluation will focus on it.</div>
+          </div>
 
-      <div class="error-banner" id="error-banner" role="alert"></div>
+          <div class="field-group">
+            <label class="field-label" for="topic-input">Purpose <span class="opt">optional</span></label>
+            <input id="topic-input" class="text-field" type="text" placeholder="e.g. friendship, the ocean, a lost key…" maxlength="140" autocomplete="off">
+          </div>
 
-      <div class="desk-group" aria-label="Library">
-        <div class="desk-label">Library <span class="opt" id="lib-count"></span></div>
-        <div class="lib-list" id="library-list"></div>
-      </div>
+          <button class="generate-btn" id="gen-btn" onclick="generateStory()">
+            <span id="gen-label">Generate Story</span>
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
 
-    </aside>
+          <div class="examples-row">
+            <span>Try an example:</span>
+            <button class="quick-chip" type="button" onclick="setExample('Mystery', 'a mystery in a small town')">A mystery in a small town</button>
+            <button class="quick-chip" type="button" onclick="setExample('Science Fiction', 'a sci-fi story about AI')">A sci-fi story about AI</button>
+            <button class="quick-chip" type="button" onclick="setExample('Romance', 'a love story at university')">A love story at university</button>
+          </div>
 
-    <!-- COUNTER -->
-    <section class="counter" id="reading-area" aria-label="Reading area">
-
-      <div class="sheet">
-        <!-- Idle entry -->
-        <div class="entry-idle" id="empty-state">
-          <svg class="big-seal" viewBox="0 0 104 104" fill="none" aria-hidden="true">
-            <circle cx="52" cy="52" r="49" fill="#1a2340"/>
-            <circle cx="52" cy="52" r="40" stroke="#f6f2e7" stroke-width="1.6" stroke-dasharray="4 3.2"/>
-            <circle cx="52" cy="52" r="30" stroke="#c8102e" stroke-width="2.4"/>
-            <path d="M38 44c4.4-3 9.2-3 14 0 4.8-3 9.6-3 14 0v20c-4.4-3-9.2-3-14 0-4.8-3-9.6-3-14 0z" stroke="#f6f2e7" stroke-width="2.4" stroke-linejoin="round"/>
-            <path d="M52 44v20" stroke="#f6f2e7" stroke-width="1.6"/>
-          </svg>
-          <h2>Ready to read?</h2>
-          <p>
-            Declare your destination, visa, and stay at the desk —<br>
-            then press <strong>Generate Story</strong> for a fresh entry sheet every time.
-          </p>
-          <ul class="idle-tools">
-            <li>
-              <span class="tool-chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5z"/><path d="M16 9a4.2 4.2 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></span>
-              Read aloud
-            </li>
-            <li>
-              <span class="tool-chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5l3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg></span>
-              Highlight
-            </li>
-            <li>
-              <span class="tool-chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2.5"/></svg></span>
-              Copy text
-            </li>
-            <li>
-              <span class="tool-chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8V3.5h10V8"/><rect x="4" y="8" width="16" height="8" rx="1.5"/><path d="M7 13.5h10V20H7z"/></svg></span>
-              Print
-            </li>
-          </ul>
+          <details class="key-details" id="key-details">
+            <summary>Groq API key <span id="groq-key-status-mini" role="status"></span></summary>
+            <div class="key-body">
+              <div class="key-wrap">
+                <input id="groq-key-input" class="text-field" type="password" placeholder="gsk_••••••••••••••••"
+                  autocomplete="off" spellcheck="false" aria-label="Groq API key">
+                <button class="key-toggle" id="groq-key-toggle" type="button" title="Show / hide" aria-label="Show or hide API key" aria-pressed="false">
+                  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></svg>
+                </button>
+              </div>
+              <div class="key-hint">
+                <span id="groq-key-status" role="status">● No guardada</span>
+                <span aria-hidden="true">·</span>
+                <a href="https://console.groq.com/keys" target="_blank" rel="noopener">Crear key en Groq</a>
+              </div>
+              <div class="key-actions">
+                <button class="btn-solid" id="groq-key-save" type="button" onclick="saveGroqKey()">Guardar</button>
+                <button class="btn-ghost" id="groq-key-clear" type="button" onclick="clearGroqKey()">Borrar</button>
+              </div>
+            </div>
+          </details>
         </div>
 
-        <!-- Loading -->
-        <div class="entry-loading" id="loading-state" style="display:none">
-          <div class="press-stage" aria-hidden="true">
-            <div class="press-shock"></div>
-            <div class="press-seal">E</div>
-          </div>
+        <aside class="cover-side" aria-label="Preview">
+          <div class="cover-frame" id="create-cover"></div>
+          <p class="cover-quote">Good stories build <strong>brighter</strong> futures.<br>Read a little more every day.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ══════════ READER ══════════ -->
+    <section class="view" id="view-reader" aria-label="Reader">
+      <div class="state-card" id="empty-state">
+        <h2>No story open</h2>
+        <p>Create a story first, or pick one from your library to continue reading.</p>
+        <button class="continue-btn" onclick="showView('create')">Create a story</button>
+      </div>
+
+      <div class="state-card" id="loading-state" style="display:none">
+        <div class="press-ring" aria-hidden="true"></div>
+        <h2>Writing your story…</h2>
+        <p>This usually takes a few seconds</p>
+      </div>
+
+      <div id="reader-content" style="display:none">
+        <div class="reader-back">
+          <button class="back-btn" onclick="showView('library')">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+            Library
+          </button>
+          <div class="reader-badges" id="story-meta"></div>
+          <button class="ask-toggle" id="ask-toggle" aria-pressed="false" onclick="toggleAsk()">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-8 8H5l-2 2V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/></svg>
+            Ask AI
+          </button>
+        </div>
+
+        <div class="reader-grid" id="reading-area">
           <div>
-            <h3>Stamping your entry…</h3>
-            <p>This usually takes a few seconds</p>
+            <article class="story-card" id="story-card" aria-live="polite">
+              <div class="story-cover" id="story-cover" aria-label="Story cover artwork"></div>
+              <div class="story-head">
+                <h2 class="story-title" id="story-title">—</h2>
+              </div>
+              <div class="story-tools">
+                <button class="tool-btn" id="tts-btn" title="Read aloud" aria-pressed="false" onclick="toggleTTS()">
+                  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5z"/><path d="M16 9a4.2 4.2 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>
+                  <span class="sr-only">Read aloud</span>
+                </button>
+                <button class="tool-btn" id="highlight-btn" title="Highlight words" aria-pressed="false" onclick="toggleHighlight()">
+                  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5l3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg>
+                  <span class="sr-only">Highlight words</span>
+                </button>
+                <button class="tool-btn" id="copy-btn" title="Copy story" onclick="copyStory()">
+                  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2.5"/></svg>
+                  <span class="sr-only">Copy story</span>
+                </button>
+                <button class="tool-btn" title="Print story" onclick="window.print()">
+                  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8V3.5h10V8"/><rect x="4" y="8" width="16" height="8" rx="1.5"/><path d="M7 13.5h10V20H7z"/></svg>
+                  <span class="sr-only">Print story</span>
+                </button>
+                <div class="font-ctl">
+                  <button class="tool-btn" id="font-dec" title="Smaller text" onclick="stepFont(-1)" aria-label="Decrease font size">A−</button>
+                  <button class="tool-btn" id="font-inc" title="Larger text" onclick="stepFont(1)" aria-label="Increase font size">A+</button>
+                  <input id="font-size-range" type="range" min="14" max="26" value="18" oninput="setFontSize(this.value)" aria-label="Text size">
+                </div>
+              </div>
+              <div class="story-body">
+                <div id="story-text"></div>
+              </div>
+              <div class="progress-thin" id="progress-bar" style="display:none">
+                <div class="progress-track" aria-hidden="true">
+                  <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <span class="progress-label" id="progress-label">0%</span>
+              </div>
+            </article>
+
+            <article class="eval-card" id="eval-card" style="display:none" aria-label="Evaluation" aria-live="polite">
+              <div id="eval-body"></div>
+            </article>
           </div>
+
+          <aside class="ask-panel" aria-label="Ask AI">
+            <div class="chat-card" id="chat-card">
+              <div class="chat-head">
+                <h3>Ask AI</h3>
+                <p>Talk about the story, ask questions or check your understanding.</p>
+              </div>
+              <div class="chat-log" id="chat-log" aria-live="polite"></div>
+              <div class="suggest-col" id="suggest-row" aria-label="Suggested questions"></div>
+              <div class="chat-row">
+                <input id="chat-input" class="text-field" type="text" placeholder="Ask something about the story…" maxlength="1000" autocomplete="off">
+                <button class="chat-send" id="chat-send" onclick="sendChat()">Send</button>
+              </div>
+              <div class="chat-status" id="chat-status"></div>
+              <div class="eval-zone">
+                <button class="eval-btn" id="eval-btn" onclick="runEvaluation()">Evaluate my English</button>
+                <div class="eval-hint" id="eval-hint">Keep chatting a little more to get a meaningful evaluation.</div>
+              </div>
+            </div>
+          </aside>
         </div>
-
-        <!-- Entry sheet -->
-        <article class="entry-sheet" id="story-card" style="display:none" aria-live="polite">
-          <div class="seal-head">
-            <div>
-              <div class="seal-row" id="story-meta"></div>
-              <h2 class="entry-title" id="story-title">—</h2>
-            </div>
-            <div class="sheet-tools">
-              <button class="sheet-btn" id="highlight-btn" title="Highlight words" aria-pressed="false" onclick="toggleHighlight()">
-                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5l3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg>
-                <span class="sr-only">Highlight words</span>
-              </button>
-              <button class="sheet-btn" id="tts-btn" title="Read aloud" aria-pressed="false" onclick="toggleTTS()">
-                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5z"/><path d="M16 9a4.2 4.2 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>
-                <span class="sr-only">Read aloud</span>
-              </button>
-              <button class="sheet-btn" id="copy-btn" title="Copy story" onclick="copyStory()">
-                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2.5"/></svg>
-                <span class="sr-only">Copy story</span>
-              </button>
-              <button class="sheet-btn" title="Print story" onclick="window.print()">
-                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8V3.5h10V8"/><rect x="4" y="8" width="16" height="8" rx="1.5"/><path d="M7 13.5h10V20H7z"/></svg>
-                <span class="sr-only">Print story</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="size-bar">
-            <label for="font-size-range">Text size</label>
-            <input id="font-size-range" type="range" min="14" max="26" value="18" oninput="setFontSize(this.value)">
-            <span class="fs-val" id="font-size-label">18</span>
-          </div>
-
-          <div class="entry-body">
-            <div id="story-text"></div>
-          </div>
-
-          <div class="route-wrap" id="progress-bar" style="display:none">
-            <div class="route-track" aria-hidden="true">
-              <div class="route-fill" id="progress-fill"></div>
-            </div>
-            <span class="route-done" id="route-flag" hidden>Entry logged</span>
-            <div class="route-label" id="progress-label">0%</div>
-          </div>
-        </article>
-
-        <!-- Suggested questions -->
-        <div class="suggest-row" id="suggest-row" style="display:none" aria-label="Suggested questions"></div>
-
-        <!-- Chat -->
-        <article class="entry-sheet" id="chat-card" style="display:none; margin-top:18px" aria-label="Discuss the story">
-          <div class="entry-body">
-            <h3 class="panel-title">Chat about this story</h3>
-            <div class="chat-log" id="chat-log" aria-live="polite"></div>
-            <div class="chat-row">
-              <input id="chat-input" class="field" type="text" placeholder="Ask about the story…" maxlength="1000" style="color:var(--text-ink); background:var(--paper-100); border-color:var(--paper-300)">
-              <button class="sheet-btn" id="chat-send" title="Send message" onclick="sendChat()" style="width:auto; padding:0 16px; font-weight:700">Send</button>
-            </div>
-            <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
-              <button class="suggest-q" id="eval-btn" onclick="runEvaluation()">Evaluate my English</button>
-              <span id="chat-status" style="font-size:0.78rem; color:var(--text-ink-soft)"></span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Evaluation -->
-        <article class="entry-sheet" id="eval-card" style="display:none; margin-top:18px" aria-label="Evaluation" aria-live="polite">
-          <div class="entry-body" id="eval-body"></div>
-        </article>
       </div>
+    </section>
 
+    <!-- ══════════ LIBRARY ══════════ -->
+    <section class="view" id="view-library" aria-label="Library">
+      <div class="lib-head">
+        <div>
+          <h1>Your stories <span id="lib-count" style="font-size:1rem; color:var(--muted); font-family:var(--sans)"></span></h1>
+          <p>All your generated stories and conversations in one place.</p>
+        </div>
+        <button class="generate-btn" style="width:auto; margin:0; padding:12px 22px" onclick="showView('create')">+ New story</button>
+      </div>
+      <div class="lib-controls">
+        <div class="lib-search">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+          <input id="lib-search" class="text-field" type="text" placeholder="Search stories…" autocomplete="off" oninput="renderLibrary()">
+        </div>
+        <div class="lib-filters" id="lib-filters" role="group" aria-label="Filter by genre"></div>
+      </div>
+      <div id="library-list"></div>
     </section>
   </main>
+
+  <!-- Floating selection toolbar + vocab popover -->
+  <div class="sel-bar" id="sel-bar" role="toolbar" aria-label="Text actions">
+    <button type="button" data-act="explain">Explain</button>
+    <button type="button" data-act="translate">Translate</button>
+    <button type="button" data-act="say">Say</button>
+  </div>
+  <div class="vocab-pop" id="vocab-pop" aria-live="polite">
+    <p class="vocab-title" id="vocab-word"></p>
+    <div class="vocab-body" id="vocab-body"></div>
+    <div class="vocab-actions">
+      <button type="button" id="vocab-listen">Listen</button>
+      <button type="button" id="vocab-close">Close</button>
+    </div>
+  </div>
 
   <script>
     // ── Config ─────────────────────────────────────────────────
@@ -1746,6 +2182,7 @@
     const LS_SESSIONS = 'ea_v1_sessions';
     const LS_MESSAGES = 'ea_v1_messages';
     const LS_EVALS = 'ea_v1_evals';
+    const LS_FONT = 'ea_v1_fontsize';
 
     // ── State ──────────────────────────────────────────────────
     let selectedGenre = 'Adventure';
@@ -1760,8 +2197,76 @@
     let currentStoryId = null;
     let chatAbort = null;
     let evalAbort = null;
+    let libFilter = 'All';
+    let currentView = 'create';
 
-    // ── Store (localStorage, §18: story survives reload) ───────
+    const LEVEL_NAMES = { A1: 'Beginner', A2: 'Elementary', B1: 'Intermediate', B2: 'Upper-Intermediate', C1: 'Advanced', C2: 'Proficiency' };
+
+    // ── Views ──────────────────────────────────────────────────
+    function showView(name) {
+      currentView = name;
+      ['create', 'reader', 'library'].forEach((v) => {
+        document.getElementById('view-' + v).classList.toggle('active', v === name);
+        const nav = document.getElementById('nav-' + v);
+        if (nav) nav.setAttribute('aria-current', v === name ? 'page' : 'false');
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (name === 'library') renderLibrary();
+    }
+
+    function goToKey() {
+      showView('create');
+      const d = document.getElementById('key-details');
+      if (d) {
+        d.open = true;
+        setTimeout(() => document.getElementById('groq-key-input').focus({ preventScroll: true }), 60);
+        d.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function setExample(genre, topic) {
+      document.querySelectorAll('#genre-grid .genre-card').forEach((b) => {
+        const on = b.dataset.val === genre;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-pressed', String(on));
+        if (on) selectedGenre = b.dataset.val;
+      });
+      document.getElementById('topic-input').value = topic;
+      updateCoverPreview();
+      generateStory();
+    }
+
+    // ── Cover art (one flat duotone SVG language, decorative) ──
+    const COVER_MOTIFS = {
+      'Adventure': '<circle cx="296" cy="66" r="26" fill="#e0653a"/><path d="M0 210 L110 90 L190 190 L270 110 L400 230 L400 250 L0 250 Z" fill="#2f4a7d"/><path d="M0 235 L140 150 L240 235 L340 170 L400 235 L400 250 L0 250 Z" fill="#16233d"/><path d="M110 90 l14 22 h-28 Z" fill="#f4efe6"/>',
+      'Mystery': '<circle cx="90" cy="62" r="24" fill="#f4efe6"/><circle cx="100" cy="56" r="20" fill="#22355c"/><rect x="150" y="120" width="60" height="70" fill="#16233d"/><rect x="230" y="100" width="70" height="90" fill="#2f4a7d"/><rect x="162" y="134" width="12" height="12" fill="#e0653a"/><rect x="244" y="116" width="12" height="12" fill="#e0653a"/><rect x="268" y="140" width="12" height="12" fill="#f4efe6"/><path d="M0 210 Q200 190 400 210 L400 250 L0 250 Z" fill="#101a30"/>',
+      'Science Fiction': '<circle cx="200" cy="120" r="52" fill="#e0653a"/><ellipse cx="200" cy="120" rx="110" ry="26" fill="none" stroke="#f4efe6" stroke-width="6" transform="rotate(-18 200 120)"/><circle cx="80" cy="50" r="4" fill="#f4efe6"/><circle cx="330" cy="60" r="5" fill="#f4efe6"/><circle cx="300" cy="200" r="4" fill="#f4efe6"/><path d="M0 220 Q200 200 400 220 L400 250 L0 250 Z" fill="#101a30"/>',
+      'Fantasy': '<circle cx="200" cy="70" r="26" fill="#e0653a"/><path d="M120 220 V130 l18-10 v14 h16 v-22 h20 v22 h16 v-14 l18 10 V220 Z" fill="#16233d"/><path d="M228 220 V140 l16-10 v12 h14 V122 h18 v20 h14 v-12 l16 10 V220 Z" fill="#2f4a7d"/><path d="M0 220 H400 V250 H0 Z" fill="#101a30"/><rect x="146" y="160" width="10" height="16" fill="#f4efe6"/><rect x="252" y="168" width="10" height="16" fill="#f4efe6"/>',
+      'Slice of Life': '<circle cx="200" cy="80" r="26" fill="#e0653a"/><path d="M150 130 h90 v52 a30 30 0 0 1-30 30 h-30 a30 30 0 0 1-30-30 Z" fill="#16233d"/><path d="M240 140 h14 a16 16 0 0 1 0 32 h-14" fill="none" stroke="#16233d" stroke-width="10"/><path d="M172 108 c0-10-10-10-10-20 M196 108 c0-10-10-10-10-20" stroke="#2f4a7d" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M0 222 H400 V250 H0 Z" fill="#101a30"/>',
+      'Horror': '<circle cx="200" cy="90" r="40" fill="#f4efe6"/><path d="M60 220 Q120 140 110 90 M110 150 l-24-8 M112 130 l-20-14 M110 170 l26-6" stroke="#101a30" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M0 220 Q200 200 400 220 L400 250 L0 250 Z" fill="#101a30"/><circle cx="320" cy="50" r="4" fill="#f4efe6"/><circle cx="70" cy="60" r="3" fill="#f4efe6"/>',
+      'Romance': '<circle cx="200" cy="72" r="26" fill="#e0653a"/><path d="M200 175 C150 140 130 115 145 95 a24 24 0 0 1 40-8 l15 14 15-14 a24 24 0 0 1 40 8 c15 20-5 45-55 80 Z" fill="#c8102e"/><path d="M0 210 Q120 180 220 205 T400 200 L400 250 L0 250 Z" fill="#16233d"/><path d="M0 230 Q200 215 400 230 L400 250 L0 250 Z" fill="#101a30"/>',
+      'Historical': '<circle cx="200" cy="66" r="24" fill="#e0653a"/><path d="M100 100 L200 60 L300 100 Z" fill="#16233d"/><rect x="120" y="110" width="14" height="70" fill="#2f4a7d"/><rect x="158" y="110" width="14" height="70" fill="#2f4a7d"/><rect x="196" y="110" width="14" height="70" fill="#2f4a7d"/><rect x="234" y="110" width="14" height="70" fill="#2f4a7d"/><rect x="268" y="110" width="14" height="70" fill="#2f4a7d"/><rect x="105" y="188" width="190" height="12" fill="#16233d"/><path d="M0 220 H400 V250 H0 Z" fill="#101a30"/>'
+    };
+
+    function coverSVG(genre) {
+      const motif = COVER_MOTIFS[genre] || COVER_MOTIFS['Adventure'];
+      return `<svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${escapeHtml(genre)} cover artwork">`
+        + `<rect width="400" height="250" fill="#f3ecdd"/>`
+        + `<rect y="150" width="400" height="100" fill="#22355c"/>`
+        + motif + `</svg>`;
+    }
+
+    function updateCoverPreview() {
+      const el = document.getElementById('create-cover');
+      if (el) el.innerHTML = coverSVG(selectedGenre);
+    }
+
+    function setCover(genre) {
+      const el = document.getElementById('story-cover');
+      if (el) el.innerHTML = coverSVG(genre);
+    }
+
+    // ── Store (localStorage, story survives reload) ────────────
     function lsGet(key, fallback) {
       try {
         const raw = localStorage.getItem(key);
@@ -1815,21 +2320,17 @@
       const has = !!getGroqKey();
       const dot = document.getElementById('groq-key-status');
       const mini = document.getElementById('groq-key-status-mini');
+      const pillLabel = document.getElementById('key-pill-label');
       const inp = document.getElementById('groq-key-input');
-      if (!dot || !inp) return;
-      if (has) {
-        dot.textContent = '● Guardada ✓';
-        dot.className = 'key-status saved';
-        inp.classList.add('has-key');
-        if (mini) { mini.textContent = '· ✓'; mini.className = 'key-status saved'; }
-      } else {
-        dot.textContent = '● No guardada';
-        dot.className = 'key-status empty';
-        inp.classList.remove('has-key');
-        if (mini) { mini.textContent = ''; mini.className = 'key-status empty'; }
+      if (mini) mini.classList.toggle('saved', has);
+      if (pillLabel) pillLabel.textContent = has ? 'Key saved' : 'API key';
+      if (dot) {
+        dot.textContent = has ? '● Guardada ✓' : '● No guardada';
+        dot.style.color = has ? 'var(--green)' : 'var(--muted)';
       }
+      if (inp) inp.classList.toggle('has-key', has);
       const clearBtn = document.getElementById('groq-key-clear');
-      if (clearBtn) clearBtn.disabled = !has && !inp.value.trim();
+      if (clearBtn) clearBtn.disabled = !has && !(inp && inp.value.trim());
     }
 
     function saveGroqKey() {
@@ -1838,13 +2339,11 @@
       if (!val) { setError('Pegá tu Groq API key (empieza con gsk_...)'); return; }
       if (!val.startsWith('gsk_')) {
         setError('La key de Groq suele empezar con gsk_ — verificá que esté bien copiada.');
-        // still save? save anyway
       } else {
         setError('');
       }
       try { localStorage.setItem(GROQ_KEY_LS, val); } catch {}
       setGroqKeyStatus();
-      // feedback
       const btn = document.getElementById('groq-key-save');
       const prev = btn.textContent;
       btn.textContent = 'Guardada ✓';
@@ -1859,82 +2358,70 @@
       setError('');
     }
 
-    // init key from storage + eye toggle wiring
-    (function initGroqKeyField() {
-      document.addEventListener('DOMContentLoaded', () => {
-        const inp = document.getElementById('groq-key-input');
-        const toggle = document.getElementById('groq-key-toggle');
-        const saved = getGroqKey();
-        if (inp && saved) inp.value = saved;
-        setGroqKeyStatus();
-        if (inp) {
-          inp.addEventListener('input', setGroqKeyStatus);
-          inp.addEventListener('keydown', e => { if (e.key === 'Enter') saveGroqKey(); });
-        }
-        if (toggle && inp) {
-          toggle.addEventListener('click', () => {
-            const show = inp.type === 'password';
-            inp.type = show ? 'text' : 'password';
-            toggle.setAttribute('aria-pressed', String(show));
-          });
-        }
-      });
-      // if DOM already ready (script at bottom), run immediately too
-      const inpImmediate = document.getElementById('groq-key-input');
-      if (inpImmediate) {
-        const savedImmediate = getGroqKey();
-        if (savedImmediate) inpImmediate.value = savedImmediate;
-        // defer status paint to next tick to ensure dot exists
-        setTimeout(setGroqKeyStatus, 0);
-      }
-    })();
-
     // ── Option wiring ──────────────────────────────────────────
-    document.querySelectorAll('#genre-grid .stamp').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#genre-grid .stamp').forEach(b => {
-          b.classList.remove('active');
-          b.setAttribute('aria-pressed', 'false');
+    function wireOptions() {
+      document.querySelectorAll('#genre-grid .genre-card').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#genre-grid .genre-card').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
+          selectedGenre = btn.dataset.val;
+          updateCoverPreview();
         });
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed', 'true');
-        selectedGenre = btn.dataset.val;
       });
-    });
 
-    document.querySelectorAll('#level-row .visa').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#level-row .visa').forEach(b => {
-          b.classList.remove('active');
-          b.setAttribute('aria-pressed', 'false');
+      document.querySelectorAll('#level-row .chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#level-row .chip').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
+          selectedLevel = btn.dataset.val;
+          document.getElementById('level-desc').innerHTML = `<strong>${selectedLevel}</strong> · ${LEVEL_NAMES[selectedLevel]}`;
         });
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed', 'true');
-        selectedLevel = btn.dataset.val;
       });
-    });
 
-    document.querySelectorAll('#length-row .ticket').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#length-row .ticket').forEach(b => {
-          b.classList.remove('active');
-          b.setAttribute('aria-pressed', 'false');
+      document.querySelectorAll('#length-row .length-card').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#length-row .length-card').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
+          selectedLength = btn.dataset.val;
         });
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed', 'true');
-        selectedLength = btn.dataset.val;
       });
-    });
 
-    document.getElementById('topic-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') generateStory();
-    });
+      document.querySelectorAll('#focus-quick .quick-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById('focus-input').value = btn.dataset.focus;
+        });
+      });
+
+      document.getElementById('topic-input').addEventListener('keydown', e => {
+        if (e.key === 'Enter') generateStory();
+      });
+      document.getElementById('focus-input').addEventListener('keydown', e => {
+        if (e.key === 'Enter') generateStory();
+      });
+      document.getElementById('chat-input').addEventListener('keydown', e => {
+        if (e.key === 'Enter') sendChat();
+      });
+    }
 
     // ── Generate ───────────────────────────────────────────────
     async function generateStory() {
       if (isGenerating) return;
       isGenerating = true;
       stopTTS();
+      hideSelBar();
+      hideVocab();
       setError('');
 
       const topic = document.getElementById('topic-input').value.trim().slice(0, 140);
@@ -1942,17 +2429,15 @@
       const lesson_focus = (lessonFocusEl ? lessonFocusEl.value : '').trim().slice(0, 80);
       const lengthKey = selectedLength.split(' ')[0].toLowerCase(); // short|medium|long
 
-      // UI: show loading
+      // UI: show loading in reader view
+      showView('reader');
+      document.getElementById('reader-content').style.display = 'none';
       document.getElementById('empty-state').style.display = 'none';
       document.getElementById('loading-state').style.display = 'flex';
-      const card = document.getElementById('story-card');
-      card.style.display = 'none';
-      card.classList.remove('stamped');
-      document.getElementById('progress-bar').style.display = 'none';
 
       const btn = document.getElementById('gen-btn');
       btn.disabled = true;
-      document.getElementById('gen-label').textContent = 'Stamping…';
+      document.getElementById('gen-label').textContent = 'Generating…';
 
       try {
         // auto-save typed key if user never pressed Guardar
@@ -1966,7 +2451,7 @@
         const headers = { 'Content-Type': 'application/json' };
         if (groqKey) headers['x-groq-api-key'] = groqKey;
 
-        // New structured path (§§2-4). Legacy text format kept as fallback.
+        // New structured path. Legacy text format kept as fallback.
         const idempotencyKey = newId();
         const newBody = { genre: selectedGenre, level: selectedLevel, length: lengthKey, topic, lesson_focus, idempotencyKey };
         let res = await fetch(API_URL, {
@@ -2001,11 +2486,10 @@
 
         if (!res.ok) {
           const errText = await res.text();
-          // surface model deprecation clearly
           if (errText.includes('model_not_found') || errText.includes('does not exist')) {
-            throw new Error(`Modelo no disponible (deprecated en Groq 16/08/2026). Actualizado a openai/gpt-oss-20b — recargá y reintentá. Detalle: ${errText}`);
+            throw new Error('Modelo no disponible en Groq — recargá y reintentá.');
           }
-          throw new Error(`API error ${res.status}: ${errText}`);
+          throw new Error(`API error ${res.status}: ${errText.slice(0, 300)}`);
         }
 
         const data = await res.json();
@@ -2014,7 +2498,7 @@
         if (data && typeof data.story === 'string' && data.story.trim()) {
           title = (data.title || 'Story').trim();
           body = data.story.trim();
-          suggested = Array.isArray(data.suggested_questions) ? data.suggested_questions.filter(Boolean).slice(0, 6) : [];
+          suggested = Array.isArray(data.suggested_questions) ? data.suggested_questions.filter(Boolean).slice(0, 4) : [];
           focusExamples = Array.isArray(data.focus_examples) ? data.focus_examples : [];
         } else {
           // robust content extraction (chat vs completion, gpt-oss reasoning)
@@ -2024,7 +2508,6 @@
             data?.choices?.[0]?.delta?.content ??
             null;
           if (!rawContent) {
-            // surface full payload for debugging
             const preview = JSON.stringify(data).slice(0, 800);
             console.error('[Groq] missing content, full data:', data);
             if (data?.error) throw new Error(`Groq error: ${JSON.stringify(data.error).slice(0, 600)}`);
@@ -2045,7 +2528,7 @@
 
         if (!body) throw new Error('Story content is empty.');
 
-        // Persist session (§§5-6, 18): story gets a stable ID, reload never regenerates.
+        // Persist session: story gets a stable ID, reload never regenerates.
         const storyId = newId();
         currentStoryId = storyId;
         const wordCountPre = body.split(/\s+/).filter(Boolean).length;
@@ -2062,42 +2545,13 @@
           window.history.replaceState({}, '', url);
         } catch {}
 
-        // Show story — The Stamp Drop: restart choreography on every arrival
-        document.getElementById('loading-state').style.display = 'none';
-        card.style.display = 'block';
-        // restart the stamp-in signature motion on every arrival
-        card.classList.remove('stamped');
-        void card.offsetWidth;
-        const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reduceMotion) card.classList.add('reduced');
-        card.classList.add('stamped');
-        // release will-change after focal (~900ms) so scroll stays cheap
-        clearTimeout(window._stampT);
-        window._stampT = setTimeout(() => {
-          card.style.willChange = 'auto';
-          card.querySelectorAll('.seal, .entry-title, #story-text p').forEach(n => { n.style.willChange = 'auto'; });
-        }, 950);
-        document.getElementById('progress-bar').style.display = 'flex';
-
-        const wordCount = body.split(/\s+/).filter(Boolean).length;
-        const readMin = Math.max(1, Math.round(wordCount / 200));
-
-        document.getElementById('story-meta').innerHTML = `
-          <span class="seal seal-red" style="--i:0">${selectedGenre}</span>
-          <span class="seal seal-ink" style="--i:1">${selectedLevel}</span>
-          <span class="seal" style="--i:2">${selectedLength.split(' ')[0]}</span>
-          <span class="seal" style="--i:3">${wordCount} words · ${readMin} min read</span>
-        `;
-        document.getElementById('story-title').textContent = title;
-
-        renderStory(body);
-        setupScrollProgress();
         openStorySession(storyId);
-        document.getElementById('story-card').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
 
       } catch (err) {
+        showView('reader');
         document.getElementById('loading-state').style.display = 'none';
-        document.getElementById('empty-state').style.display = 'flex';
+        document.getElementById('reader-content').style.display = currentStoryId ? 'block' : 'none';
+        document.getElementById('empty-state').style.display = currentStoryId ? 'none' : 'flex';
         setError(err.message || 'Could not generate story. Please try again.');
         console.error(err);
       } finally {
@@ -2107,32 +2561,507 @@
       }
     }
 
+    // ── Session / library / chat / evaluate ────────────────────
+    function currentStory() { return currentStoryId ? getStory(currentStoryId) : null; }
+
+    function openStorySession(storyId) {
+      const s = getStory(storyId);
+      if (!s) return;
+      currentStoryId = storyId;
+      stopTTS();
+      hideSelBar();
+      hideVocab();
+      setError('');
+      showView('reader');
+      document.getElementById('empty-state').style.display = 'none';
+      document.getElementById('loading-state').style.display = 'none';
+      document.getElementById('reader-content').style.display = 'block';
+
+      const readMin = Math.max(1, Math.round((s.words || 0) / 200));
+      const last = lastEval(storyId);
+      document.getElementById('story-meta').innerHTML =
+        `<span class="badge badge-accent">${escapeHtml(s.genre)}</span>`
+        + `<span class="badge badge-ink">${escapeHtml(s.level)}</span>`
+        + `<span class="badge">${escapeHtml(s.length)} · ${s.words} words · ${readMin} min</span>`
+        + (s.lesson_focus ? `<span class="badge">${escapeHtml(s.lesson_focus)}</span>` : '')
+        + (last ? `<span class="badge">eval ${last.score}</span>` : '');
+      document.getElementById('story-title').textContent = s.title;
+      setCover(s.genre);
+      renderStory(s.body);
+      setupScrollProgress();
+      // Ask AI starts closed; reader owns the viewport.
+      document.getElementById('reading-area').classList.remove('ask-open');
+      document.getElementById('ask-toggle').setAttribute('aria-pressed', 'false');
+      renderSuggested(s);
+      renderChatLog();
+      updateEvalGate();
+      const prev = lastEval(storyId);
+      if (prev) renderEval(prev);
+      else document.getElementById('eval-card').style.display = 'none';
+      setSession(storyId, { status: prev ? 'evaluated' : 'reading' });
+      renderLibrary();
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set('story', storyId);
+        window.history.replaceState({}, '', url);
+      } catch {}
+    }
+
+    function toggleAsk() {
+      const grid = document.getElementById('reading-area');
+      const open = !grid.classList.contains('ask-open');
+      grid.classList.toggle('ask-open', open);
+      document.getElementById('ask-toggle').setAttribute('aria-pressed', String(open));
+      if (open) {
+        setTimeout(() => document.getElementById('chat-input').focus({ preventScroll: true }), 320);
+      }
+    }
+
+    function fmtDate(iso) {
+      try {
+        return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      } catch { return ''; }
+    }
+
+    function scoreLabel(score) {
+      if (score == null) return 'Not evaluated';
+      if (score >= 85) return 'Excellent!';
+      if (score >= 70) return 'Great progress!';
+      if (score >= 50) return 'Good job!';
+      return 'Keep going!';
+    }
+
+    function renderLibrary() {
+      const el = document.getElementById('library-list');
+      if (!el) return;
+      const all = Object.values(lsGet(LS_STORIES, {})).sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+      const q = (document.getElementById('lib-search')?.value || '').trim().toLowerCase();
+      // genre filter chips
+      const filtersEl = document.getElementById('lib-filters');
+      if (filtersEl && !filtersEl.children.length) {
+        ['All', 'Adventure', 'Mystery', 'Science Fiction', 'Fantasy', 'Slice of Life', 'Horror', 'Romance', 'Historical'].forEach((g) => {
+          const b = document.createElement('button');
+          b.className = 'chip' + (g === libFilter ? ' active' : '');
+          b.type = 'button';
+          b.textContent = g === 'Science Fiction' ? 'Sci-Fi' : g;
+          b.dataset.genre = g;
+          b.addEventListener('click', () => {
+            libFilter = g;
+            filtersEl.querySelectorAll('.chip').forEach((c) => c.classList.toggle('active', c.dataset.genre === g));
+            renderLibrary();
+          });
+          filtersEl.appendChild(b);
+        });
+      }
+      document.getElementById('lib-count').textContent = all.length ? `(${all.length})` : '';
+      const rows = all.filter((s) =>
+        (libFilter === 'All' || s.genre === libFilter) &&
+        (!q || (s.title + ' ' + (s.body || '').slice(0, 400)).toLowerCase().includes(q))
+      );
+      if (!rows.length) {
+        el.innerHTML = `<div class="lib-empty-card"><h3>${all.length ? 'No matches' : 'No stories yet'}</h3><p>${all.length ? 'Try another search or genre.' : 'Generate your first story and it will live here.'}</p></div>`;
+        return;
+      }
+      el.innerHTML = '';
+      rows.slice(0, 50).forEach((s) => {
+        const last = lastEval(s.id);
+        const score = last ? last.score : null;
+        const row = document.createElement('div');
+        row.className = 'story-row';
+        const excerpt = (s.body || '').replace(/\s+/g, ' ').slice(0, 110) + '…';
+        row.innerHTML =
+          `<div class="story-thumb">${coverSVG(s.genre)}</div>`
+          + `<div><h2></h2><div class="row-badges">`
+          + `<span class="badge badge-accent">${escapeHtml(s.genre)}</span>`
+          + `<span class="badge badge-ink">${escapeHtml(s.level)}</span>`
+          + `<span class="badge">${escapeHtml(s.length)}</span>`
+          + (s.lesson_focus ? `<span class="badge">${escapeHtml(s.lesson_focus)}</span>` : '')
+          + `</div><div class="row-excerpt"></div></div>`
+          + `<div class="row-side"><div class="row-score"><div class="n">${score == null ? '–' : score}</div><div class="l">${escapeHtml(scoreLabel(score))}</div></div>`
+          + `<div><div class="row-date">${escapeHtml(fmtDate(s.created_at))}</div>`
+          + `<div class="row-cta" style="margin-top:8px"><button class="continue-btn" type="button">${score == null && getMessages(s.id).length === 0 ? 'Read again →' : 'Continue →'}</button></div></div></div>`;
+        row.querySelector('h2').textContent = s.title;
+        row.querySelector('.row-excerpt').textContent = excerpt;
+        row.querySelector('.continue-btn').addEventListener('click', () => openStorySession(s.id));
+        el.appendChild(row);
+      });
+    }
+
+    function renderSuggested(s) {
+      const col = document.getElementById('suggest-row');
+      const qs = (s.suggested_questions || []).slice(0, 4);
+      col.innerHTML = '';
+      if (!qs.length) return;
+      // open the panel automatically when there is something to discuss? No — reader stays clean.
+      qs.forEach((q) => {
+        const b = document.createElement('button');
+        b.className = 'suggest-q'; b.type = 'button'; b.textContent = q;
+        b.addEventListener('click', () => {
+          const grid = document.getElementById('reading-area');
+          if (!grid.classList.contains('ask-open')) toggleAsk();
+          const inp = document.getElementById('chat-input');
+          inp.value = q;
+          sendChat();
+        });
+        col.appendChild(b);
+      });
+    }
+
+    function renderChatLog() {
+      const logEl = document.getElementById('chat-log');
+      const msgs = currentStoryId ? getMessages(currentStoryId) : [];
+      logEl.innerHTML = '';
+      msgs.forEach((m) => {
+        const d = document.createElement('div');
+        d.className = 'chat-msg ' + m.role;
+        d.textContent = m.text;
+        logEl.appendChild(d);
+      });
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function updateEvalGate() {
+      const btn = document.getElementById('eval-btn');
+      const hint = document.getElementById('eval-hint');
+      const n = currentStoryId ? getMessages(currentStoryId).filter((m) => m.role === 'user').length : 0;
+      const ready = n >= 4;
+      btn.classList.toggle('gated', !ready);
+      hint.textContent = ready
+        ? 'Ready — I can evaluate your English from this conversation.'
+        : `Keep chatting a little more to get a meaningful evaluation. (${n}/4 messages)`;
+    }
+
+    function chatHeaders() {
+      const typedKey = (document.getElementById('groq-key-input')?.value || '').trim();
+      const groqKey = typedKey || getGroqKey();
+      const h = { 'Content-Type': 'application/json' };
+      if (groqKey) h['x-groq-api-key'] = groqKey;
+      return h;
+    }
+
+    async function sendChat() {
+      const story = currentStory();
+      if (!story || isSending) return;
+      const inp = document.getElementById('chat-input');
+      const text = (inp.value || '').trim().slice(0, 1000);
+      if (!text) return;
+      const grid = document.getElementById('reading-area');
+      if (!grid.classList.contains('ask-open')) toggleAsk();
+      isSending = true;
+      const btn = document.getElementById('chat-send');
+      btn.disabled = true;
+      document.getElementById('chat-status').textContent = 'Thinking…';
+      if (chatAbort) chatAbort.abort();
+      chatAbort = new AbortController();
+      const userMsg = { id: newId(), role: 'user', text, created_at: new Date().toISOString() };
+      pushMessage(story.id, userMsg);
+      renderChatLog();
+      updateEvalGate();
+      inp.value = '';
+      try {
+        const history = getMessages(story.id).slice(-12).map((m) => ({ role: m.role, text: m.text }));
+        const idempotencyKey = newId();
+        const res = await fetch(CHAT_URL, {
+          method: 'POST',
+          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
+          body: JSON.stringify({ story: story.body, level: story.level, lesson_focus: story.lesson_focus || '', history: history.slice(0, -1), message: text, idempotencyKey }),
+          signal: chatAbort.signal,
+        });
+        if (!res.ok) {
+          const t = await res.text();
+          if (res.status === 404) throw new Error('Chat needs the server — run with `vercel dev`.');
+          throw new Error(res.status === 409 ? 'Already sending — wait a moment.' : `Chat error ${res.status}: ${t.slice(0, 300)}`);
+        }
+        const data = await res.json();
+        pushMessage(story.id, { id: newId(), role: 'assistant', text: (data.reply || '').trim(), created_at: new Date().toISOString() });
+        renderChatLog();
+        setSession(story.id, { status: 'chatting' });
+        document.getElementById('chat-status').textContent = '';
+      } catch (err) {
+        if (err?.name !== 'AbortError') {
+          document.getElementById('chat-status').textContent = err.message || 'Chat failed. Try again.';
+        }
+      } finally {
+        isSending = false;
+        btn.disabled = false;
+        if (document.getElementById('chat-status').textContent === 'Thinking…') document.getElementById('chat-status').textContent = '';
+      }
+    }
+
+    function ringSVG(score) {
+      const r = 62;
+      const c = 2 * Math.PI * r;
+      const off = c - (c * Math.min(100, Math.max(0, score))) / 100;
+      return `<svg viewBox="0 0 148 148" role="img" aria-label="Score ${score} out of 100">`
+        + `<circle cx="74" cy="74" r="${r}" fill="none" stroke="var(--line-soft)" stroke-width="12"/>`
+        + `<circle cx="74" cy="74" r="${r}" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 74 74)"/>`
+        + `<text x="74" y="72" text-anchor="middle" font-family="Literata, Georgia, serif" font-weight="800" font-size="34" fill="var(--ink)">${score}</text>`
+        + `<text x="74" y="94" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="var(--muted)">/ 100</text></svg>`;
+    }
+
+    function renderEval(e) {
+      const card = document.getElementById('eval-card');
+      const bodyEl = document.getElementById('eval-body');
+      card.style.display = 'block';
+      const s = e.scores || {};
+      const catRow = (k, label, focus) => (s[k] != null
+        ? `<div class="cat-row"><span class="cat-name">${label}${focus ? ` <span style="color:var(--faint)">(${escapeHtml(e.lesson_focus_feedback?.focus || '')})</span>` : ''}</span><span class="cat-val">${s[k]}</span><div class="cat-bar"><span class="${focus ? 'focus' : ''}" style="width:${s[k]}%"></span></div></div>`
+        : '');
+      const mistakes = (e.mistakes || []).map((m) => `
+        <div class="mistake">
+          <div class="m-pair"><del>${escapeHtml(m.original)}</del><span class="m-arrow">→</span><ins>${escapeHtml(m.correction)}</ins></div>
+          ${m.explanation ? `<div class="m-exp">${escapeHtml(m.explanation)}</div>` : ''}
+          <span class="m-cat">${escapeHtml(m.category)} · ${escapeHtml(m.severity)}</span>
+        </div>`).join('');
+      bodyEl.innerHTML =
+        `<h3 class="eval-section-title" style="font-size:1.4rem">Your evaluation</h3>`
+        + `<div class="eval-top"><div class="score-ring">${ringSVG(e.score)}<div class="score-verdict">${escapeHtml(scoreLabel(e.score))}</div><div class="score-sub">Based on your messages in this conversation.</div></div>`
+        + `<div><h4 class="eval-section-title">Scores</h4><div class="cat-list">${catRow('comprehension', 'Comprehension')}${catRow('grammar', 'Grammar')}${catRow('vocabulary', 'Vocabulary')}${catRow('communication', 'Communication')}${s.lesson_focus != null ? catRow('lesson_focus', 'Lesson focus', true) : ''}</div>`
+        + ((e.strengths || []).length ? `<ul class="strength-list">${e.strengths.map((x) => `<li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><span>${escapeHtml(x)}</span></li>`).join('')}</ul>` : '')
+        + `</div>`
+        + `<div><h4 class="eval-section-title">Overall feedback</h4><p class="eval-summary">${escapeHtml(e.summary || '')}</p>`
+        + (e.lesson_focus_feedback?.feedback ? `<p class="eval-summary" style="margin-top:10px"><strong>${escapeHtml(e.lesson_focus_feedback.focus)}:</strong> ${escapeHtml(e.lesson_focus_feedback.feedback)}</p>` : '')
+        + `</div></div>`
+        + `<div class="eval-cols"><div><h4 class="eval-section-title">Common mistakes</h4>${mistakes || '<p class="eval-summary">No concrete errors found — solid work.</p>'}</div>`
+        + `<div><h4 class="eval-section-title">Recommendations</h4>${(e.recommendations || []).length ? `<ul class="rec-list">${e.recommendations.map((x) => `<li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><span>${escapeHtml(x)}</span></li>`).join('')}</ul>` : '<p class="eval-summary">Nothing specific — keep reading and chatting.</p>'}</div></div>`;
+    }
+
+    async function runEvaluation() {
+      const story = currentStory();
+      if (!story || isEvaluating) return;
+      isEvaluating = true;
+      const btn = document.getElementById('eval-btn');
+      btn.disabled = true;
+      const prevLabel = btn.textContent;
+      btn.textContent = 'Evaluating…';
+      if (evalAbort) evalAbort.abort();
+      evalAbort = new AbortController();
+      try {
+        const userMessages = getMessages(story.id).filter((m) => m.role === 'user').map((m) => m.text);
+        const idempotencyKey = newId();
+        const res = await fetch(EVAL_URL, {
+          method: 'POST',
+          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
+          body: JSON.stringify({ story: story.body, lesson_focus: story.lesson_focus || '', userMessages, idempotencyKey }),
+          signal: evalAbort.signal,
+        });
+        if (!res.ok) {
+          const t = await res.text();
+          if (res.status === 404) throw new Error('Evaluation needs the server — run with `vercel dev`.');
+          throw new Error(res.status === 409 ? 'Evaluation already running.' : `Evaluation error ${res.status}: ${t.slice(0, 300)}`);
+        }
+        const data = await res.json();
+        if (!data.evaluable) {
+          setError(data.message || 'Keep talking a little more so I can give you a meaningful evaluation.');
+          return;
+        }
+        const record = { ...data, id: newId(), storyId: story.id, created_at: new Date().toISOString() };
+        saveEval(record);
+        setSession(story.id, { status: 'evaluated' });
+        renderEval(record);
+        renderLibrary();
+        openStorySessionKeepScroll(story.id);
+        document.getElementById('eval-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        if (err?.name !== 'AbortError') setError(err.message || 'Evaluation failed. Try again.');
+      } finally {
+        isEvaluating = false;
+        btn.disabled = false;
+        btn.textContent = prevLabel;
+      }
+    }
+
+    function openStorySessionKeepScroll(storyId) {
+      const y = window.scrollY;
+      openStorySession(storyId);
+      window.scrollTo(0, y);
+    }
+
+    function viewEvaluation(storyId) {
+      openStorySession(storyId);
+      setTimeout(() => {
+        const card = document.getElementById('eval-card');
+        if (card.style.display !== 'none') card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+
+    // ── Text selection toolbar + vocabulary popover ────────────
+    function selBar() { return document.getElementById('sel-bar'); }
+    function vocabPop() { return document.getElementById('vocab-pop'); }
+
+    function hideSelBar() { selBar().classList.remove('show'); }
+    function hideVocab() { vocabPop().classList.remove('show'); }
+
+    function selectedText() {
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return '';
+      const anchor = sel.anchorNode ? sel.anchorNode.parentElement : null;
+      if (!anchor || !anchor.closest || !anchor.closest('#story-text')) return '';
+      return sel.toString().trim().slice(0, 300);
+    }
+
+    function placeNear(el, rect) {
+      const pad = 8;
+      const w = el.offsetWidth || 260;
+      const h = el.offsetHeight || 48;
+      let x = Math.min(Math.max(pad, rect.left + rect.width / 2 - w / 2), window.innerWidth - w - pad);
+      let y = rect.top - h - 10;
+      if (y < 70) y = rect.bottom + 10;
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+    }
+
+    function showVocab(word, bodyHtml, x, y) {
+      document.getElementById('vocab-word').textContent = word;
+      document.getElementById('vocab-body').innerHTML = bodyHtml;
+      const pop = vocabPop();
+      pop.classList.add('show');
+      const pad = 16;
+      pop.style.left = Math.min(Math.max(pad, x), window.innerWidth - 336) + 'px';
+      pop.style.top = (y || 200) + 'px';
+    }
+
+    function speak(text) {
+      if (!('speechSynthesis' in window)) { setError('Text-to-speech is not supported in your browser.'); return; }
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';
+      u.rate = 0.9;
+      speechSynthesis.speak(u);
+    }
+
+    async function askAboutSelection(kind, text) {
+      const story = currentStory();
+      if (!story) return;
+      hideSelBar();
+      const msg = kind === 'translate'
+        ? `Translate "${text}" to Spanish and briefly explain its use in this story. Keep it short.`
+        : `Explain what "${text}" means in the context of this story, in simple English (2-3 short sentences).`;
+      showVocab(text.length > 42 ? text.slice(0, 42) + '…' : text, 'Thinking…', window.innerWidth / 2 - 160, 220);
+      try {
+        const idempotencyKey = newId();
+        const res = await fetch(CHAT_URL, {
+          method: 'POST',
+          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
+          body: JSON.stringify({ story: story.body, level: story.level, lesson_focus: story.lesson_focus || '', history: [], message: msg, idempotencyKey }),
+        });
+        if (!res.ok) throw new Error(`AI error ${res.status}`);
+        const data = await res.json();
+        showVocab(text.length > 42 ? text.slice(0, 42) + '…' : text, escapeHtml((data.reply || '').trim()), window.innerWidth / 2 - 160, 220);
+      } catch (err) {
+        showVocab('Hmm', escapeHtml(err.message || 'Could not reach the AI.'), window.innerWidth / 2 - 160, 220);
+      }
+    }
+
+    async function askVocab(word, x, y) {
+      const story = currentStory();
+      showVocab(word, 'Thinking…', x, y);
+      window._vocabWord = word;
+      if (!story) {
+        showVocab(word, 'Open a story to get context-aware definitions.', x, y);
+        return;
+      }
+      try {
+        const idempotencyKey = newId();
+        const res = await fetch(CHAT_URL, {
+          method: 'POST',
+          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
+          body: JSON.stringify({ story: story.body, level: story.level, lesson_focus: '', history: [], message: `What does "${word}" mean in the context of this story? Give a short definition plus one tiny example. Under 60 words.`, idempotencyKey }),
+        });
+        if (!res.ok) throw new Error(`AI error ${res.status}`);
+        const data = await res.json();
+        showVocab(word, escapeHtml((data.reply || '').trim()), x, y);
+      } catch (err) {
+        showVocab(word, escapeHtml(err.message || 'Could not reach the AI.'), x, y);
+      }
+    }
+
+    function wireTextTools() {
+      const storyEl = document.getElementById('story-text');
+      storyEl.addEventListener('mouseup', (ev) => {
+        if (highlightMode) return;
+        setTimeout(() => {
+          const text = selectedText();
+          const bar = selBar();
+          if (!text || text.length < 2) { hideSelBar(); return; }
+          const sel = window.getSelection();
+          const rect = sel.getRangeAt(0).getBoundingClientRect();
+          bar.classList.add('show');
+          placeNear(bar, rect);
+          bar.dataset.text = text;
+        }, 30);
+      });
+      storyEl.addEventListener('touchend', () => {
+        if (highlightMode) return;
+        setTimeout(() => {
+          const text = selectedText();
+          if (!text || text.length < 2) { hideSelBar(); return; }
+          const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
+          const bar = selBar();
+          bar.classList.add('show');
+          placeNear(bar, rect);
+          bar.dataset.text = text;
+        }, 60);
+      });
+      selBar().querySelectorAll('button').forEach((b) => {
+        b.addEventListener('click', () => {
+          const text = selBar().dataset.text || '';
+          if (!text) return;
+          if (b.dataset.act === 'say') { speak(text); hideSelBar(); return; }
+          askAboutSelection(b.dataset.act, text);
+        });
+      });
+      document.getElementById('vocab-listen').addEventListener('click', () => {
+        if (window._vocabWord) speak(window._vocabWord);
+      });
+      document.getElementById('vocab-close').addEventListener('click', hideVocab);
+      document.addEventListener('mousedown', (ev) => {
+        if (!ev.target.closest('#sel-bar') && !ev.target.closest('#vocab-pop') && !ev.target.closest('#story-text')) {
+          hideSelBar();
+          hideVocab();
+        }
+      });
+      document.addEventListener('scroll', () => { hideSelBar(); }, { passive: true });
+    }
+
     // ── Render ─────────────────────────────────────────────────
     function renderStory(text) {
       const el = document.getElementById('story-text');
       const paras = text.split(/\n+/).filter(p => p.trim());
-      el.innerHTML = paras.map((p, i) => {
+      el.innerHTML = paras.map((p) => {
         const wrapped = p.trim().split(/(\s+)/).map(w =>
           /\s/.test(w) ? w : `<span class="word">${escapeHtml(w)}</span>`
         ).join('');
-        return `<p style="--i:${Math.min(i, 8)}">${wrapped}</p>`;
+        return `<p>${wrapped}</p>`;
       }).join('');
 
       el.querySelectorAll('.word').forEach(span => {
-        span.addEventListener('click', () => {
-          if (highlightMode) span.classList.toggle('highlighted');
+        span.addEventListener('click', (ev) => {
+          if (highlightMode) { span.classList.toggle('highlighted'); return; }
+          const w = span.textContent.replace(/[^\p{L}'-]/gu, '').slice(0, 40);
+          if (w.length < 2) return;
+          hideSelBar();
+          askVocab(w, ev.clientX, ev.clientY + 14);
+          window.getSelection()?.removeAllRanges();
         });
       });
     }
 
     function escapeHtml(str) {
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
     // ── Font size ──────────────────────────────────────────────
     function setFontSize(val) {
       document.getElementById('story-text').style.fontSize = val + 'px';
-      document.getElementById('font-size-label').textContent = val;
+      try { localStorage.setItem(LS_FONT, String(val)); } catch {}
+    }
+
+    function stepFont(d) {
+      const r = document.getElementById('font-size-range');
+      const v = Math.min(26, Math.max(14, Number(r.value) + d));
+      r.value = v;
+      setFontSize(v);
     }
 
     // ── Highlight ──────────────────────────────────────────────
@@ -2142,6 +3071,7 @@
       btn.classList.toggle('on', highlightMode);
       btn.setAttribute('aria-pressed', String(highlightMode));
       document.getElementById('story-text').classList.toggle('highlight-mode', highlightMode);
+      if (highlightMode) { hideSelBar(); hideVocab(); }
     }
 
     // ── TTS ────────────────────────────────────────────────────
@@ -2192,11 +3122,10 @@
     function setupScrollProgress() {
       const fill = document.getElementById('progress-fill');
       const label = document.getElementById('progress-label');
-      const flag = document.getElementById('route-flag');
 
       function update() {
         const card = document.getElementById('story-card');
-        if (!card || card.style.display === 'none') return;
+        if (!card) return;
         const y = window.scrollY || document.documentElement.scrollTop || 0;
         const top = card.getBoundingClientRect().top + y;
         const total = card.offsetHeight - window.innerHeight + 160;
@@ -2204,9 +3133,13 @@
         const pct = total > 0 ? Math.min(100, Math.max(0, Math.round((passed / total) * 100))) : 0;
         fill.style.transform = 'scaleX(' + pct / 100 + ')';
         label.textContent = pct + '%';
-        const done = pct >= 100;
-        if (flag) flag.hidden = !done;
-        label.style.display = done ? 'none' : '';
+        if (currentStoryId) {
+          const all = lsGet(LS_SESSIONS, {});
+          if (all[currentStoryId]) {
+            all[currentStoryId].progressPct = pct;
+            lsSet(LS_SESSIONS, all);
+          }
+        }
       }
 
       if (window._routeHandler) {
@@ -2219,249 +3152,68 @@
       update();
     }
 
-    // ── Session / library / chat / evaluate (logic part 2) ────
-    function currentStory() { return currentStoryId ? getStory(currentStoryId) : null; }
-
-    function openStorySession(storyId) {
-      const s = getStory(storyId);
-      if (!s) return;
-      currentStoryId = storyId;
-      stopTTS();
-      setError('');
-      document.getElementById('empty-state').style.display = 'none';
-      document.getElementById('loading-state').style.display = 'none';
-      const card = document.getElementById('story-card');
-      card.style.display = 'block';
-      document.getElementById('progress-bar').style.display = 'flex';
-      const readMin = Math.max(1, Math.round((s.words || 0) / 200));
-      const last = lastEval(storyId);
-      document.getElementById('story-meta').innerHTML = `
-        <span class="seal seal-red" style="--i:0">${escapeHtml(s.genre)}</span>
-        <span class="seal seal-ink" style="--i:1">${escapeHtml(s.level)}</span>
-        <span class="seal" style="--i:2">${escapeHtml(s.length)}</span>
-        <span class="seal" style="--i:3">${s.words} words · ${readMin} min read</span>
-        ${s.lesson_focus ? `<span class="seal" style="--i:4">${escapeHtml(s.lesson_focus)}</span>` : ''}
-        ${last ? `<span class="seal" style="--i:5">eval ${last.score}</span>` : ''}
-      `;
-      document.getElementById('story-title').textContent = s.title;
-      renderStory(s.body);
-      setupScrollProgress();
-      renderSuggested(s);
-      renderChatLog();
-      const prev = lastEval(storyId);
-      if (prev) renderEval(prev);
-      else document.getElementById('eval-card').style.display = 'none';
-      document.getElementById('chat-card').style.display = 'block';
-      setSession(storyId, { status: prev ? 'evaluated' : 'reading' });
-      renderLibrary();
-      try {
-        const url = new URL(window.location.href);
-        url.searchParams.set('story', storyId);
-        window.history.replaceState({}, '', url);
-      } catch {}
-    }
-
-    function renderLibrary() {
-      const el = document.getElementById('library-list');
-      if (!el) return;
-      const all = Object.values(lsGet(LS_STORIES, {})).sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
-      document.getElementById('lib-count').textContent = all.length ? `(${all.length})` : '';
-      if (!all.length) { el.innerHTML = '<div class="lib-empty">No stories yet — generate your first.</div>'; return; }
-      el.innerHTML = '';
-      all.slice(0, 20).forEach((s) => {
-        const last = lastEval(s.id);
-        const b = document.createElement('button');
-        b.className = 'lib-item' + (s.id === currentStoryId ? ' active' : '');
-        b.type = 'button';
-        const left = document.createElement('span');
-        left.textContent = `${s.title} · ${s.level}`;
-        const right = document.createElement('span');
-        right.className = 'lib-score';
-        right.textContent = last ? String(last.score) : '';
-        b.appendChild(left); b.appendChild(right);
-        b.addEventListener('click', () => openStorySession(s.id));
-        el.appendChild(b);
-      });
-    }
-
-    function renderSuggested(s) {
-      const row = document.getElementById('suggest-row');
-      const qs = (s.suggested_questions || []).slice(0, 4);
-      if (!qs.length) { row.style.display = 'none'; row.innerHTML = ''; return; }
-      row.style.display = 'flex';
-      row.innerHTML = '';
-      qs.forEach((q) => {
-        const b = document.createElement('button');
-        b.className = 'suggest-q'; b.type = 'button'; b.textContent = q;
-        b.addEventListener('click', () => {
-          const inp = document.getElementById('chat-input');
-          inp.value = q;
-          sendChat();
-        });
-        row.appendChild(b);
-      });
-    }
-
-    function renderChatLog() {
-      const logEl = document.getElementById('chat-log');
-      const msgs = currentStoryId ? getMessages(currentStoryId) : [];
-      logEl.innerHTML = '';
-      msgs.forEach((m) => {
-        const d = document.createElement('div');
-        d.className = 'chat-msg ' + m.role;
-        d.textContent = m.text;
-        logEl.appendChild(d);
-      });
-      logEl.scrollTop = logEl.scrollHeight;
-    }
-
-    function chatHeaders() {
-      const typedKey = (document.getElementById('groq-key-input')?.value || '').trim();
-      const groqKey = typedKey || getGroqKey();
-      const h = { 'Content-Type': 'application/json' };
-      if (groqKey) h['x-groq-api-key'] = groqKey;
-      return h;
-    }
-
-    async function sendChat() {
-      const story = currentStory();
-      if (!story || isSending) return;
-      const inp = document.getElementById('chat-input');
-      const text = (inp.value || '').trim().slice(0, 1000);
-      if (!text) return;
-      isSending = true;
-      const btn = document.getElementById('chat-send');
-      btn.disabled = true;
-      document.getElementById('chat-status').textContent = 'sending…';
-      if (chatAbort) chatAbort.abort();
-      chatAbort = new AbortController();
-      const userMsg = { id: newId(), role: 'user', text, created_at: new Date().toISOString() };
-      pushMessage(story.id, userMsg);
-      renderChatLog();
-      inp.value = '';
-      try {
-        const history = getMessages(story.id).slice(-12).map((m) => ({ role: m.role, text: m.text }));
-        const idempotencyKey = newId();
-        const res = await fetch(CHAT_URL, {
-          method: 'POST',
-          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
-          body: JSON.stringify({ story: story.body, level: story.level, lesson_focus: story.lesson_focus || '', history: history.slice(0, -1), message: text, idempotencyKey }),
-          signal: chatAbort.signal,
-        });
-        if (!res.ok) {
-          const t = await res.text();
-          throw new Error(res.status === 409 ? 'Already sending — wait a moment.' : `Chat error ${res.status}: ${t.slice(0, 300)}`);
-        }
-        const data = await res.json();
-        pushMessage(story.id, { id: newId(), role: 'assistant', text: (data.reply || '').trim(), created_at: new Date().toISOString() });
-        renderChatLog();
-        setSession(story.id, { status: 'chatting' });
-        document.getElementById('chat-status').textContent = '';
-      } catch (err) {
-        if (err?.name !== 'AbortError') {
-          document.getElementById('chat-status').textContent = err.message || 'Chat failed. Try again.';
-        }
-      } finally {
-        isSending = false;
-        btn.disabled = false;
-        if (document.getElementById('chat-status').textContent === 'sending…') document.getElementById('chat-status').textContent = '';
-      }
-    }
-
-    function renderEval(e) {
-      const card = document.getElementById('eval-card');
-      const bodyEl = document.getElementById('eval-body');
-      card.style.display = 'block';
-      const s = e.scores || {};
-      const sub = (k, label) => (s[k] != null ? `<span class="seal">${label} ${s[k]}</span>` : '');
-      const mistakes = (e.mistakes || []).map((m) => `
-        <div class="eval-mistake">
-          <div><del>${escapeHtml(m.original)}</del> → <ins>${escapeHtml(m.correction)}</ins> <small>(${escapeHtml(m.category)} · ${escapeHtml(m.severity)})</small></div>
-          <div><small>${escapeHtml(m.explanation)}</small></div>
-        </div>`).join('');
-      bodyEl.innerHTML = `
-        <h3 class="panel-title">Evaluation</h3>
-        <div class="eval-score">${e.score}<small style="font-size:1rem">/100</small></div>
-        <div class="eval-grid">${sub('comprehension', 'Comp')} ${sub('grammar', 'Gram')} ${sub('vocabulary', 'Vocab')} ${sub('communication', 'Comm')} ${s.lesson_focus != null ? `<span class="seal seal-red">Focus ${s.lesson_focus}</span>` : ''}</div>
-        ${e.summary ? `<p style="font-family:var(--serif); line-height:1.7">${escapeHtml(e.summary)}</p>` : ''}
-        ${(e.strengths || []).length ? `<h4 class="panel-title" style="font-size:1rem; margin-top:12px">Strengths</h4><ul style="margin-left:18px">${e.strengths.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul>` : ''}
-        ${mistakes || '<p><small>No concrete errors found — solid work.</small></p>'}
-        ${(e.recommendations || []).length ? `<h4 class="panel-title" style="font-size:1rem; margin-top:12px">Recommendations</h4><ul style="margin-left:18px">${e.recommendations.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul>` : ''}
-        ${e.lesson_focus_feedback ? `<h4 class="panel-title" style="font-size:1rem; margin-top:12px">${escapeHtml(e.lesson_focus_feedback.focus)} — ${e.lesson_focus_feedback.score}</h4><p>${escapeHtml(e.lesson_focus_feedback.feedback || '')}</p>` : ''}
-      `;
-    }
-
-    async function runEvaluation() {
-      const story = currentStory();
-      if (!story || isEvaluating) return;
-      isEvaluating = true;
-      const btn = document.getElementById('eval-btn');
-      btn.disabled = true;
-      const prevLabel = btn.textContent;
-      btn.textContent = 'Evaluating…';
-      if (evalAbort) evalAbort.abort();
-      evalAbort = new AbortController();
-      try {
-        const userMessages = getMessages(story.id).filter((m) => m.role === 'user').map((m) => m.text);
-        const idempotencyKey = newId();
-        const res = await fetch(EVAL_URL, {
-          method: 'POST',
-          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
-          body: JSON.stringify({ story: story.body, lesson_focus: story.lesson_focus || '', userMessages, idempotencyKey }),
-          signal: evalAbort.signal,
-        });
-        if (!res.ok) {
-          const t = await res.text();
-          throw new Error(res.status === 409 ? 'Evaluation already running.' : `Evaluation error ${res.status}: ${t.slice(0, 300)}`);
-        }
-        const data = await res.json();
-        if (!data.evaluable) {
-          setError(data.message || 'Keep talking a little more so I can give you a meaningful evaluation.');
-          return;
-        }
-        const record = { ...data, id: newId(), storyId: story.id, created_at: new Date().toISOString() };
-        saveEval(record);
-        setSession(story.id, { status: 'evaluated' });
-        renderEval(record);
-        renderLibrary();
-        openStorySessionKeepScroll(story.id);
-      } catch (err) {
-        if (err?.name !== 'AbortError') setError(err.message || 'Evaluation failed. Try again.');
-      } finally {
-        isEvaluating = false;
-        btn.disabled = false;
-        btn.textContent = prevLabel;
-      }
-    }
-
-    function openStorySessionKeepScroll(storyId) {
-      const y = window.scrollY;
-      openStorySession(storyId);
-      window.scrollTo(0, y);
-    }
-
-    // Restore library + last story on load (§§6, 18).
-    document.addEventListener('DOMContentLoaded', () => {
-      renderLibrary();
-      try {
-        const id = new URL(window.location.href).searchParams.get('story');
-        const all = lsGet(LS_STORIES, {});
-        const ids = Object.keys(all);
-        const target = (id && all[id]) ? id : ids.sort((a, b) => (all[b].created_at || '').localeCompare(all[a].created_at || ''))[0];
-        if (target) openStorySession(target);
-      } catch {}
-      const ci = document.getElementById('chat-input');
-      if (ci) ci.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendChat(); });
-      const fi = document.getElementById('focus-input');
-      if (fi) fi.addEventListener('keydown', (e) => { if (e.key === 'Enter') generateStory(); });
-    });
-
     // ── Error ──────────────────────────────────────────────────
+    let _errT = null;
     function setError(msg) {
       const el = document.getElementById('error-banner');
       el.textContent = msg;
-      el.style.display = msg ? 'block' : 'none';
+      el.classList.toggle('show', !!msg);
+      clearTimeout(_errT);
+      if (msg) _errT = setTimeout(() => el.classList.remove('show'), 6000);
     }
+
+    // ── Init ───────────────────────────────────────────────────
+    (function initGroqKeyField() {
+      const saved = getGroqKey();
+      const inpImmediate = document.getElementById('groq-key-input');
+      if (inpImmediate && saved) inpImmediate.value = saved;
+      setTimeout(setGroqKeyStatus, 0);
+      document.addEventListener('DOMContentLoaded', () => {
+        const inp = document.getElementById('groq-key-input');
+        const toggle = document.getElementById('groq-key-toggle');
+        if (saved && inp) inp.value = saved;
+        setGroqKeyStatus();
+        if (inp) {
+          inp.addEventListener('input', setGroqKeyStatus);
+          inp.addEventListener('keydown', e => { if (e.key === 'Enter') saveGroqKey(); });
+        }
+        if (toggle && inp) {
+          toggle.addEventListener('click', () => {
+            const show = inp.type === 'password';
+            inp.type = show ? 'text' : 'password';
+            toggle.setAttribute('aria-pressed', String(show));
+          });
+        }
+      });
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      wireOptions();
+      wireTextTools();
+      updateCoverPreview();
+      try {
+        const savedFont = Number(localStorage.getItem(LS_FONT) || '18');
+        if (savedFont >= 14 && savedFont <= 26) {
+          document.getElementById('font-size-range').value = savedFont;
+          setFontSize(savedFont);
+        }
+      } catch {}
+      document.getElementById('brand-home').addEventListener('click', (e) => {
+        e.preventDefault();
+        showView(currentStoryId ? 'reader' : 'create');
+        if (currentStoryId) openStorySessionKeepScroll(currentStoryId);
+      });
+      renderLibrary();
+      // Deep link ?story=id → reader, else create.
+      let target = null;
+      try {
+        const id = new URL(window.location.href).searchParams.get('story');
+        const all = lsGet(LS_STORIES, {});
+        if (id && all[id]) target = id;
+      } catch {}
+      if (target) openStorySession(target);
+      else showView('create');
+    });
   </script>
 </body>
 
