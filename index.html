@@ -2728,6 +2728,12 @@
         logEl.appendChild(d);
       });
       logEl.scrollTop = logEl.scrollHeight;
+      // Suggested questions live only until the first user message — after that
+      // the learner writes on their own, keeping the evaluation honest.
+      const hasUserMsg = msgs.some((m) => m.role === 'user');
+      const suggest = document.getElementById('suggest-row');
+      if (suggest && hasUserMsg) suggest.style.display = 'none';
+      else if (suggest && suggest.children.length) suggest.style.display = '';
     }
 
     function updateEvalGate() {
