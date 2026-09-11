@@ -1060,6 +1060,26 @@
       border-top-left-radius: 4px;
     }
 
+    .chat-msg.assistant p + p {
+      margin-top: 0.6em;
+    }
+
+    .chat-msg.assistant ul,
+    .chat-msg.assistant ol {
+      margin: 0.5em 0 0.5em 1.2em;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3em;
+    }
+
+    .chat-msg.assistant code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.86em;
+      background: var(--line-soft);
+      border-radius: 5px;
+      padding: 1px 6px;
+    }
+
     .chat-msg.user {
       background: var(--ink);
       color: #fff;
@@ -2717,6 +2737,50 @@
       });
     }
 
+    // ── Mini markdown (assistant messages only; HTML-escaped first) ──
+    function mdInline(t) {
+      return t
+        .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|\W)\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    }
+
+    function mdToHtml(src) {
+      const lines = escapeHtml(src).split('\n');
+      let html = '', inUl = false, inOl = false;
+      let para = [];
+      const flushPara = () => {
+        if (para.length) {
+          html += '<p>' + para.map(mdInline).join('<br>') + '</p>';
+          para = [];
+        }
+      };
+      const closeLists = () => {
+        if (inUl) { html += '</ul>'; inUl = false; }
+        if (inOl) { html += '</ol>'; inOl = false; }
+      };
+      lines.forEach((ln) => {
+        const t = ln.trim();
+        let m;
+        if (!t) { closeLists(); flushPara(); }
+        else if ((m = t.match(/^[-*•]\s+(.*)/))) {
+          flushPara();
+          if (!inUl) { closeLists(); html += '<ul>'; inUl = true; }
+          html += '<li>' + mdInline(m[1]) + '</li>';
+        } else if ((m = t.match(/^\d+[.)]\s+(.*)/))) {
+          flushPara();
+          if (!inOl) { closeLists(); html += '<ol>'; inOl = true; }
+          html += '<li>' + mdInline(m[1]) + '</li>';
+        } else if ((m = t.match(/^#{1,4}\s+(.*)/))) {
+          closeLists(); flushPara();
+          html += '<p><strong>' + mdInline(m[1]) + '</strong></p>';
+        } else { para.push(t); }
+      });
+      closeLists();
+      flushPara();
+      return html;
+    }
+
     function renderChatLog() {
       const logEl = document.getElementById('chat-log');
       const msgs = currentStoryId ? getMessages(currentStoryId) : [];
@@ -2724,7 +2788,8 @@
       msgs.forEach((m) => {
         const d = document.createElement('div');
         d.className = 'chat-msg ' + m.role;
-        d.textContent = m.text;
+        if (m.role === 'assistant') d.innerHTML = mdToHtml(m.text);
+        else d.textContent = m.text;
         logEl.appendChild(d);
       });
       logEl.scrollTop = logEl.scrollHeight;
@@ -2961,7 +3026,7 @@
         });
         if (!res.ok) throw new Error(`AI error ${res.status}`);
         const data = await res.json();
-        showVocab(text.length > 42 ? text.slice(0, 42) + '…' : text, escapeHtml((data.reply || '').trim()), window.innerWidth / 2 - 160, 220);
+        showVocab(text.length > 42 ? text.slice(0, 42) + '…' : text, mdToHtml((data.reply || '').trim()), window.innerWidth / 2 - 160, 220);
       } catch (err) {
         showVocab('Hmm', escapeHtml(err.message || 'Could not reach the AI.'), window.innerWidth / 2 - 160, 220);
       }
@@ -2984,7 +3049,7 @@
         });
         if (!res.ok) throw new Error(`AI error ${res.status}`);
         const data = await res.json();
-        showVocab(word, escapeHtml((data.reply || '').trim()), x, y);
+        showVocab(word, mdToHtml((data.reply || '').trim()), x, y);
       } catch (err) {
         showVocab(word, escapeHtml(err.message || 'Could not reach the AI.'), x, y);
       }
