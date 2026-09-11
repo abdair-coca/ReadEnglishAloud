@@ -1,6 +1,6 @@
 const { CONFIG } = require('./lib/config');
 const { validateGenerate, LENGTHS } = require('./lib/validate');
-const { callGroq, extractContent, parseJsonSafe, log } = require('./lib/groq');
+const { callGroq, describeContent, parseJsonSafe, log } = require('./lib/groq');
 const { validateStoryJson } = require('./lib/schemas');
 const { storyUserPrompt } = require('./lib/prompts');
 
@@ -67,12 +67,14 @@ module.exports = async function handler(req, res) {
         temperature: CONFIG.temperatures.story,
         max_completion_tokens: CONFIG.maxTokens.story,
         top_p: 0.95,
+        reasoning_effort: CONFIG.reasoningEffort.story,
       };
       const data = await callGroq({ apiKey, payload, timeoutMs: CONFIG.timeoutsMs.story, op: 'story' });
-      const raw = extractContent(data);
+      const desc = describeContent(data);
+      const raw = desc.text;
       if (!raw) {
-        log('story', { ok: false, reason: 'empty-model-response' });
-        return res.status(502).json({ error: 'empty model response' });
+        log('story', { ok: false, reason: 'empty-model-response', finishReason: desc.finishReason, messageKeys: desc.messageKeys, contentLen: desc.contentLen, reasoningLen: desc.reasoningLen });
+        return res.status(502).json({ error: 'empty model response', detail: `finish=${desc.finishReason} content_len=${desc.contentLen} reasoning_len=${desc.reasoningLen}` });
       }
       const parsed = parseJsonSafe(raw);
       if (!parsed.ok) {

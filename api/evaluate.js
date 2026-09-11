@@ -1,6 +1,6 @@
 const { CONFIG } = require('./lib/config');
 const { validateEvaluate } = require('./lib/validate');
-const { callGroq, extractContent, parseJsonSafe, log } = require('./lib/groq');
+const { callGroq, describeContent, parseJsonSafe, log } = require('./lib/groq');
 const { validateEvalJson } = require('./lib/schemas');
 const { evalUser } = require('./lib/prompts');
 
@@ -57,9 +57,10 @@ module.exports = async function handler(req, res) {
       temperature: CONFIG.temperatures.evaluation,
       max_completion_tokens: CONFIG.maxTokens.evaluation,
       top_p: 1,
+      reasoning_effort: CONFIG.reasoningEffort.evaluation,
     };
     const data = await callGroq({ apiKey, payload, timeoutMs: CONFIG.timeoutsMs.evaluation, op: 'evaluate' });
-    const raw = extractContent(data);
+    const raw = describeContent(data).text;
     if (!raw) {
       log('evaluate', { ok: false, reason: 'empty-model-response' });
       return res.status(502).json({ error: 'empty model response' });

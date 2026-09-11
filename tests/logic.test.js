@@ -158,6 +158,7 @@ test('payloads avoid response_format (gpt-oss compat)', async () => {
   );
   assert.equal(seen.length, 2);
   assert.ok(seen.every((p) => !('response_format' in p)), 'no response_format in any payload');
+  assert.ok(seen.every((p) => p.reasoning_effort === 'low'), 'gpt-oss gets reasoning_effort low');
 });
 test('parseJsonSafe: fences + surrounding text recovered', () => {
   const r = parseJsonSafe('```json\n{"title":"T","story":"' + 'w '.repeat(50) + '"}\n```');

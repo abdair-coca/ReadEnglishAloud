@@ -18,6 +18,13 @@ const CONFIG = {
     chat: 20000,
     evaluation: 40000,
   },
+  // gpt-oss spends tokens on reasoning; without this, content can come back
+  // empty (finish_reason=length consumed by the trace). 'low' restores answers.
+  reasoningEffort: {
+    story: 'low',
+    chat: 'low',
+    evaluation: 'low',
+  },
   chatHistoryLimit: 12,
   // Evaluation gate (§16)
   evalMinUserMessages: 4,

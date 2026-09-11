@@ -1,6 +1,6 @@
 const { CONFIG } = require('./lib/config');
 const { validateChat } = require('./lib/validate');
-const { callGroq, extractContent, log } = require('./lib/groq');
+const { callGroq, describeContent, log } = require('./lib/groq');
 const { chatSystem, chatUser } = require('./lib/prompts');
 
 const seen = new Map();
@@ -48,9 +48,10 @@ module.exports = async function handler(req, res) {
       temperature: CONFIG.temperatures.chat,
       max_completion_tokens: CONFIG.maxTokens.chat,
       top_p: 0.95,
+      reasoning_effort: CONFIG.reasoningEffort.chat,
     };
     const data = await callGroq({ apiKey, payload, timeoutMs: CONFIG.timeoutsMs.chat, op: 'chat' });
-    const reply = (extractContent(data) || '').trim();
+    const reply = describeContent(data).text.trim();
     if (!reply) {
       log('chat', { ok: false, reason: 'empty-model-response' });
       return res.status(502).json({ error: 'empty model response' });

@@ -63,6 +63,24 @@ function extractContent(data) {
   );
 }
 
+// Diagnostic snapshot for empty responses (lengths/keys only, no secrets).
+function describeContent(data) {
+  const choice = data?.choices?.[0] || {};
+  const msg = choice.message || {};
+  const text =
+    (typeof msg.content === 'string' && msg.content.trim()) ||
+    (typeof choice.text === 'string' && choice.text.trim()) ||
+    (typeof choice.delta?.content === 'string' && choice.delta.content.trim()) ||
+    '';
+  return {
+    text,
+    finishReason: choice.finish_reason || null,
+    messageKeys: msg && typeof msg === 'object' ? Object.keys(msg) : [],
+    contentLen: typeof msg.content === 'string' ? msg.content.length : -1,
+    reasoningLen: typeof msg.reasoning === 'string' ? msg.reasoning.length : -1,
+  };
+}
+
 // Safe JSON recovery: strip code fences, grab first {...} block.
 function parseJsonSafe(raw) {
   if (!raw || typeof raw !== 'string') return { ok: false, error: 'empty' };
@@ -83,4 +101,4 @@ function parseJsonSafe(raw) {
   }
 }
 
-module.exports = { callGroq, extractContent, parseJsonSafe, log };
+module.exports = { callGroq, extractContent, describeContent, parseJsonSafe, log };
