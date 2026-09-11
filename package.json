@@ -1,0 +1,13 @@
+{
+  "name": "englishaloud",
+  "version": "1.1.0",
+  "private": true,
+  "description": "EnglishAloud — AI-first English reading practice (Groq backend + vanilla frontend)",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test tests/logic.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
