@@ -1383,6 +1383,37 @@
       padding: 6px 12px 12px;
     }
 
+    /* ── LOGIC PART 2: chat / evaluate / library (same tokens, no redesign) ── */
+    .lib-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+    .lib-item {
+      width: 100%; text-align: left; background: rgba(244,241,230,0.04);
+      border: 1px solid var(--ink-line); color: var(--text-paper);
+      border-radius: 8px; padding: 8px 10px; font-size: 0.78rem; cursor: pointer;
+      display: flex; justify-content: space-between; gap: 8px; align-items: baseline;
+    }
+    .lib-item:hover { border-color: var(--text-paper-soft); }
+    .lib-item.active { border-color: var(--stamp-600); }
+    .lib-item .lib-score { font-variant-numeric: tabular-nums; color: var(--stamp-on-ink); font-weight: 700; }
+    .lib-empty { font-size: 0.76rem; color: rgba(198,205,221,0.6); }
+    .suggest-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+    .suggest-q {
+      background: var(--paper-100); border: 1px solid var(--paper-300); color: var(--ink-900);
+      border-radius: 20px; padding: 7px 13px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    }
+    .suggest-q:hover { border-color: var(--ink-900); }
+    .chat-log { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; max-width: 68ch; }
+    .chat-msg { font-family: var(--serif); font-size: 0.95rem; line-height: 1.65; padding: 10px 14px; border-radius: 10px; }
+    .chat-msg.user { background: var(--paper-100); border: 1px solid var(--paper-300); align-self: flex-end; }
+    .chat-msg.assistant { background: var(--ink-900); color: var(--text-paper); align-self: flex-start; }
+    .chat-row { display: flex; gap: 8px; }
+    .chat-row .field { font-family: var(--sans); }
+    .eval-score { font-family: var(--serif); font-size: 2.4rem; font-weight: 800; color: var(--stamp-700); }
+    .eval-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+    .eval-mistake { border-left: 3px solid var(--stamp-600); padding: 8px 12px; margin: 8px 0; background: var(--paper-100); border-radius: 0 8px 8px 0; }
+    .eval-mistake del { color: var(--stamp-700); }
+    .eval-mistake ins { color: #166534; text-decoration: none; font-weight: 700; }
+    .panel-title { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; margin-bottom: 10px; }
+
     @media print {
       .rail,
       .desk,
@@ -1530,7 +1561,13 @@
 
       <div class="desk-group">
         <label class="desk-label" for="topic-input">Purpose <span class="opt">optional</span></label>
-        <input id="topic-input" class="field" type="text" placeholder="e.g. friendship, the ocean, a lost key…">
+        <input id="topic-input" class="field" type="text" placeholder="e.g. friendship, the ocean, a lost key…" maxlength="140">
+        <div class="perf" aria-hidden="true"></div>
+      </div>
+
+      <div class="desk-group">
+        <label class="desk-label" for="focus-input">Lesson focus <span class="opt">optional</span></label>
+        <input id="focus-input" class="field" type="text" placeholder="e.g. Past Perfect, phrasal verbs…" maxlength="80">
         <div class="perf" aria-hidden="true"></div>
       </div>
 
@@ -1566,6 +1603,11 @@
       </button>
 
       <div class="error-banner" id="error-banner" role="alert"></div>
+
+      <div class="desk-group" aria-label="Library">
+        <div class="desk-label">Library <span class="opt" id="lib-count"></span></div>
+        <div class="lib-list" id="library-list"></div>
+      </div>
 
     </aside>
 
@@ -1664,6 +1706,30 @@
             <div class="route-label" id="progress-label">0%</div>
           </div>
         </article>
+
+        <!-- Suggested questions -->
+        <div class="suggest-row" id="suggest-row" style="display:none" aria-label="Suggested questions"></div>
+
+        <!-- Chat -->
+        <article class="entry-sheet" id="chat-card" style="display:none; margin-top:18px" aria-label="Discuss the story">
+          <div class="entry-body">
+            <h3 class="panel-title">Chat about this story</h3>
+            <div class="chat-log" id="chat-log" aria-live="polite"></div>
+            <div class="chat-row">
+              <input id="chat-input" class="field" type="text" placeholder="Ask about the story…" maxlength="1000" style="color:var(--text-ink); background:var(--paper-100); border-color:var(--paper-300)">
+              <button class="sheet-btn" id="chat-send" title="Send message" onclick="sendChat()" style="width:auto; padding:0 16px; font-weight:700">Send</button>
+            </div>
+            <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
+              <button class="suggest-q" id="eval-btn" onclick="runEvaluation()">Evaluate my English</button>
+              <span id="chat-status" style="font-size:0.78rem; color:var(--text-ink-soft)"></span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Evaluation -->
+        <article class="entry-sheet" id="eval-card" style="display:none; margin-top:18px" aria-label="Evaluation" aria-live="polite">
+          <div class="entry-body" id="eval-body"></div>
+        </article>
       </div>
 
     </section>
@@ -1672,16 +1738,73 @@
   <script>
     // ── Config ─────────────────────────────────────────────────
     const API_URL = '/api/generate';
+    const CHAT_URL = '/api/chat';
+    const EVAL_URL = '/api/evaluate';
     const GROQ_KEY_LS = 'groq_api_key';
+    // Persistence (free, no accounts): versioned localStorage only.
+    const LS_STORIES = 'ea_v1_stories';
+    const LS_SESSIONS = 'ea_v1_sessions';
+    const LS_MESSAGES = 'ea_v1_messages';
+    const LS_EVALS = 'ea_v1_evals';
 
     // ── State ──────────────────────────────────────────────────
     let selectedGenre = 'Adventure';
     let selectedLevel = 'B1';
     let selectedLength = 'medium (about 500 words)';
     let isGenerating = false;
+    let isSending = false;
+    let isEvaluating = false;
     let highlightMode = false;
     let ttsActive = false;
     let ttsUtterance = null;
+    let currentStoryId = null;
+    let chatAbort = null;
+    let evalAbort = null;
+
+    // ── Store (localStorage, §18: story survives reload) ───────
+    function lsGet(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch { return fallback; }
+    }
+    function lsSet(key, val) {
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+    }
+    function newId() {
+      return (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now() + '-' + Math.random().toString(16).slice(2));
+    }
+    function saveStory(record) {
+      const all = lsGet(LS_STORIES, {});
+      all[record.id] = record;
+      lsSet(LS_STORIES, all);
+      renderLibrary();
+    }
+    function getStory(id) { return lsGet(LS_STORIES, {})[id] || null; }
+    function setSession(storyId, patch) {
+      const all = lsGet(LS_SESSIONS, {});
+      all[storyId] = { ...(all[storyId] || { storyId, status: 'generated' }), ...patch, updated_at: new Date().toISOString() };
+      lsSet(LS_SESSIONS, all);
+    }
+    function getMessages(storyId) { return lsGet(LS_MESSAGES, {})[storyId] || []; }
+    function pushMessage(storyId, msg) {
+      const all = lsGet(LS_MESSAGES, {});
+      const list = all[storyId] || [];
+      list.push(msg);
+      all[storyId] = list.slice(-60);
+      lsSet(LS_MESSAGES, all);
+    }
+    function saveEval(record) {
+      const all = lsGet(LS_EVALS, {});
+      const list = all[record.storyId] || [];
+      list.push(record);
+      all[record.storyId] = list.slice(-10);
+      lsSet(LS_EVALS, all);
+    }
+    function lastEval(storyId) {
+      const list = lsGet(LS_EVALS, {})[storyId] || [];
+      return list.length ? list[list.length - 1] : null;
+    }
 
     // ── Groq API Key — localStorage ────────────────────────────
     function getGroqKey() {
@@ -1814,21 +1937,10 @@
       stopTTS();
       setError('');
 
-      const topic = document.getElementById('topic-input').value.trim();
-      const topicLine = topic ? ` The story should involve or touch on: "${topic}".` : '';
-
-      const prompt =
-        `Write an engaging English reading practice story with these specifications:
-- Genre: ${selectedGenre}
-- English level: ${selectedLevel} (use vocabulary and sentence complexity appropriate for this level)
-- Length: ${selectedLength}${topicLine}
-
-Format your response EXACTLY as follows — nothing else:
-TITLE: [story title here]
----
-[story paragraphs here, separated by blank lines]
-
-Only the title line, the divider "---", and the story paragraphs. No preamble or commentary.`;
+      const topic = document.getElementById('topic-input').value.trim().slice(0, 140);
+      const lessonFocusEl = document.getElementById('focus-input');
+      const lesson_focus = (lessonFocusEl ? lessonFocusEl.value : '').trim().slice(0, 80);
+      const lengthKey = selectedLength.split(' ')[0].toLowerCase(); // short|medium|long
 
       // UI: show loading
       document.getElementById('empty-state').style.display = 'none';
@@ -1854,24 +1966,29 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
         const headers = { 'Content-Type': 'application/json' };
         if (groqKey) headers['x-groq-api-key'] = groqKey;
 
-        // gpt-oss works best with low reasoning effort for story generation
-        const groqBody = {
-          model: 'openai/gpt-oss-20b',
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.6,
-          max_completion_tokens: 2048,
-          top_p: 0.95,
-          reasoning_effort: 'low'
-        };
+        // New structured path (§§2-4). Legacy text format kept as fallback.
+        const idempotencyKey = newId();
+        const newBody = { genre: selectedGenre, level: selectedLevel, length: lengthKey, topic, lesson_focus, idempotencyKey };
         let res = await fetch(API_URL, {
           method: 'POST',
-          headers,
-          body: JSON.stringify(groqBody)
+          headers: { ...headers, 'Idempotency-Key': idempotencyKey },
+          body: JSON.stringify(newBody)
         });
 
         // Fallback: if /api/generate not available (e.g. opening index.html directly without Vercel),
-        // call Groq directly from the browser using the user-provided key
+        // call Groq directly from the browser using the user-provided key (legacy text prompt).
         if (!res.ok && res.status === 404 && groqKey) {
+          const topicLine = topic ? ` The story should involve or touch on: "${topic}".` : '';
+          const focusLine = lesson_focus ? ` Lesson focus "${lesson_focus}" woven in naturally.` : '';
+          const prompt =
+            `Write an engaging English reading practice story with these specifications:\n- Genre: ${selectedGenre}\n- English level: ${selectedLevel}\n- Length: ${selectedLength}${topicLine}${focusLine}\n\nFormat your response EXACTLY as follows — nothing else:\nTITLE: [story title here]\n---\n[story paragraphs here, separated by blank lines]`;
+          const groqBody = {
+            model: 'openai/gpt-oss-20b',
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.6,
+            max_completion_tokens: 2048,
+            top_p: 0.95
+          };
           res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -1892,32 +2009,58 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
         }
 
         const data = await res.json();
-        console.log('[Groq] raw response:', data);
-        // robust content extraction (chat vs completion, gpt-oss reasoning)
-        const rawContent =
-          data?.choices?.[0]?.message?.content ??
-          data?.choices?.[0]?.text ??
-          data?.choices?.[0]?.delta?.content ??
-          null;
-        if (!rawContent) {
-          // surface full payload for debugging
-          const preview = JSON.stringify(data).slice(0, 800);
-          console.error('[Groq] missing content, full data:', data);
-          if (data?.error) throw new Error(`Groq error: ${JSON.stringify(data.error).slice(0, 600)}`);
-          if (!data?.choices?.length) throw new Error(`No story returned — empty choices. Raw: ${preview}`);
-          throw new Error(`No story returned — content empty. Raw: ${preview}`);
-        }
-        const content = rawContent;
+        // New structured shape {title, story, ...} first; legacy Groq choices as fallback.
+        let title, body, suggested = [], focusExamples = [];
+        if (data && typeof data.story === 'string' && data.story.trim()) {
+          title = (data.title || 'Story').trim();
+          body = data.story.trim();
+          suggested = Array.isArray(data.suggested_questions) ? data.suggested_questions.filter(Boolean).slice(0, 6) : [];
+          focusExamples = Array.isArray(data.focus_examples) ? data.focus_examples : [];
+        } else {
+          // robust content extraction (chat vs completion, gpt-oss reasoning)
+          const rawContent =
+            data?.choices?.[0]?.message?.content ??
+            data?.choices?.[0]?.text ??
+            data?.choices?.[0]?.delta?.content ??
+            null;
+          if (!rawContent) {
+            // surface full payload for debugging
+            const preview = JSON.stringify(data).slice(0, 800);
+            console.error('[Groq] missing content, full data:', data);
+            if (data?.error) throw new Error(`Groq error: ${JSON.stringify(data.error).slice(0, 600)}`);
+            if (data?.details) throw new Error(`Invalid request: ${JSON.stringify(data.details).slice(0, 300)}`);
+            if (!data?.choices?.length) throw new Error(`No story returned — empty choices. Raw: ${preview}`);
+            throw new Error(`No story returned — content empty. Raw: ${preview}`);
+          }
+          const content = rawContent;
 
-        const divIdx = content.indexOf('---');
-        const title = divIdx !== -1
-          ? content.slice(0, divIdx).replace(/^TITLE:/i, '').trim()
-          : 'Story';
-        const body = divIdx !== -1
-          ? content.slice(divIdx + 3).trim()
-          : content.trim();
+          const divIdx = content.indexOf('---');
+          title = divIdx !== -1
+            ? content.slice(0, divIdx).replace(/^TITLE:/i, '').trim()
+            : 'Story';
+          body = divIdx !== -1
+            ? content.slice(divIdx + 3).trim()
+            : content.trim();
+        }
 
         if (!body) throw new Error('Story content is empty.');
+
+        // Persist session (§§5-6, 18): story gets a stable ID, reload never regenerates.
+        const storyId = newId();
+        currentStoryId = storyId;
+        const wordCountPre = body.split(/\s+/).filter(Boolean).length;
+        saveStory({
+          id: storyId, title, body, genre: selectedGenre, level: selectedLevel,
+          length: lengthKey, words: wordCountPre, lesson_focus,
+          suggested_questions: suggested, focus_examples: focusExamples,
+          created_at: new Date().toISOString(),
+        });
+        setSession(storyId, { status: 'reading', progressPct: 0 });
+        try {
+          const url = new URL(window.location.href);
+          url.searchParams.set('story', storyId);
+          window.history.replaceState({}, '', url);
+        } catch {}
 
         // Show story — The Stamp Drop: restart choreography on every arrival
         document.getElementById('loading-state').style.display = 'none';
@@ -1949,6 +2092,7 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
 
         renderStory(body);
         setupScrollProgress();
+        openStorySession(storyId);
         document.getElementById('story-card').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
 
       } catch (err) {
@@ -2074,6 +2218,243 @@ Only the title line, the divider "---", and the story paragraphs. No preamble or
       window.addEventListener('resize', update);
       update();
     }
+
+    // ── Session / library / chat / evaluate (logic part 2) ────
+    function currentStory() { return currentStoryId ? getStory(currentStoryId) : null; }
+
+    function openStorySession(storyId) {
+      const s = getStory(storyId);
+      if (!s) return;
+      currentStoryId = storyId;
+      stopTTS();
+      setError('');
+      document.getElementById('empty-state').style.display = 'none';
+      document.getElementById('loading-state').style.display = 'none';
+      const card = document.getElementById('story-card');
+      card.style.display = 'block';
+      document.getElementById('progress-bar').style.display = 'flex';
+      const readMin = Math.max(1, Math.round((s.words || 0) / 200));
+      const last = lastEval(storyId);
+      document.getElementById('story-meta').innerHTML = `
+        <span class="seal seal-red" style="--i:0">${escapeHtml(s.genre)}</span>
+        <span class="seal seal-ink" style="--i:1">${escapeHtml(s.level)}</span>
+        <span class="seal" style="--i:2">${escapeHtml(s.length)}</span>
+        <span class="seal" style="--i:3">${s.words} words · ${readMin} min read</span>
+        ${s.lesson_focus ? `<span class="seal" style="--i:4">${escapeHtml(s.lesson_focus)}</span>` : ''}
+        ${last ? `<span class="seal" style="--i:5">eval ${last.score}</span>` : ''}
+      `;
+      document.getElementById('story-title').textContent = s.title;
+      renderStory(s.body);
+      setupScrollProgress();
+      renderSuggested(s);
+      renderChatLog();
+      const prev = lastEval(storyId);
+      if (prev) renderEval(prev);
+      else document.getElementById('eval-card').style.display = 'none';
+      document.getElementById('chat-card').style.display = 'block';
+      setSession(storyId, { status: prev ? 'evaluated' : 'reading' });
+      renderLibrary();
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set('story', storyId);
+        window.history.replaceState({}, '', url);
+      } catch {}
+    }
+
+    function renderLibrary() {
+      const el = document.getElementById('library-list');
+      if (!el) return;
+      const all = Object.values(lsGet(LS_STORIES, {})).sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+      document.getElementById('lib-count').textContent = all.length ? `(${all.length})` : '';
+      if (!all.length) { el.innerHTML = '<div class="lib-empty">No stories yet — generate your first.</div>'; return; }
+      el.innerHTML = '';
+      all.slice(0, 20).forEach((s) => {
+        const last = lastEval(s.id);
+        const b = document.createElement('button');
+        b.className = 'lib-item' + (s.id === currentStoryId ? ' active' : '');
+        b.type = 'button';
+        const left = document.createElement('span');
+        left.textContent = `${s.title} · ${s.level}`;
+        const right = document.createElement('span');
+        right.className = 'lib-score';
+        right.textContent = last ? String(last.score) : '';
+        b.appendChild(left); b.appendChild(right);
+        b.addEventListener('click', () => openStorySession(s.id));
+        el.appendChild(b);
+      });
+    }
+
+    function renderSuggested(s) {
+      const row = document.getElementById('suggest-row');
+      const qs = (s.suggested_questions || []).slice(0, 4);
+      if (!qs.length) { row.style.display = 'none'; row.innerHTML = ''; return; }
+      row.style.display = 'flex';
+      row.innerHTML = '';
+      qs.forEach((q) => {
+        const b = document.createElement('button');
+        b.className = 'suggest-q'; b.type = 'button'; b.textContent = q;
+        b.addEventListener('click', () => {
+          const inp = document.getElementById('chat-input');
+          inp.value = q;
+          sendChat();
+        });
+        row.appendChild(b);
+      });
+    }
+
+    function renderChatLog() {
+      const logEl = document.getElementById('chat-log');
+      const msgs = currentStoryId ? getMessages(currentStoryId) : [];
+      logEl.innerHTML = '';
+      msgs.forEach((m) => {
+        const d = document.createElement('div');
+        d.className = 'chat-msg ' + m.role;
+        d.textContent = m.text;
+        logEl.appendChild(d);
+      });
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function chatHeaders() {
+      const typedKey = (document.getElementById('groq-key-input')?.value || '').trim();
+      const groqKey = typedKey || getGroqKey();
+      const h = { 'Content-Type': 'application/json' };
+      if (groqKey) h['x-groq-api-key'] = groqKey;
+      return h;
+    }
+
+    async function sendChat() {
+      const story = currentStory();
+      if (!story || isSending) return;
+      const inp = document.getElementById('chat-input');
+      const text = (inp.value || '').trim().slice(0, 1000);
+      if (!text) return;
+      isSending = true;
+      const btn = document.getElementById('chat-send');
+      btn.disabled = true;
+      document.getElementById('chat-status').textContent = 'sending…';
+      if (chatAbort) chatAbort.abort();
+      chatAbort = new AbortController();
+      const userMsg = { id: newId(), role: 'user', text, created_at: new Date().toISOString() };
+      pushMessage(story.id, userMsg);
+      renderChatLog();
+      inp.value = '';
+      try {
+        const history = getMessages(story.id).slice(-12).map((m) => ({ role: m.role, text: m.text }));
+        const idempotencyKey = newId();
+        const res = await fetch(CHAT_URL, {
+          method: 'POST',
+          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
+          body: JSON.stringify({ story: story.body, level: story.level, lesson_focus: story.lesson_focus || '', history: history.slice(0, -1), message: text, idempotencyKey }),
+          signal: chatAbort.signal,
+        });
+        if (!res.ok) {
+          const t = await res.text();
+          throw new Error(res.status === 409 ? 'Already sending — wait a moment.' : `Chat error ${res.status}: ${t.slice(0, 300)}`);
+        }
+        const data = await res.json();
+        pushMessage(story.id, { id: newId(), role: 'assistant', text: (data.reply || '').trim(), created_at: new Date().toISOString() });
+        renderChatLog();
+        setSession(story.id, { status: 'chatting' });
+        document.getElementById('chat-status').textContent = '';
+      } catch (err) {
+        if (err?.name !== 'AbortError') {
+          document.getElementById('chat-status').textContent = err.message || 'Chat failed. Try again.';
+        }
+      } finally {
+        isSending = false;
+        btn.disabled = false;
+        if (document.getElementById('chat-status').textContent === 'sending…') document.getElementById('chat-status').textContent = '';
+      }
+    }
+
+    function renderEval(e) {
+      const card = document.getElementById('eval-card');
+      const bodyEl = document.getElementById('eval-body');
+      card.style.display = 'block';
+      const s = e.scores || {};
+      const sub = (k, label) => (s[k] != null ? `<span class="seal">${label} ${s[k]}</span>` : '');
+      const mistakes = (e.mistakes || []).map((m) => `
+        <div class="eval-mistake">
+          <div><del>${escapeHtml(m.original)}</del> → <ins>${escapeHtml(m.correction)}</ins> <small>(${escapeHtml(m.category)} · ${escapeHtml(m.severity)})</small></div>
+          <div><small>${escapeHtml(m.explanation)}</small></div>
+        </div>`).join('');
+      bodyEl.innerHTML = `
+        <h3 class="panel-title">Evaluation</h3>
+        <div class="eval-score">${e.score}<small style="font-size:1rem">/100</small></div>
+        <div class="eval-grid">${sub('comprehension', 'Comp')} ${sub('grammar', 'Gram')} ${sub('vocabulary', 'Vocab')} ${sub('communication', 'Comm')} ${s.lesson_focus != null ? `<span class="seal seal-red">Focus ${s.lesson_focus}</span>` : ''}</div>
+        ${e.summary ? `<p style="font-family:var(--serif); line-height:1.7">${escapeHtml(e.summary)}</p>` : ''}
+        ${(e.strengths || []).length ? `<h4 class="panel-title" style="font-size:1rem; margin-top:12px">Strengths</h4><ul style="margin-left:18px">${e.strengths.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul>` : ''}
+        ${mistakes || '<p><small>No concrete errors found — solid work.</small></p>'}
+        ${(e.recommendations || []).length ? `<h4 class="panel-title" style="font-size:1rem; margin-top:12px">Recommendations</h4><ul style="margin-left:18px">${e.recommendations.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul>` : ''}
+        ${e.lesson_focus_feedback ? `<h4 class="panel-title" style="font-size:1rem; margin-top:12px">${escapeHtml(e.lesson_focus_feedback.focus)} — ${e.lesson_focus_feedback.score}</h4><p>${escapeHtml(e.lesson_focus_feedback.feedback || '')}</p>` : ''}
+      `;
+    }
+
+    async function runEvaluation() {
+      const story = currentStory();
+      if (!story || isEvaluating) return;
+      isEvaluating = true;
+      const btn = document.getElementById('eval-btn');
+      btn.disabled = true;
+      const prevLabel = btn.textContent;
+      btn.textContent = 'Evaluating…';
+      if (evalAbort) evalAbort.abort();
+      evalAbort = new AbortController();
+      try {
+        const userMessages = getMessages(story.id).filter((m) => m.role === 'user').map((m) => m.text);
+        const idempotencyKey = newId();
+        const res = await fetch(EVAL_URL, {
+          method: 'POST',
+          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
+          body: JSON.stringify({ story: story.body, lesson_focus: story.lesson_focus || '', userMessages, idempotencyKey }),
+          signal: evalAbort.signal,
+        });
+        if (!res.ok) {
+          const t = await res.text();
+          throw new Error(res.status === 409 ? 'Evaluation already running.' : `Evaluation error ${res.status}: ${t.slice(0, 300)}`);
+        }
+        const data = await res.json();
+        if (!data.evaluable) {
+          setError(data.message || 'Keep talking a little more so I can give you a meaningful evaluation.');
+          return;
+        }
+        const record = { ...data, id: newId(), storyId: story.id, created_at: new Date().toISOString() };
+        saveEval(record);
+        setSession(story.id, { status: 'evaluated' });
+        renderEval(record);
+        renderLibrary();
+        openStorySessionKeepScroll(story.id);
+      } catch (err) {
+        if (err?.name !== 'AbortError') setError(err.message || 'Evaluation failed. Try again.');
+      } finally {
+        isEvaluating = false;
+        btn.disabled = false;
+        btn.textContent = prevLabel;
+      }
+    }
+
+    function openStorySessionKeepScroll(storyId) {
+      const y = window.scrollY;
+      openStorySession(storyId);
+      window.scrollTo(0, y);
+    }
+
+    // Restore library + last story on load (§§6, 18).
+    document.addEventListener('DOMContentLoaded', () => {
+      renderLibrary();
+      try {
+        const id = new URL(window.location.href).searchParams.get('story');
+        const all = lsGet(LS_STORIES, {});
+        const ids = Object.keys(all);
+        const target = (id && all[id]) ? id : ids.sort((a, b) => (all[b].created_at || '').localeCompare(all[a].created_at || ''))[0];
+        if (target) openStorySession(target);
+      } catch {}
+      const ci = document.getElementById('chat-input');
+      if (ci) ci.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendChat(); });
+      const fi = document.getElementById('focus-input');
+      if (fi) fi.addEventListener('keydown', (e) => { if (e.key === 'Enter') generateStory(); });
+    });
 
     // ── Error ──────────────────────────────────────────────────
     function setError(msg) {
