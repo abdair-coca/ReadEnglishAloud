@@ -1,0 +1,14 @@
+node_modules/
+.env
+.env.local
+.agent/
+.agents/
+.atl/
+.claude/
+.codex/
+.cursor/
+.gemini/
+.grok/
+.impeccable/
+.opencode/
+.playwright-mcp/
