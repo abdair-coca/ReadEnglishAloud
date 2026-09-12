@@ -514,3 +514,27 @@ test('integration: default focus-input is populated and synchronized with reader
   assert.ok(html.includes('id="practice-target-strip"'), 'Must render target strip in practice panel');
 });
 
+test('integration: reader view and catalog expose explicit tense structures with Subject + Verb + Complement', async () => {
+  const res = await fetch(`${baseUrl}/`);
+  const html = await res.text();
+
+  // Past Simple presence in catalog and quick chips
+  assert.ok(html.includes("'past simple'"), 'Catalog must define past simple');
+  assert.ok(html.includes('data-focus="Past Simple"'), 'Quick row must include Past Simple chip');
+
+  // Syntax tokens & Structure Banner components
+  assert.ok(html.includes('lesson-structure-banner'), 'Must include lesson-structure-banner markup/class');
+  assert.ok(html.includes('structure-diagram'), 'Must render visual syntax diagram');
+  assert.ok(html.includes('syntax-chip'), 'Must style individual syntax chips');
+  assert.ok(html.includes('structure-patterns'), 'Must render affirmative, negative, and question patterns');
+
+  // Syntactic formulas for Past Simple
+  assert.ok(html.includes('Subject + Verb (past form: -ed / irregular V2) + Complement'), 'Past Simple formula must include Subject + Verb + Complement breakdown');
+  assert.ok(html.includes("did not (didn\\'t) + Base Verb"), 'Must provide negative auxiliary pattern');
+  assert.ok(html.includes("Did + Subject + Base Verb"), 'Must provide question inversion pattern');
+
+  // Helper functions
+  assert.ok(html.includes('buildLessonStructureHtml(item)'), 'Must define reusable structure banner builder');
+});
+
+

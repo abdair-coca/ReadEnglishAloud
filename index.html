@@ -1250,6 +1250,143 @@
       border-radius: 3px;
     }
 
+    /* ── Lesson Structure Banner & Syntax Diagram ── */
+    .lesson-structure-banner {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(28, 42, 74, 0.04);
+    }
+
+    .structure-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .structure-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-deep);
+      background: var(--accent-soft);
+      padding: 2px 8px;
+      border-radius: var(--r-pill);
+    }
+
+    .structure-name {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+
+    .structure-diagram {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      background: var(--surface-2);
+      border: 1px dashed var(--line);
+      border-radius: 6px;
+    }
+
+    .syntax-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: #fff;
+      border: 1px solid var(--line-soft);
+      color: var(--ink);
+    }
+
+    .syntax-chip.subj {
+      background: #eef2ff;
+      border-color: #c7d2fe;
+      color: #3730a3;
+    }
+
+    .syntax-chip.verb {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #991b1b;
+      font-weight: 700;
+    }
+
+    .syntax-chip.comp {
+      background: #ecfdf5;
+      border-color: #a7f3d0;
+      color: #065f46;
+    }
+
+    .syntax-plus {
+      font-family: ui-monospace, monospace;
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .structure-patterns {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .pattern-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .pattern-tag {
+      flex-shrink: 0;
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .pattern-tag.aff {
+      background: #ecfdf5;
+      color: #065f46;
+    }
+
+    .pattern-tag.neg {
+      background: #fef2f2;
+      color: #991b1b;
+    }
+
+    .pattern-tag.qst {
+      background: #eff6ff;
+      color: #1e40af;
+    }
+
+    .pattern-formula {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: var(--ink-2);
+      word-break: break-word;
+    }
+
     .practice-target-strip {
       background: #fff;
       border: 1px solid var(--line-soft);
@@ -2434,6 +2571,7 @@
             <input id="focus-input" class="text-field" type="text" value="Past Perfect" placeholder="Past Perfect, phrasal verbs, travel English…" maxlength="80" autocomplete="off">
             <div class="quick-row" id="focus-quick">
               <button class="quick-chip active" type="button" data-focus="Past Perfect" aria-pressed="true">Past Perfect</button>
+              <button class="quick-chip" type="button" data-focus="Past Simple" aria-pressed="false">Past Simple</button>
               <button class="quick-chip" type="button" data-focus="Phrasal verbs" aria-pressed="false">Phrasal verbs</button>
               <button class="quick-chip" type="button" data-focus="Conditionals" aria-pressed="false">Conditionals</button>
               <button class="quick-chip" type="button" data-focus="Travel vocabulary" aria-pressed="false">Travel vocabulary</button>
@@ -2455,6 +2593,7 @@
 
           <div class="examples-row">
             <span>Try an example:</span>
+            <button class="quick-chip" type="button" onclick="setExample('Adventure', 'an ancient treasure in a Scottish castle', 'Past Simple')">A treasure in Scotland</button>
             <button class="quick-chip" type="button" onclick="setExample('Mystery', 'a mystery in a small town', 'Past Perfect')">A mystery in a small town</button>
             <button class="quick-chip" type="button" onclick="setExample('Science Fiction', 'a sci-fi story about AI', 'Conditionals')">A sci-fi story about AI</button>
             <button class="quick-chip" type="button" onclick="setExample('Romance', 'a love story at university', 'Phrasal verbs')">A love story at university</button>
@@ -2677,25 +2816,257 @@
 
     // ── Static Grammar Knowledge Catalog (0 Token Consumption) ─
     const GRAMMAR_CATALOG = {
+      'past simple': {
+        title: 'Past Simple',
+        formula: 'Subject + Verb (past form: -ed / irregular V2) + Complement',
+        structure: {
+          affirmative: 'Subject + Verb (past form: -ed / irregular V2) + Complement',
+          negative: 'Subject + did not (didn\'t) + Base Verb + Complement',
+          question: 'Did + Subject + Base Verb + Complement?'
+        },
+        components: ['Subject', 'Verb (past / -ed / V2)', 'Complement'],
+        rule: 'Describes finished actions, habits, or discrete events completed at a definite time in the past.',
+        examples: [
+          { context: 'Completed Action', sentence: 'Yesterday evening, Maya finished the entire technical report ahead of schedule.', highlight: 'finished' },
+          { context: 'Historical Discovery', sentence: 'The archaeologist discovered the ancient stone manuscript deep inside the mountain cavern.', highlight: 'discovered' },
+          { context: 'Narrative Sequence', sentence: 'He grabbed his notebook, locked the wooden door, and hurried down the foggy avenue.', highlight: 'grabbed ... locked ... hurried' }
+        ],
+        deepTip: 'Regular vs Irregular & Auxiliary Rule: Regular verbs take -ed (finish → finished), but irregular verbs transform (go → went, write → wrote). In negatives and questions, "did / didn\'t" absorbs the past tense, so the main verb stays in base form ("Did you see it?", never "Did you saw it?").',
+        extraExamples: [
+          { context: 'Direct Dialogue', sentence: '"Did you receive the encrypted transmission before the communication towers went offline?"', highlight: 'Did you receive' },
+          { context: 'Negative Observation', sentence: 'The security inspector did not notice any signs of forced entry into the archive room.', highlight: 'did not notice' },
+          { context: 'Childhood Habit', sentence: 'During their youth in Edinburgh, they walked along the historic ramparts every Sunday.', highlight: 'walked' }
+        ]
+      },
+      'present simple': {
+        title: 'Present Simple',
+        formula: 'Subject + Base Verb (-s / -es for 3rd person) + Complement',
+        structure: {
+          affirmative: 'Subject (I/You/We/They) + Base Verb | (He/She/It) + Verb-s/es + Complement',
+          negative: 'Subject + do / does not (don\'t / doesn\'t) + Base Verb + Complement',
+          question: 'Do / Does + Subject + Base Verb + Complement?'
+        },
+        components: ['Subject', 'Verb (Base / -s)', 'Complement'],
+        rule: 'Describes universal facts, regular habits, permanent routines, or timeless truths.',
+        examples: [
+          { context: 'Daily Routine', sentence: 'Every morning at dawn, Marcus reviews the maritime harbor logs before the ships arrive.', highlight: 'reviews' },
+          { context: 'Universal Fact', sentence: 'The Earth orbits the Sun once every 365.25 days in a slightly elliptical path.', highlight: 'orbits' },
+          { context: 'Fixed Timetable', sentence: 'The express rail shuttle to Zurich departs precisely at eight o\'clock every morning.', highlight: 'departs' }
+        ],
+        deepTip: 'Third-Person Singular Marker: Remember to append -s or -es for he, she, and it ("she speaks", "he analyzes"). In negatives and questions, does/doesn\'t carries the marker, so the main verb remains bare ("Does he speak?").',
+        extraExamples: [
+          { context: 'Negative Fact', sentence: 'Our automated analytics platform does not store customer passwords in plain text format.', highlight: 'does not store' },
+          { context: 'Interview Query', sentence: '"Do you usually collaborate directly with overseas research units during data audits?"', highlight: 'Do you usually collaborate' },
+          { context: 'Physical Constant', sentence: 'Pure water boils at 100 degrees Celsius under standard atmospheric sea-level pressure.', highlight: 'boils' }
+        ]
+      },
+      'present continuous': {
+        title: 'Present Continuous',
+        formula: 'Subject + am / is / are + Verb-ing + Complement',
+        structure: {
+          affirmative: 'Subject + am / is / are + Verb-ing + Complement',
+          negative: 'Subject + am / is / are not + Verb-ing + Complement',
+          question: 'Am / Is / Are + Subject + Verb-ing + Complement?'
+        },
+        components: ['Subject', 'am / is / are', 'Verb-ing', 'Complement'],
+        rule: 'Describes actions occurring right now at the moment of speaking or temporary ongoing situations.',
+        examples: [
+          { context: 'Immediate Action', sentence: 'Look at the ridge! Heavy snow is falling silently across the dark pine forest.', highlight: 'is falling' },
+          { context: 'Temporary Situation', sentence: 'Dr. Harris is currently lecturing at Cambridge while his primary laboratory undergoes renovation.', highlight: 'is currently lecturing' },
+          { context: 'Evolving Trend', sentence: 'Global investments in clean renewable technology are increasing at an unprecedented rate.', highlight: 'are increasing' }
+        ],
+        deepTip: 'Stative Verbs Caution: Continuous tenses are generally not used with stative verbs expressing feelings, mental states, or possession (know, believe, understand, like, own). Say "I understand", never "I am understanding".',
+        extraExamples: [
+          { context: 'Live Transmission', sentence: 'The research satellite is approaching the orbital docking corridor right now.', highlight: 'is approaching' },
+          { context: 'Phone Conversation', sentence: '"Could you hold on for a moment? I am discussing the balance sheet with the controller."', highlight: 'am discussing' },
+          { context: 'Urban Project', sentence: 'City architects are currently redesigning the historical riverside promenade.', highlight: 'are currently redesigning' }
+        ]
+      },
+      'past continuous': {
+        title: 'Past Continuous',
+        formula: 'Subject + was / were + Verb-ing + Complement',
+        structure: {
+          affirmative: 'Subject + was / were + Verb-ing + Complement',
+          negative: 'Subject + was / were not (wasn\'t / weren\'t) + Verb-ing + Complement',
+          question: 'Was / Were + Subject + Verb-ing + Complement?'
+        },
+        components: ['Subject', 'was / were', 'Verb-ing', 'Complement'],
+        rule: 'Expresses an action that was ongoing in the past, frequently interrupted by a discrete Past Simple event.',
+        examples: [
+          { context: 'Interruption in Action', sentence: 'Elena was calibrating the microscope when the power grid suddenly failed.', highlight: 'was calibrating' },
+          { context: 'Atmospheric Setting', sentence: 'Cold rain was lashing the cabin windowpanes while the wind was howling in the valley.', highlight: 'was lashing' },
+          { context: 'Simultaneous Activities', sentence: '"While the analyst was reviewing the logs, the director was speaking to the board."', highlight: 'was reviewing' }
+        ],
+        deepTip: 'Narrative Background: Use Past Continuous to set the scenery or ongoing backdrop, and Past Simple for the sudden events that drive the plot forward.',
+        extraExamples: [
+          { context: 'Background Detail', sentence: 'At nine o\'clock last evening, the technicians were monitoring the satellite transmission.', highlight: 'were monitoring' },
+          { context: 'Mystery Story', sentence: 'A suspicious figure was loitering near the library entrance just before dusk.', highlight: 'was loitering' },
+          { context: 'Temporary Past Period', sentence: 'Throughout 2021, Dr. Vance was conducting field research in northern Norway.', highlight: 'was conducting' }
+        ]
+      },
+      'present perfect': {
+        title: 'Present Perfect',
+        formula: 'Subject + have / has + Past Participle (V3) + Complement',
+        structure: {
+          affirmative: 'Subject + have / has + Past Participle (V3) + Complement',
+          negative: 'Subject + have / has not (haven\'t / hasn\'t) + Past Participle (V3) + Complement',
+          question: 'Have / Has + Subject + Past Participle (V3) + Complement?'
+        },
+        components: ['Subject', 'have / has', 'Verb (V3)', 'Complement'],
+        rule: 'Connects past experiences or actions to the current moment, without specifying a finished point in time.',
+        examples: [
+          { context: 'Life Experience', sentence: 'Sofia has explored twenty different countries, but she has never witnessed a solar eclipse.', highlight: 'has explored' },
+          { context: 'Immediate Present Result', sentence: 'Look at the terrace! Julian has planted forty English roses this afternoon.', highlight: 'has planted' },
+          { context: 'Unfinished Time Window', sentence: '"Our department has processed over two hundred inquiries so far this week."', highlight: 'have processed' }
+        ],
+        deepTip: 'Definite vs Indefinite Time: If you mention when an action happened (yesterday, last month, in 2020), you MUST switch to Past Simple ("Julian planted them yesterday").',
+        extraExamples: [
+          { context: 'Milestone Achievement', sentence: 'The engineering team has finally resolved the telemetry synchronization glitch.', highlight: 'has finally resolved' },
+          { context: 'Recent Observation', sentence: 'Market indicators have improved notably since the opening of the fiscal quarter.', highlight: 'have improved' },
+          { context: 'Ongoing State', sentence: 'The family has preserved this traditional vineyard for more than five generations.', highlight: 'has preserved' }
+        ]
+      },
       'past perfect': {
         title: 'Past Perfect',
-        formula: 'had + past participle (V3)',
+        formula: 'Subject + had + Past Participle (V3) + Complement',
+        structure: {
+          affirmative: 'Subject + had + Past Participle (V3) + Complement',
+          negative: 'Subject + had not (hadn\'t) + Past Participle (V3) + Complement',
+          question: 'Had + Subject + Past Participle (V3) + Complement?'
+        },
+        components: ['Subject', 'had', 'Verb (V3)', 'Complement'],
         rule: 'Describes an action that was completed before another past event or point in time.',
         examples: [
           { context: 'Work & Routine', sentence: 'By the time the manager arrived, Sarah had already compiled the quarterly sales audit.', highlight: 'had already compiled' },
           { context: 'Narrative Fiction', sentence: 'When the detective opened the cellar vault, the courier had vanished into the shadows.', highlight: 'had vanished' },
           { context: 'Conversation', sentence: '"I couldn\'t enter the building because I had forgotten my security badge at home."', highlight: 'had forgotten' }
         ],
-        deepTip: 'Common Trap: Do not use Past Perfect simply because something happened a long time ago. Use it strictly to establish a clear chronological sequence between two past occurrences.',
+        deepTip: 'Chronological Sequence: Use Past Perfect strictly to establish which of two past actions happened earlier (Event 1 = Past Perfect, Event 2 = Past Simple).',
         extraExamples: [
           { context: 'Travel Scenario', sentence: 'They realized they had boarded the wrong train only after it crossed the state border.', highlight: 'had boarded' },
           { context: 'Scientific Context', sentence: 'The team discovered that previous researchers had miscalculated the pressure variable.', highlight: 'had miscalculated' },
           { context: 'Conditional Nuance', sentence: 'If she had known the road was blocked, she would have chosen the coastal highway.', highlight: 'had known' }
         ]
       },
+      'future simple': {
+        title: 'Future Simple (Will / Be Going To)',
+        formula: 'Subject + will + Base Verb + Complement',
+        structure: {
+          affirmative: 'Subject + will + Base Verb + Complement | Subject + am/is/are going to + Base Verb',
+          negative: 'Subject + will not (won\'t) + Base Verb + Complement',
+          question: 'Will + Subject + Base Verb + Complement?'
+        },
+        components: ['Subject', 'will / won\'t', 'Base Verb', 'Complement'],
+        rule: 'Used for spontaneous decisions, promises, future predictions, or established intentions.',
+        examples: [
+          { context: 'Spontaneous Decision', sentence: 'The storm is getting heavier; I will call a taxi instead of walking home.', highlight: 'will call' },
+          { context: 'Future Prediction', sentence: 'Leading meteorologists predict that the polar jet stream will shift eastward by Friday.', highlight: 'will shift' },
+          { context: 'Firm Promise', sentence: '"Do not worry about the documentation; we will deliver the verified findings tomorrow morning."', highlight: 'will deliver' }
+        ],
+        deepTip: 'Will vs Going to: Use "will" for spontaneous decisions or formal predictions. Use "be going to" for pre-existing plans or predictions based on immediate physical evidence ("Look at those black clouds! It is going to rain").',
+        extraExamples: [
+          { context: 'Prior Intention', sentence: 'Next semester, Sofia is going to specialize in artificial intelligence and bioinformatics.', highlight: 'is going to specialize' },
+          { context: 'Diplomatic Inquiry', sentence: '"Will the international delegation arrive before the opening ceremony concludes?"', highlight: 'Will the international delegation arrive' },
+          { context: 'Immediate Evidence', sentence: 'Be careful with that delicate antique vase; it is going to slip from your hands!', highlight: 'is going to slip' }
+        ]
+      },
+      'conditionals': {
+        title: 'Conditionals (Zero, First & Second)',
+        formula: '1st: If + Present, will + V1 | 2nd: If + Past, would + V1',
+        structure: {
+          affirmative: '1st: If + Present Simple, will + Base Verb | 2nd: If + Past Simple, would + Base Verb',
+          negative: 'If + Subject + negative verb, Subject + won\'t / wouldn\'t + Base Verb',
+          question: 'What will / would you do if + Subject + Verb...?'
+        },
+        components: ['If-clause (Condition)', 'Result clause (Consequence)'],
+        rule: 'First conditional deals with real future possibilities; Second conditional explores hypothetical, imaginary, or counterfactual realities.',
+        examples: [
+          { context: 'Practical Decision', sentence: 'If the connecting flight is delayed, we will take the express bullet train to the capital.', highlight: 'will take' },
+          { context: 'Hypothetical Vision', sentence: 'If she discovered the lost parchment, she would donate it to the national archives.', highlight: 'would donate' },
+          { context: 'Direct Advice', sentence: '"If I were in your position, I would consult a trade specialist before signing that contract."', highlight: 'If I were ... would consult' }
+        ],
+        deepTip: 'Formal Subjunctive: In second conditionals, standard English uses "were" instead of "was" for all persons: "If he were honest...", "If I were you...".',
+        extraExamples: [
+          { context: 'Negotiations', sentence: 'If you guarantee delivery by Friday, our firm will finalize the purchase order.', highlight: 'will finalize' },
+          { context: 'Imaginary Scenario', sentence: 'If they lived closer to the coastline, they would go sailing every weekend.', highlight: 'would go' },
+          { context: 'Safety Rule', sentence: 'If you step across the yellow barrier, the emergency sensors will trigger an alert.', highlight: 'will trigger' }
+        ]
+      },
+      'passive voice': {
+        title: 'Passive Voice',
+        formula: 'Subject (Receiver) + be (conjugated) + Past Participle (V3) (+ by Agent)',
+        structure: {
+          affirmative: 'Subject + am/is/are/was/were/been + Past Participle (V3) (+ by Agent)',
+          negative: 'Subject + be + not + Past Participle (V3) (+ by Agent)',
+          question: 'Be (conjugated) + Subject + Past Participle (V3) (+ by Agent)?'
+        },
+        components: ['Receiver (Subject)', 'be (conjugated)', 'Verb (V3)', 'by Agent (optional)'],
+        rule: 'Shifts focus to the recipient or outcome of an action, especially when the actor is unknown, secondary, or irrelevant.',
+        examples: [
+          { context: 'Journalism & News', sentence: 'The medieval stone aqueduct was reinforced following last month\'s seismic tremors.', highlight: 'was reinforced' },
+          { context: 'Scientific Documentation', sentence: 'The bio-samples are kept in hermetically sealed nitrogen canisters at all times.', highlight: 'are kept' },
+          { context: 'Historical Discovery', sentence: 'The rare Roman mosaic was uncovered by local farmers beneath an ancient olive grove.', highlight: 'was uncovered' }
+        ],
+        deepTip: 'Stylistic Choice: Use passive voice to maintain an objective, scientific tone or when the action itself matters most: "The specimen was contaminated".',
+        extraExamples: [
+          { context: 'Public Policy', sentence: 'Strict digital security protocols will be enforced across all government portals.', highlight: 'will be enforced' },
+          { context: 'Museum Exhibit', sentence: 'The golden crown was originally forged by Byzantine goldsmiths in Constantinople.', highlight: 'was originally forged' },
+          { context: 'Legal Investigation', sentence: 'The disputed documents were submitted to the high magistrate late yesterday.', highlight: 'were submitted' }
+        ]
+      },
+      'modal verbs': {
+        title: 'Modal Verbs (Can, Could, Should, Must, Might)',
+        formula: 'Subject + Modal Auxiliary + Base Verb (Bare Infinitive) + Complement',
+        structure: {
+          affirmative: 'Subject + can / could / should / must / might + Base Verb + Complement',
+          negative: 'Subject + cannot / couldn\'t / shouldn\'t / mustn\'t + Base Verb + Complement',
+          question: 'Modal + Subject + Base Verb + Complement?'
+        },
+        components: ['Subject', 'Modal Auxiliary', 'Base Verb', 'Complement'],
+        rule: 'Expresses ability, permission, obligation, advice, possibility, or deduction without altering the main verb.',
+        examples: [
+          { context: 'Advice & Recommendation', sentence: 'You should consult the maritime navigation charts before steering through the shallow reef.', highlight: 'should consult' },
+          { context: 'Past Ability', sentence: 'Even as a novice apprentice, Thomas could decipher ancient cryptographic ciphers with ease.', highlight: 'could decipher' },
+          { context: 'Strict Obligation', sentence: 'All aviation personnel must complete the emergency pressure chamber simulation annually.', highlight: 'must complete' }
+        ],
+        deepTip: 'Bare Infinitive Rule: Modal verbs are never followed by "to" (except "ought to"). Say "she must go", never "she must to go". Also, modals never take third-person -s ("he can", not "he cans").',
+        extraExamples: [
+          { context: 'Logical Deduction', sentence: 'The library lights are still glowing; the archivist must be cataloging the recent artifacts.', highlight: 'must be cataloging' },
+          { context: 'Polite Request', sentence: '"Could you clarify the third clause in the preliminary partnership contract?"', highlight: 'Could you clarify' },
+          { context: 'Future Possibility', sentence: 'With favorable offshore winds, the exploratory vessel might reach the outer archipelago by dawn.', highlight: 'might reach' }
+        ]
+      },
+      'used to': {
+        title: 'Used to (Past Habits & States)',
+        formula: 'Subject + used to + Base Verb + Complement',
+        structure: {
+          affirmative: 'Subject + used to + Base Verb + Complement',
+          negative: 'Subject + did not use to (didn\'t use to) + Base Verb + Complement',
+          question: 'Did + Subject + use to + Base Verb + Complement?'
+        },
+        components: ['Subject', 'used to', 'Base Verb', 'Complement'],
+        rule: 'Expresses habits, regular routines, or continuous states in the past that are no longer true in the present.',
+        examples: [
+          { context: 'Past Habit', sentence: 'Elena used to practice the cello for three hours every evening after finishing her laboratory duties.', highlight: 'used to practice' },
+          { context: 'Past State', sentence: 'This bustling commercial harbor used to be a sleepy fishing village two centuries ago.', highlight: 'used to be' },
+          { context: 'Negative Past Habit', sentence: 'The local islanders didn\'t use to lock their front gates during the autumn harvest season.', highlight: 'didn\'t use to lock' }
+        ],
+        deepTip: 'Spelling in Negatives and Questions: When using "did" or "didn\'t", drop the final "d": say "didn\'t use to" and "Did you use to?", not "didn\'t used to".',
+        extraExamples: [
+          { context: 'Inquiry', sentence: '"Did your grandparents use to cultivate olive groves on these Mediterranean hillsides?"', highlight: 'Did ... use to cultivate' },
+          { context: 'Contrast with Modern Day', sentence: 'We used to communicate via physical dispatch, but now telemetry arrives instantaneously.', highlight: 'used to communicate' },
+          { context: 'City Transformation', sentence: 'The grand botanical conservatory used to house rare arctic flora before the municipal renovation.', highlight: 'used to house' }
+        ]
+      },
       'phrasal verbs': {
         title: 'Phrasal Verbs',
-        formula: 'Verb + Particle (Preposition or Adverb) → Idiomatic Meaning',
+        formula: 'Subject + Verb + Particle (Preposition/Adverb) + Object',
+        structure: {
+          affirmative: 'Subject + Verb + Particle + Object (e.g. figure out, turn off, give up)',
+          negative: 'Subject + auxiliary not + Verb + Particle + Object',
+          question: 'Auxiliary + Subject + Verb + Particle + Object?'
+        },
+        components: ['Subject', 'Base Verb', 'Particle', 'Object / Complement'],
         rule: 'Multi-word verbs that form an idiomatic meaning distinct from the literal definition of the base verb.',
         examples: [
           { context: 'Daily Productivity', sentence: 'Every morning at dawn, Marcus turns off his phone to focus entirely on writing.', highlight: 'turns off' },
@@ -2709,74 +3080,16 @@
           { context: 'Health & Energy', sentence: 'Following three weeks of travel, the diplomat came down with a persistent flu.', highlight: 'came down with' }
         ]
       },
-      'conditionals': {
-        title: 'Conditionals (First & Second)',
-        formula: 'First: If + Present Simple, will + V1 | Second: If + Past Simple, would + V1',
-        rule: 'First conditional deals with real possibilities; Second conditional explores hypothetical, imaginary, or counterfactual realities.',
-        examples: [
-          { context: 'Practical Decision', sentence: 'If the connecting flight is delayed, we will take the express bullet train to the capital.', highlight: 'will take' },
-          { context: 'Hypothetical Vision', sentence: 'If she discovered the lost parchment, she would donate it to the national archives.', highlight: 'would donate' },
-          { context: 'Direct Advice', sentence: '"If I were in your position, I would consult a trade specialist before signing that contract."', highlight: 'If I were ... would consult' }
-        ],
-        deepTip: 'Formal Subjunctive: In second conditionals, standard English uses "were" instead of "was" for all persons: "If he were honest...", "If I were you...".',
-        extraExamples: [
-          { context: 'Negotiations', sentence: 'If you guarantee delivery by Friday, our firm will finalize the purchase order.', highlight: 'will finalize' },
-          { context: 'Imaginary Scenario', sentence: 'If they lived closer to the coastline, they would go sailing every weekend.', highlight: 'would go' },
-          { context: 'Safety Rule', sentence: 'If you step across the yellow barrier, the emergency sensors will trigger an alert.', highlight: 'will trigger' }
-        ]
-      },
-      'past continuous': {
-        title: 'Past Continuous',
-        formula: 'was / were + verb-ing',
-        rule: 'Expresses an action that was ongoing in the past, frequently interrupted by a discrete Past Simple action.',
-        examples: [
-          { context: 'Interruption in Action', sentence: 'Elena was calibrating the microscope when the power grid suddenly failed.', highlight: 'was calibrating' },
-          { context: 'Atmospheric Setting', sentence: 'Cold rain was lashing the cabin windowpanes while the wind was howling in the valley.', highlight: 'was lashing' },
-          { context: 'Simultaneous Activities', sentence: '"While the analyst was reviewing the logs, the director was speaking to the board."', highlight: 'was reviewing' }
-        ],
-        deepTip: 'Stative Verbs Warning: Stative verbs describing emotional states or possession (know, understand, believe, have) do not take continuous forms. Say "I understood", never "I was understanding".',
-        extraExamples: [
-          { context: 'Background Detail', sentence: 'At nine o\'clock last evening, the technicians were monitoring the satellite transmission.', highlight: 'were monitoring' },
-          { context: 'Mystery Story', sentence: 'A suspicious figure was loitering near the library entrance just before dusk.', highlight: 'was loitering' },
-          { context: 'Temporary Past Period', sentence: 'Throughout 2021, Dr. Vance was conducting field research in northern Norway.', highlight: 'was conducting' }
-        ]
-      },
-      'present perfect': {
-        title: 'Present Perfect',
-        formula: 'have / has + past participle (V3)',
-        rule: 'Connects past experiences or actions to the current moment, without referring to a specific finished time.',
-        examples: [
-          { context: 'Life Experience', sentence: 'Sofia has explored twenty different countries, but she has never witnessed a solar eclipse.', highlight: 'has explored' },
-          { context: 'Immediate Present Result', sentence: 'Look at the garden terrace! Julian has planted forty English roses this afternoon.', highlight: 'has planted' },
-          { context: 'Unfinished Time Window', sentence: '"Our department has processed over two hundred inquiries so far this week."', highlight: 'have processed' }
-        ],
-        deepTip: 'Definite vs Indefinite Time: If you mention when an action happened (yesterday, last month, in 2020), you MUST use Past Simple ("Julian planted them yesterday").',
-        extraExamples: [
-          { context: 'Milestone Achievement', sentence: 'The engineering team has finally resolved the telemetry synchronization glitch.', highlight: 'has finally resolved' },
-          { context: 'Recent Observation', sentence: 'Market indicators have improved notably since the opening of the fiscal quarter.', highlight: 'have improved' },
-          { context: 'Ongoing State', sentence: 'The family has preserved this traditional vineyard for more than five generations.', highlight: 'has preserved' }
-        ]
-      },
-      'passive voice': {
-        title: 'Passive Voice',
-        formula: 'be (in appropriate tense) + past participle (V3)',
-        rule: 'Shifts focus to the recipient or outcome of an action, especially when the actor is unknown, secondary, or irrelevant.',
-        examples: [
-          { context: 'Journalism & News', sentence: 'The medieval stone aqueduct was reinforced following last month\'s seismic tremors.', highlight: 'was reinforced' },
-          { context: 'Scientific Documentation', sentence: 'The bio-samples are kept in hermetically sealed nitrogen canisters at all times.', highlight: 'are kept' },
-          { context: 'Historical Discovery', sentence: 'The rare Roman mosaic was uncovered by local farmers beneath an ancient olive grove.', highlight: 'was uncovered' }
-        ],
-        deepTip: 'Stylistic Choice: Use the passive voice to maintain an objective tone or when the action itself matters most: "The specimen was contaminated".',
-        extraExamples: [
-          { context: 'Public Policy', sentence: 'Strict digital security protocols will be enforced across all government portals.', highlight: 'will be enforced' },
-          { context: 'Museum Exhibit', sentence: 'The golden crown was originally forged by Byzantine goldsmiths in Constantinople.', highlight: 'was originally forged' },
-          { context: 'Legal Investigation', sentence: 'The disputed documents were submitted to the high magistrate late yesterday.', highlight: 'were submitted' }
-        ]
-      },
       'travel vocabulary': {
         title: 'Travel English',
-        formula: 'High-utility transit & hospitality collocations',
-        rule: 'Essential set phrases for boarding, accommodation, customs clearance, and navigating international destinations.',
+        formula: 'Subject + Travel Collocation + Destination / Context',
+        structure: {
+          affirmative: 'Subject + travel verb (board / check in / navigate) + transit collocation',
+          negative: 'Subject + auxiliary not + travel phrase',
+          question: 'Could / Would + Subject + travel query (e.g. "Could you tell me the gate?")'
+        },
+        components: ['Subject', 'Travel Action Phrase', 'Location / Context'],
+        rule: 'Essential set phrases for boarding, accommodation, customs clearance, and navigating international transit.',
         examples: [
           { context: 'Airport Terminal', sentence: 'All passengers holding boarding passes for gate twelve must proceed to the aircraft immediately.', highlight: 'proceed to the aircraft' },
           { context: 'Hotel Front Desk', sentence: 'We arranged a late check-out and asked the concierge to store our backpacks until midnight.', highlight: 'late check-out' },
@@ -2791,8 +3104,14 @@
       },
       'linking words': {
         title: 'Linking Words & Connectors',
-        formula: 'Discourse markers for contrast, consequence, and sequence',
-        rule: 'Transitions that knit ideas and paragraphs together smoothly, elevating basic sentences into cohesive, professional English.',
+        formula: 'Clause 1 + [Connector (however / therefore / although)] + Clause 2',
+        structure: {
+          affirmative: 'Clause A; Connector, Clause B (or: Connector + Clause A, Clause B)',
+          negative: 'Although + Clause A, Subject does / did not + Base Verb',
+          question: 'In addition to [X], why did [Y] occur?'
+        },
+        components: ['Clause A', 'Discourse Connector', 'Clause B'],
+        rule: 'Transitions that knit ideas and sentences together smoothly, elevating basic phrasing into cohesive, fluent English.',
         examples: [
           { context: 'Contrast & Concession', sentence: 'The mountain ascent was punishing; nevertheless, the crystal dawn from the ridge made every step worthwhile.', highlight: 'nevertheless' },
           { context: 'Cause & Consequence', sentence: 'Heavy landslides closed the alpine pass; consequently, the survey expedition was halted until noon.', highlight: 'consequently' },
@@ -2809,13 +3128,109 @@
 
     function findGrammarTopic(query) {
       if (!query || !query.trim()) return null;
-      const q = query.trim().toLowerCase();
+      const raw = query.trim();
+      const q = raw.toLowerCase();
+
+      // 1. Direct exact key match
       if (GRAMMAR_CATALOG[q]) return GRAMMAR_CATALOG[q];
+
+      // 2. High-utility alias mappings
+      const aliases = [
+        { test: /past\s*simple|simple\s*past|^past\s*tense$|^past$/i, key: 'past simple' },
+        { test: /present\s*simple|simple\s*present|^present\s*tense$|^present$/i, key: 'present simple' },
+        { test: /present\s*cont|present\s*prog/i, key: 'present continuous' },
+        { test: /past\s*cont|past\s*prog/i, key: 'past continuous' },
+        { test: /past\s*perf/i, key: 'past perfect' },
+        { test: /present\s*perf/i, key: 'present perfect' },
+        { test: /future\s*simple|future|^future$|\bwill\b/i, key: 'future simple' },
+        { test: /modal/i, key: 'modal verbs' },
+        { test: /used\s*to/i, key: 'used to' },
+        { test: /conditional/i, key: 'conditionals' },
+        { test: /passive/i, key: 'passive voice' },
+        { test: /phrasal/i, key: 'phrasal verbs' },
+        { test: /travel/i, key: 'travel vocabulary' },
+        { test: /link|connector/i, key: 'linking words' }
+      ];
+      for (const al of aliases) {
+        if (al.test.test(q) && GRAMMAR_CATALOG[al.key]) {
+          return GRAMMAR_CATALOG[al.key];
+        }
+      }
+
+      // 3. Substring match across keys and titles
       for (const [key, val] of Object.entries(GRAMMAR_CATALOG)) {
         if (q.includes(key) || key.includes(q)) return val;
         if (val.title.toLowerCase().includes(q)) return val;
       }
-      return null;
+
+      // 4. Intelligent fallback for custom inputs: synthesizes full structural breakdown
+      return {
+        title: raw,
+        formula: `Subject + ${raw} + Complement`,
+        structure: {
+          affirmative: `Subject + [${raw}] + Complement`,
+          negative: `Subject + auxiliary not + [${raw}] + Complement`,
+          question: `Auxiliary + Subject + [${raw}] + Complement?`
+        },
+        components: ['Subject', raw, 'Complement'],
+        rule: `This story is crafted to practice "${raw}". Notice how this target structure is constructed and used naturally throughout the narrative.`,
+        examples: [],
+        deepTip: `Make sure your answers use complete sentence structure (Subject + Verb + Complement) when answering the targeted practice questions.`,
+        extraExamples: []
+      };
+    }
+
+    function buildLessonStructureHtml(item) {
+      if (!item) return '';
+      const compHtml = Array.isArray(item.components) && item.components.length > 0
+        ? item.components.map((comp, idx) => {
+            let cls = 'comp';
+            const cLower = comp.toLowerCase();
+            if (cLower.includes('subj') || cLower.includes('clause a') || cLower.includes('receiver')) cls = 'subj';
+            else if (cLower.includes('verb') || cLower.includes('had') || cLower.includes('was') || cLower.includes('were') || cLower.includes('be ') || cLower.includes('modal') || cLower.includes('am') || cLower.includes('have') || cLower.includes('used') || cLower.includes('will')) cls = 'verb';
+            return `<span class="syntax-chip ${cls}">${escapeHtml(comp)}</span>${idx < item.components.length - 1 ? '<span class="syntax-plus">+</span>' : ''}`;
+          }).join('')
+        : `<span class="syntax-chip verb">${escapeHtml(item.formula || 'Structure')}</span>`;
+
+      const struct = item.structure || {};
+      const aff = struct.affirmative || item.formula;
+      const neg = struct.negative;
+      const qst = struct.question;
+
+      return `
+        <div class="lesson-structure-banner">
+          <div class="structure-top">
+            <span class="structure-badge">
+              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+              Grammar Structure
+            </span>
+            <span class="structure-name">${escapeHtml(item.title)}</span>
+          </div>
+          <div class="structure-diagram">
+            ${compHtml}
+          </div>
+          <div class="structure-patterns">
+            ${aff ? `
+              <div class="pattern-row">
+                <span class="pattern-tag aff">+ Affirmative</span>
+                <span class="pattern-formula">${escapeHtml(aff)}</span>
+              </div>
+            ` : ''}
+            ${neg ? `
+              <div class="pattern-row">
+                <span class="pattern-tag neg">− Negative</span>
+                <span class="pattern-formula">${escapeHtml(neg)}</span>
+              </div>
+            ` : ''}
+            ${qst ? `
+              <div class="pattern-row">
+                <span class="pattern-tag qst">? Question</span>
+                <span class="pattern-formula">${escapeHtml(qst)}</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
     }
 
     function updateGrammarPrimer(rawFocus) {
@@ -2828,59 +3243,46 @@
         return;
       }
       const item = findGrammarTopic(text);
-      if (!item) {
-        primerEl.style.display = 'block';
-        primerEl.innerHTML = `
-          <div class="primer-header">
-            <div class="primer-title">
-              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-              <span>Custom Focus: <em>${escapeHtml(text)}</em></span>
-            </div>
-            <span class="primer-pill">Custom Target</span>
-          </div>
-          <p class="primer-rule">The generated story will naturally weave in real examples of this topic, and the 3-question practice challenge will assess how well you produce it.</p>
-        `;
-        return;
-      }
+      const structureHtml = buildLessonStructureHtml(item);
 
-      const examplesHtml = item.examples.map(ex => `
+      const examplesHtml = (item.examples || []).map(ex => `
         <div class="primer-ex-card">
           <span class="primer-ex-badge">${escapeHtml(ex.context)}</span>
           <div>${escapeHtml(ex.sentence).replace(escapeHtml(ex.highlight), `<strong>${escapeHtml(ex.highlight)}</strong>`)}</div>
         </div>
       `).join('');
 
-      const extraExamplesHtml = item.extraExamples.map(ex => `
+      const extraExamplesHtml = (item.extraExamples || []).map(ex => `
         <div class="primer-ex-card">
           <span class="primer-ex-badge">${escapeHtml(ex.context)}</span>
           <div>${escapeHtml(ex.sentence).replace(escapeHtml(ex.highlight), `<strong>${escapeHtml(ex.highlight)}</strong>`)}</div>
         </div>
       `).join('');
+
+      const hasExtras = (item.extraExamples && item.extraExamples.length > 0) || item.deepTip;
 
       primerEl.style.display = 'block';
       primerEl.innerHTML = `
         <div class="primer-header">
           <div class="primer-title">
             <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-            <span>${escapeHtml(item.title)}</span>
+            <span>Pre-Reading Lesson: <strong>${escapeHtml(item.title)}</strong></span>
           </div>
           <span class="primer-pill">Pre-Reading Primer</span>
         </div>
-        <div class="primer-formula">${escapeHtml(item.formula)}</div>
+        ${structureHtml}
         <p class="primer-rule">${escapeHtml(item.rule)}</p>
-        <div class="primer-examples">
-          ${examplesHtml}
-        </div>
-        <button type="button" class="primer-expand-btn" id="primer-expand-btn" onclick="togglePrimerExtra()">
-          <span>Learn more & 3 extra examples</span>
-          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="primer-expanded-content" id="primer-expanded-content">
-          <div class="primer-deep-tip"><strong>Pedagogical tip:</strong> ${escapeHtml(item.deepTip)}</div>
-          <div class="primer-examples">
-            ${extraExamplesHtml}
+        ${examplesHtml ? `<div class="primer-examples">${examplesHtml}</div>` : ''}
+        ${hasExtras ? `
+          <button type="button" class="primer-expand-btn" id="primer-expand-btn" onclick="togglePrimerExtra()">
+            <span>Learn more & extra examples</span>
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="primer-expanded-content" id="primer-expanded-content">
+            ${item.deepTip ? `<div class="primer-deep-tip"><strong>Pedagogical tip:</strong> ${escapeHtml(item.deepTip)}</div>` : ''}
+            ${extraExamplesHtml ? `<div class="primer-examples">${extraExamplesHtml}</div>` : ''}
           </div>
-        </div>
+        ` : ''}
       `;
     }
 
@@ -2891,7 +3293,7 @@
       const isOpen = box.classList.contains('open');
       box.classList.toggle('open', !isOpen);
       btn.classList.toggle('open', !isOpen);
-      btn.querySelector('span').textContent = isOpen ? 'Learn more & 3 extra examples' : 'Collapse extra examples';
+      btn.querySelector('span').textContent = isOpen ? 'Learn more & extra examples' : 'Collapse extra examples';
     }
 
     function renderStoryLessonPrimer(s) {
@@ -2925,43 +3327,23 @@
         `;
       }
 
-      if (!item) {
-        card.style.display = 'block';
-        card.classList.remove('minimized');
-        card.innerHTML = `
-          <div class="primer-header">
-            <div class="primer-title">
-              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-              <span>Pre-Reading Lesson: <strong>${escapeHtml(focus)}</strong></span>
-            </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span class="primer-pill">Lesson Focus</span>
-              <button type="button" class="primer-toggle-btn" id="story-primer-toggle" onclick="toggleStoryPrimer()" aria-label="Toggle lesson visibility">
-                <span id="story-primer-toggle-label">Minimize</span>
-              </button>
-            </div>
-          </div>
-          <div class="story-primer-collapsible" id="story-primer-collapsible">
-            <p class="primer-rule">This story focuses on <strong>${escapeHtml(focus)}</strong>. Notice how this structure appears in the narrative before answering the 3 practice questions.</p>
-            ${instancesHtml}
-          </div>
-        `;
-        return;
-      }
+      const structureHtml = buildLessonStructureHtml(item);
 
-      const examplesHtml = item.examples.map(ex => `
+      const examplesHtml = (item.examples || []).map(ex => `
         <div class="primer-ex-card">
           <span class="primer-ex-badge">${escapeHtml(ex.context)}</span>
           <div>${escapeHtml(ex.sentence).replace(escapeHtml(ex.highlight), `<strong>${escapeHtml(ex.highlight)}</strong>`)}</div>
         </div>
       `).join('');
 
-      const extraExamplesHtml = item.extraExamples.map(ex => `
+      const extraExamplesHtml = (item.extraExamples || []).map(ex => `
         <div class="primer-ex-card">
           <span class="primer-ex-badge">${escapeHtml(ex.context)}</span>
           <div>${escapeHtml(ex.sentence).replace(escapeHtml(ex.highlight), `<strong>${escapeHtml(ex.highlight)}</strong>`)}</div>
         </div>
       `).join('');
+
+      const hasExtras = (item.extraExamples && item.extraExamples.length > 0) || item.deepTip;
 
       card.style.display = 'block';
       card.classList.remove('minimized');
@@ -2979,22 +3361,20 @@
           </div>
         </div>
         <div class="story-primer-collapsible" id="story-primer-collapsible">
-          <div class="primer-formula">${escapeHtml(item.formula)}</div>
+          ${structureHtml}
           <p class="primer-rule">${escapeHtml(item.rule)}</p>
-          <div class="primer-examples">
-            ${examplesHtml}
-          </div>
+          ${examplesHtml ? `<div class="primer-examples">${examplesHtml}</div>` : ''}
           ${instancesHtml}
-          <button type="button" class="primer-expand-btn" id="story-primer-expand-btn" onclick="toggleStoryPrimerExtra()">
-            <span>Learn more & 3 extra examples</span>
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-          </button>
-          <div class="primer-expanded-content" id="story-primer-expanded-content">
-            <div class="primer-deep-tip"><strong>Pedagogical tip:</strong> ${escapeHtml(item.deepTip)}</div>
-            <div class="primer-examples">
-              ${extraExamplesHtml}
+          ${hasExtras ? `
+            <button type="button" class="primer-expand-btn" id="story-primer-expand-btn" onclick="toggleStoryPrimerExtra()">
+              <span>Learn more & extra examples</span>
+              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="primer-expanded-content" id="story-primer-expanded-content">
+              ${item.deepTip ? `<div class="primer-deep-tip"><strong>Pedagogical tip:</strong> ${escapeHtml(item.deepTip)}</div>` : ''}
+              ${extraExamplesHtml ? `<div class="primer-examples">${extraExamplesHtml}</div>` : ''}
             </div>
-          </div>
+          ` : ''}
         </div>
       `;
     }
@@ -3014,7 +3394,7 @@
       const isOpen = box.classList.contains('open');
       box.classList.toggle('open', !isOpen);
       btn.classList.toggle('open', !isOpen);
-      btn.querySelector('span').textContent = isOpen ? 'Learn more & 3 extra examples' : 'Collapse extra examples';
+      btn.querySelector('span').textContent = isOpen ? 'Learn more & extra examples' : 'Collapse extra examples';
     }
 
     // ── Views ──────────────────────────────────────────────────
@@ -3762,7 +4142,8 @@ Return ONLY valid JSON:
       const stripEl = document.getElementById('practice-target-strip');
       if (stripEl) {
         if (item) {
-          stripEl.innerHTML = `<span>Target Formula:</span> <code>${escapeHtml(item.formula)}</code>`;
+          const structAff = item.structure?.affirmative || item.formula;
+          stripEl.innerHTML = `<span>Structure (<strong>${escapeHtml(item.title)}</strong>):</span> <code>${escapeHtml(structAff)}</code>`;
           stripEl.style.display = 'flex';
         } else if (s.lesson_focus) {
           stripEl.innerHTML = `<span>Target Focus:</span> <code>${escapeHtml(s.lesson_focus)}</code>`;
