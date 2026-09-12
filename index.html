@@ -800,6 +800,7 @@
       color: #fff;
     }
 
+    .practice-toggle,
     .ask-toggle {
       margin-left: auto;
       border: none;
@@ -813,13 +814,16 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      transition: background 0.15s ease;
+      transition: background 0.15s ease, transform 0.15s var(--ease);
     }
 
+    .practice-toggle:hover,
     .ask-toggle:hover {
       background: var(--accent-deep);
+      transform: translateY(-1px);
     }
 
+    .practice-toggle[aria-pressed="true"],
     .ask-toggle[aria-pressed="true"] {
       background: var(--accent);
     }
@@ -831,8 +835,9 @@
       align-items: start;
     }
 
+    .reader-grid.practice-open,
     .reader-grid.ask-open {
-      grid-template-columns: minmax(0, 7fr) minmax(300px, 4fr);
+      grid-template-columns: minmax(0, 7fr) minmax(320px, 5fr);
     }
 
     .story-card {
@@ -1000,200 +1005,448 @@
       text-align: right;
     }
 
-    /* Ask AI panel */
-    .ask-panel {
+    /* ── Grammar Primer (Presentation) ─────────────────────── */
+    @keyframes primerEnter {
+      from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .grammar-primer {
+      margin-top: 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 16px 18px;
+      animation: primerEnter 0.28s var(--ease) both;
+    }
+
+    .primer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .primer-title {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .primer-pill {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      padding: 3px 8px;
+      border-radius: var(--r-pill);
+    }
+
+    .primer-formula {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.83rem;
+      background: #fff;
+      border: 1px solid var(--line-soft);
+      color: var(--ink-2);
+      padding: 6px 12px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .primer-rule {
+      font-size: 0.86rem;
+      line-height: 1.55;
+      color: var(--ink-2);
+      margin-bottom: 12px;
+    }
+
+    .primer-examples {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .primer-ex-card {
+      background: #fff;
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+      padding: 9px 13px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      transition: transform 0.15s var(--ease), border-color 0.15s ease;
+    }
+
+    .primer-ex-card:hover {
+      transform: translateX(3px);
+      border-color: var(--line);
+    }
+
+    .primer-ex-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+      display: block;
+    }
+
+    .primer-ex-card strong {
+      color: var(--accent-deep);
+      font-weight: 700;
+      background: var(--accent-soft);
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    .primer-expand-btn {
+      border: none;
+      background: transparent;
+      color: var(--ink);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 0;
+      transition: color 0.15s ease;
+    }
+
+    .primer-expand-btn:hover {
+      color: var(--accent);
+    }
+
+    .primer-expand-btn svg {
+      transition: transform 0.25s var(--ease);
+    }
+
+    .primer-expand-btn.open svg {
+      transform: rotate(180deg);
+    }
+
+    .primer-expanded-content {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.35s var(--ease), opacity 0.25s ease, margin-top 0.25s ease;
+    }
+
+    .primer-expanded-content.open {
+      max-height: 800px;
+      opacity: 1;
+      margin-top: 12px;
+    }
+
+    .primer-deep-tip {
+      background: #fff;
+      border-left: 3px solid var(--accent);
+      padding: 9px 13px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: var(--ink-2);
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 10px;
+    }
+
+    /* ── Targeted Practice Panel (Production) ──────────────── */
+    .practice-panel {
       display: none;
     }
 
-    .reader-grid.ask-open .ask-panel {
+    .reader-grid.practice-open .practice-panel,
+    .reader-grid.ask-open .practice-panel {
       display: block;
       position: sticky;
       top: 86px;
       animation: view-in 250ms var(--ease) both;
     }
 
-    .chat-card {
+    .practice-card {
       background: var(--surface);
       border: 1px solid var(--line-soft);
       border-radius: var(--r-lg);
       box-shadow: var(--shadow-sm);
-      padding: 20px;
+      padding: 22px 20px;
       display: flex;
       flex-direction: column;
       max-height: calc(100vh - 110px);
+      overflow-y: auto;
     }
 
-    .chat-head h3 {
-      font-family: var(--serif);
-      font-size: 1.2rem;
+    .practice-head {
+      margin-bottom: 14px;
+    }
+
+    .practice-tag-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .practice-pill {
+      font-size: 0.72rem;
       font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      padding: 3px 10px;
+      border-radius: var(--r-pill);
     }
 
-    .chat-head p {
-      font-size: 0.8rem;
+    .practice-head h3 {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .practice-head p {
+      font-size: 0.82rem;
       color: var(--muted);
-      margin: 4px 0 14px;
+      margin-top: 4px;
       line-height: 1.5;
     }
 
-    .chat-log {
+    .practice-questions-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      overflow-y: auto;
-      margin-bottom: 12px;
-      min-height: 120px;
+      gap: 16px;
+      margin-bottom: 18px;
     }
 
-    .chat-msg {
-      font-size: 0.88rem;
-      line-height: 1.6;
-      padding: 10px 14px;
-      border-radius: 12px;
-      max-width: 100%;
+    @keyframes qCardIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .chat-msg.assistant {
-      background: var(--surface-2);
-      border: 1px solid var(--line-soft);
-      color: var(--ink);
-      border-top-left-radius: 4px;
-    }
-
-    .chat-msg.assistant p + p {
-      margin-top: 0.6em;
-    }
-
-    .chat-msg.assistant ul,
-    .chat-msg.assistant ol {
-      margin: 0.5em 0 0.5em 1.2em;
-      display: flex;
-      flex-direction: column;
-      gap: 0.3em;
-    }
-
-    .chat-msg.assistant code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 0.86em;
-      background: var(--line-soft);
-      border-radius: 5px;
-      padding: 1px 6px;
-    }
-
-    .chat-msg.user {
-      background: var(--ink);
-      color: #fff;
-      align-self: flex-end;
-      border-top-right-radius: 4px;
-      max-width: 92%;
-    }
-
-    .suggest-col {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .suggest-q {
+    .q-card {
       background: #fff;
       border: 1px solid var(--line);
-      color: var(--ink-2);
-      border-radius: 10px;
-      padding: 9px 13px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      cursor: pointer;
-      text-align: left;
-      line-height: 1.45;
-      transition: border-color 0.15s ease;
+      border-radius: var(--r-md);
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(28, 42, 74, 0.04);
+      animation: qCardIn 0.35s var(--ease) both;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .suggest-q:hover {
-      border-color: var(--accent);
-      color: var(--accent-deep);
+    .q-card:focus-within {
+      border-color: var(--ink);
+      box-shadow: 0 4px 12px -4px rgba(28, 42, 74, 0.12);
     }
 
-    .chat-row {
+    .q-card:nth-child(1) { animation-delay: 0.05s; }
+    .q-card:nth-child(2) { animation-delay: 0.12s; }
+    .q-card:nth-child(3) { animation-delay: 0.19s; }
+
+    .q-card-head {
       display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 8px;
+      margin-bottom: 6px;
     }
 
-    .chat-row .text-field {
-      font-size: 0.86rem;
-      padding: 10px 13px;
+    .q-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    .chat-send {
+    .q-hint {
+      font-size: 0.74rem;
+      color: var(--coral);
+      font-weight: 600;
+      background: #fdf5f0;
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+
+    .q-text {
+      font-family: var(--serif);
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .q-input {
+      width: 100%;
+      min-height: 60px;
+      resize: vertical;
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--surface);
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .q-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #fff;
+    }
+
+    .practice-submit-btn {
+      width: 100%;
       border: none;
       background: var(--ink);
       color: #fff;
-      border-radius: 10px;
-      padding: 0 18px;
-      font-weight: 700;
-      font-size: 0.86rem;
-      cursor: pointer;
-    }
-
-    .chat-send:hover:not(:disabled) {
-      background: var(--accent-deep);
-    }
-
-    .chat-send:disabled {
-      opacity: 0.5;
-      cursor: wait;
-    }
-
-    .eval-zone {
-      margin-top: 12px;
-      border-top: 1px solid var(--line-soft);
-      padding-top: 12px;
-    }
-
-    .eval-btn {
-      width: 100%;
-      border: 1.5px solid var(--ink);
-      background: transparent;
-      color: var(--ink);
-      border-radius: 10px;
-      padding: 11px;
-      font-size: 0.86rem;
+      border-radius: var(--r-md);
+      padding: 13px 20px;
+      font-size: 0.9rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: background 0.15s ease, color 0.15s ease;
+      transition: background 0.15s var(--ease), transform 0.15s var(--ease);
     }
 
-    .eval-btn:hover:not(:disabled) {
-      background: var(--ink);
-      color: #fff;
+    .practice-submit-btn:hover:not(:disabled) {
+      background: var(--accent-deep);
+      transform: translateY(-1px);
     }
 
-    .eval-btn:disabled {
-      opacity: 0.45;
+    .practice-submit-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .practice-submit-btn:disabled {
+      opacity: 0.55;
       cursor: wait;
     }
 
-    .eval-btn.gated {
-      border-color: var(--line);
-      color: var(--faint);
+    .practice-status {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 10px;
+      min-height: 1.3em;
     }
 
-    .eval-hint {
+    .practice-results {
+      animation: qCardIn 0.35s var(--ease) both;
+      margin-top: 18px;
+      border-top: 1px solid var(--line-soft);
+      padding-top: 18px;
+    }
+
+    .feedback-card {
+      background: #fff;
+      border: 1px solid var(--line-soft);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      animation: qCardIn 0.3s var(--ease) both;
+    }
+
+    .feedback-card.correct {
+      border-left: 4px solid var(--green);
+    }
+
+    .feedback-card.incorrect {
+      border-left: 4px solid var(--accent);
+    }
+
+    .fb-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       font-size: 0.76rem;
-      color: var(--muted);
-      margin-top: 8px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .fb-badge.correct {
+      color: var(--green);
+    }
+
+    .fb-badge.incorrect {
+      color: var(--accent-deep);
+    }
+
+    .fb-orig {
+      font-size: 0.86rem;
+      color: var(--ink-2);
+      margin-bottom: 6px;
       line-height: 1.5;
     }
 
-    .chat-status {
-      font-size: 0.76rem;
+    .fb-correction {
+      font-family: var(--serif);
+      font-size: 0.92rem;
+      background: var(--surface-2);
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: var(--ink);
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    .fb-correction strong {
+      color: var(--green);
+    }
+
+    .fb-note {
+      font-size: 0.8rem;
       color: var(--muted);
-      margin-top: 8px;
-      min-height: 1.2em;
+      line-height: 1.45;
+    }
+
+    .practice-retry-btn {
+      border: 1.5px solid var(--ink);
+      background: transparent;
+      color: var(--ink);
+      border-radius: var(--r-pill);
+      padding: 9px 16px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 12px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .practice-retry-btn:hover {
+      background: var(--ink);
+      color: #fff;
     }
 
     /* Selection toolbar + vocab popover */
@@ -1288,6 +1541,7 @@
       border-radius: var(--r-lg);
       box-shadow: var(--shadow);
       padding: 32px 36px;
+      animation: qCardIn 0.4s var(--ease) both;
     }
 
     .eval-top {
@@ -1306,6 +1560,10 @@
       height: 148px;
     }
 
+    .score-ring circle:nth-child(2) {
+      transition: stroke-dashoffset 1s var(--ease);
+    }
+
     .score-verdict {
       font-family: var(--serif);
       font-weight: 700;
@@ -1316,8 +1574,7 @@
     .score-sub {
       font-size: 0.8rem;
       color: var(--muted);
-      margin-top: 4px;
-      line-height: 1.55;
+      margin-top: 2px;
     }
 
     .cat-list {
@@ -1329,18 +1586,18 @@
     .cat-row {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 4px 12px;
-      font-size: 0.84rem;
+      gap: 4px 10px;
+      font-size: 0.88rem;
     }
 
-    .cat-row .cat-name {
-      font-weight: 600;
-      color: var(--ink-2);
+    .cat-name {
+      color: var(--ink);
     }
 
-    .cat-row .cat-val {
-      font-weight: 700;
+    .cat-val {
       font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      color: var(--ink);
     }
 
     .cat-bar {
@@ -1356,6 +1613,7 @@
       height: 100%;
       border-radius: 4px;
       background: var(--ink);
+      transition: width 0.8s var(--ease);
     }
 
     .cat-bar span.focus {
@@ -2011,6 +2269,7 @@
               <button class="quick-chip" type="button" data-focus="Linking words">Linking words</button>
             </div>
             <div class="field-hint">The story will naturally include this topic, and the evaluation will focus on it.</div>
+            <div class="grammar-primer" id="grammar-primer" style="display:none;" aria-live="polite"></div>
           </div>
 
           <div class="field-group">
@@ -2081,9 +2340,9 @@
             Library
           </button>
           <div class="reader-badges" id="story-meta"></div>
-          <button class="ask-toggle" id="ask-toggle" aria-pressed="false" onclick="toggleAsk()">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-8 8H5l-2 2V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/></svg>
-            Ask AI
+          <button class="practice-toggle" id="practice-toggle" aria-pressed="false" onclick="togglePractice()">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Targeted Practice (3)
           </button>
         </div>
 
@@ -2133,22 +2392,30 @@
             </article>
           </div>
 
-          <aside class="ask-panel" aria-label="Ask AI">
-            <div class="chat-card" id="chat-card">
-              <div class="chat-head">
-                <h3>Ask AI</h3>
-                <p>Talk about the story, ask questions or check your understanding.</p>
+          <aside class="practice-panel" id="practice-panel" aria-label="Targeted Practice">
+            <div class="practice-card" id="practice-card">
+              <div class="practice-head">
+                <div class="practice-tag-row">
+                  <span class="practice-pill" id="practice-focus-badge">Practice Challenge</span>
+                </div>
+                <h3>Targeted Practice</h3>
+                <p>Answer these 3 story questions using the target structure to build lasting retention.</p>
               </div>
-              <div class="chat-log" id="chat-log" aria-live="polite"></div>
-              <div class="suggest-col" id="suggest-row" aria-label="Suggested questions"></div>
-              <div class="chat-row">
-                <input id="chat-input" class="text-field" type="text" placeholder="Ask something about the story…" maxlength="1000" autocomplete="off">
-                <button class="chat-send" id="chat-send" onclick="sendChat()">Send</button>
+
+              <div class="practice-questions-list" id="practice-questions-list">
+                <!-- Staggered Question Cards rendered via JS -->
               </div>
-              <div class="chat-status" id="chat-status"></div>
-              <div class="eval-zone">
-                <button class="eval-btn" id="eval-btn" onclick="runEvaluation()">Evaluate my English</button>
-                <div class="eval-hint" id="eval-hint">Keep chatting a little more to get a meaningful evaluation.</div>
+
+              <div class="practice-action-row">
+                <button class="practice-submit-btn" id="practice-submit-btn" onclick="submitPracticeAnswers()">
+                  <span>Check My Answers</span>
+                  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+              </div>
+              <div class="practice-status" id="practice-status" role="status" aria-live="polite"></div>
+
+              <div class="practice-results" id="practice-results" style="display:none" aria-live="polite">
+                <!-- Evaluation score ring + feedback per question -->
               </div>
             </div>
           </aside>
@@ -2221,6 +2488,225 @@
     let currentView = 'create';
 
     const LEVEL_NAMES = { A1: 'Beginner', A2: 'Elementary', B1: 'Intermediate', B2: 'Upper-Intermediate', C1: 'Advanced', C2: 'Proficiency' };
+
+    // ── Static Grammar Knowledge Catalog (0 Token Consumption) ─
+    const GRAMMAR_CATALOG = {
+      'past perfect': {
+        title: 'Past Perfect',
+        formula: 'had + past participle (V3)',
+        rule: 'Describes an action that was completed before another past event or point in time.',
+        examples: [
+          { context: 'Work & Routine', sentence: 'By the time the manager arrived, Sarah had already compiled the quarterly sales audit.', highlight: 'had already compiled' },
+          { context: 'Narrative Fiction', sentence: 'When the detective opened the cellar vault, the courier had vanished into the shadows.', highlight: 'had vanished' },
+          { context: 'Conversation', sentence: '"I couldn\'t enter the building because I had forgotten my security badge at home."', highlight: 'had forgotten' }
+        ],
+        deepTip: 'Common Trap: Do not use Past Perfect simply because something happened a long time ago. Use it strictly to establish a clear chronological sequence between two past occurrences.',
+        extraExamples: [
+          { context: 'Travel Scenario', sentence: 'They realized they had boarded the wrong train only after it crossed the state border.', highlight: 'had boarded' },
+          { context: 'Scientific Context', sentence: 'The team discovered that previous researchers had miscalculated the pressure variable.', highlight: 'had miscalculated' },
+          { context: 'Conditional Nuance', sentence: 'If she had known the road was blocked, she would have chosen the coastal highway.', highlight: 'had known' }
+        ]
+      },
+      'phrasal verbs': {
+        title: 'Phrasal Verbs',
+        formula: 'Verb + Particle (Preposition or Adverb) → Idiomatic Meaning',
+        rule: 'Multi-word verbs that form an idiomatic meaning distinct from the literal definition of the base verb.',
+        examples: [
+          { context: 'Daily Productivity', sentence: 'Every morning at dawn, Marcus turns off his phone to focus entirely on writing.', highlight: 'turns off' },
+          { context: 'Narrative Drama', sentence: 'Despite the freezing blizzard, the mountain rescue unit refused to give up the search.', highlight: 'give up' },
+          { context: 'Work Collaboration', sentence: 'The committee had to put off the launch until the engineering team sorted out the latency issue.', highlight: 'put off' }
+        ],
+        deepTip: 'Separable vs Inseparable: Some phrasal verbs can be split by a pronoun or noun ("turn it down"), whereas others must remain glued together ("look after the children").',
+        extraExamples: [
+          { context: 'Casual Encounter', sentence: 'I ran into an old mentor while crossing the central station concourse.', highlight: 'ran into' },
+          { context: 'Investigation', sentence: 'After scrutinizing the ledger for hours, the auditor figured out the discrepancy.', highlight: 'figured out' },
+          { context: 'Health & Energy', sentence: 'Following three weeks of travel, the diplomat came down with a persistent flu.', highlight: 'came down with' }
+        ]
+      },
+      'conditionals': {
+        title: 'Conditionals (First & Second)',
+        formula: 'First: If + Present Simple, will + V1 | Second: If + Past Simple, would + V1',
+        rule: 'First conditional deals with real possibilities; Second conditional explores hypothetical, imaginary, or counterfactual realities.',
+        examples: [
+          { context: 'Practical Decision', sentence: 'If the connecting flight is delayed, we will take the express bullet train to the capital.', highlight: 'will take' },
+          { context: 'Hypothetical Vision', sentence: 'If she discovered the lost parchment, she would donate it to the national archives.', highlight: 'would donate' },
+          { context: 'Direct Advice', sentence: '"If I were in your position, I would consult a trade specialist before signing that contract."', highlight: 'If I were ... would consult' }
+        ],
+        deepTip: 'Formal Subjunctive: In second conditionals, standard English uses "were" instead of "was" for all persons: "If he were honest...", "If I were you...".',
+        extraExamples: [
+          { context: 'Negotiations', sentence: 'If you guarantee delivery by Friday, our firm will finalize the purchase order.', highlight: 'will finalize' },
+          { context: 'Imaginary Scenario', sentence: 'If they lived closer to the coastline, they would go sailing every weekend.', highlight: 'would go' },
+          { context: 'Safety Rule', sentence: 'If you step across the yellow barrier, the emergency sensors will trigger an alert.', highlight: 'will trigger' }
+        ]
+      },
+      'past continuous': {
+        title: 'Past Continuous',
+        formula: 'was / were + verb-ing',
+        rule: 'Expresses an action that was ongoing in the past, frequently interrupted by a discrete Past Simple action.',
+        examples: [
+          { context: 'Interruption in Action', sentence: 'Elena was calibrating the microscope when the power grid suddenly failed.', highlight: 'was calibrating' },
+          { context: 'Atmospheric Setting', sentence: 'Cold rain was lashing the cabin windowpanes while the wind was howling in the valley.', highlight: 'was lashing' },
+          { context: 'Simultaneous Activities', sentence: '"While the analyst was reviewing the logs, the director was speaking to the board."', highlight: 'was reviewing' }
+        ],
+        deepTip: 'Stative Verbs Warning: Stative verbs describing emotional states or possession (know, understand, believe, have) do not take continuous forms. Say "I understood", never "I was understanding".',
+        extraExamples: [
+          { context: 'Background Detail', sentence: 'At nine o\'clock last evening, the technicians were monitoring the satellite transmission.', highlight: 'were monitoring' },
+          { context: 'Mystery Story', sentence: 'A suspicious figure was loitering near the library entrance just before dusk.', highlight: 'was loitering' },
+          { context: 'Temporary Past Period', sentence: 'Throughout 2021, Dr. Vance was conducting field research in northern Norway.', highlight: 'was conducting' }
+        ]
+      },
+      'present perfect': {
+        title: 'Present Perfect',
+        formula: 'have / has + past participle (V3)',
+        rule: 'Connects past experiences or actions to the current moment, without referring to a specific finished time.',
+        examples: [
+          { context: 'Life Experience', sentence: 'Sofia has explored twenty different countries, but she has never witnessed a solar eclipse.', highlight: 'has explored' },
+          { context: 'Immediate Present Result', sentence: 'Look at the garden terrace! Julian has planted forty English roses this afternoon.', highlight: 'has planted' },
+          { context: 'Unfinished Time Window', sentence: '"Our department has processed over two hundred inquiries so far this week."', highlight: 'have processed' }
+        ],
+        deepTip: 'Definite vs Indefinite Time: If you mention when an action happened (yesterday, last month, in 2020), you MUST use Past Simple ("Julian planted them yesterday").',
+        extraExamples: [
+          { context: 'Milestone Achievement', sentence: 'The engineering team has finally resolved the telemetry synchronization glitch.', highlight: 'has finally resolved' },
+          { context: 'Recent Observation', sentence: 'Market indicators have improved notably since the opening of the fiscal quarter.', highlight: 'have improved' },
+          { context: 'Ongoing State', sentence: 'The family has preserved this traditional vineyard for more than five generations.', highlight: 'has preserved' }
+        ]
+      },
+      'passive voice': {
+        title: 'Passive Voice',
+        formula: 'be (in appropriate tense) + past participle (V3)',
+        rule: 'Shifts focus to the recipient or outcome of an action, especially when the actor is unknown, secondary, or irrelevant.',
+        examples: [
+          { context: 'Journalism & News', sentence: 'The medieval stone aqueduct was reinforced following last month\'s seismic tremors.', highlight: 'was reinforced' },
+          { context: 'Scientific Documentation', sentence: 'The bio-samples are kept in hermetically sealed nitrogen canisters at all times.', highlight: 'are kept' },
+          { context: 'Historical Discovery', sentence: 'The rare Roman mosaic was uncovered by local farmers beneath an ancient olive grove.', highlight: 'was uncovered' }
+        ],
+        deepTip: 'Stylistic Choice: Use the passive voice to maintain an objective tone or when the action itself matters most: "The specimen was contaminated".',
+        extraExamples: [
+          { context: 'Public Policy', sentence: 'Strict digital security protocols will be enforced across all government portals.', highlight: 'will be enforced' },
+          { context: 'Museum Exhibit', sentence: 'The golden crown was originally forged by Byzantine goldsmiths in Constantinople.', highlight: 'was originally forged' },
+          { context: 'Legal Investigation', sentence: 'The disputed documents were submitted to the high magistrate late yesterday.', highlight: 'were submitted' }
+        ]
+      },
+      'travel vocabulary': {
+        title: 'Travel English',
+        formula: 'High-utility transit & hospitality collocations',
+        rule: 'Essential set phrases for boarding, accommodation, customs clearance, and navigating international destinations.',
+        examples: [
+          { context: 'Airport Terminal', sentence: 'All passengers holding boarding passes for gate twelve must proceed to the aircraft immediately.', highlight: 'proceed to the aircraft' },
+          { context: 'Hotel Front Desk', sentence: 'We arranged a late check-out and asked the concierge to store our backpacks until midnight.', highlight: 'late check-out' },
+          { context: 'City Navigation', sentence: 'Walk past the town clock tower and take the second exit off the roundabout toward the riverbank.', highlight: 'second exit off the roundabout' }
+        ],
+        deepTip: 'Natural Collocations: Native speakers say "catch a flight", "miss a connection", "declare customs", and "book lodging" rather than literal word-by-word translations.',
+        extraExamples: [
+          { context: 'Railway Concourse', sentence: 'Make sure you validate your rail pass at the magnetic validator before stepping onto platform four.', highlight: 'validate your rail pass' },
+          { context: 'Border Control', sentence: 'The immigration officer asked whether we had any restricted botanical samples to declare.', highlight: 'samples to declare' },
+          { context: 'Flight Update', sentence: 'Because of heavy crosswinds, the flight captain announced an unscheduled landing in Geneva.', highlight: 'unscheduled landing' }
+        ]
+      },
+      'linking words': {
+        title: 'Linking Words & Connectors',
+        formula: 'Discourse markers for contrast, consequence, and sequence',
+        rule: 'Transitions that knit ideas and paragraphs together smoothly, elevating basic sentences into cohesive, professional English.',
+        examples: [
+          { context: 'Contrast & Concession', sentence: 'The mountain ascent was punishing; nevertheless, the crystal dawn from the ridge made every step worthwhile.', highlight: 'nevertheless' },
+          { context: 'Cause & Consequence', sentence: 'Heavy landslides closed the alpine pass; consequently, the survey expedition was halted until noon.', highlight: 'consequently' },
+          { context: 'Adding Evidence', sentence: 'Furthermore, the historical audit confirmed that no architectural survey had occurred since 1984.', highlight: 'Furthermore' }
+        ],
+        deepTip: 'Punctuation Hygiene: Formal connectors like "however", "therefore", and "nevertheless" are typically enclosed in commas or follow a semicolon: "; however, ...".',
+        extraExamples: [
+          { context: 'Concession', sentence: 'Although the research team lacked modern radar equipment, they uncovered the forgotten temple foundation.', highlight: 'Although' },
+          { context: 'Causality', sentence: 'Due to severe coastal erosion, the maritime authority relocated the navigational beacon.', highlight: 'Due to' },
+          { context: 'Synthesis', sentence: 'In conclusion, the clinical trials demonstrated that early physical therapy accelerates recovery twofold.', highlight: 'In conclusion' }
+        ]
+      }
+    };
+
+    function findGrammarTopic(query) {
+      if (!query || !query.trim()) return null;
+      const q = query.trim().toLowerCase();
+      if (GRAMMAR_CATALOG[q]) return GRAMMAR_CATALOG[q];
+      for (const [key, val] of Object.entries(GRAMMAR_CATALOG)) {
+        if (q.includes(key) || key.includes(q)) return val;
+        if (val.title.toLowerCase().includes(q)) return val;
+      }
+      return null;
+    }
+
+    function updateGrammarPrimer(rawFocus) {
+      const primerEl = document.getElementById('grammar-primer');
+      if (!primerEl) return;
+      const text = (rawFocus || '').trim();
+      if (!text) {
+        primerEl.style.display = 'none';
+        primerEl.innerHTML = '';
+        return;
+      }
+      const item = findGrammarTopic(text);
+      if (!item) {
+        primerEl.style.display = 'block';
+        primerEl.innerHTML = `
+          <div class="primer-header">
+            <div class="primer-title">
+              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              <span>Custom Focus: <em>${escapeHtml(text)}</em></span>
+            </div>
+            <span class="primer-pill">Custom Target</span>
+          </div>
+          <p class="primer-rule">The generated story will naturally weave in real examples of this topic, and the 3-question practice challenge will assess how well you produce it.</p>
+        `;
+        return;
+      }
+
+      const examplesHtml = item.examples.map(ex => `
+        <div class="primer-ex-card">
+          <span class="primer-ex-badge">${escapeHtml(ex.context)}</span>
+          <div>${escapeHtml(ex.sentence).replace(escapeHtml(ex.highlight), `<strong>${escapeHtml(ex.highlight)}</strong>`)}</div>
+        </div>
+      `).join('');
+
+      const extraExamplesHtml = item.extraExamples.map(ex => `
+        <div class="primer-ex-card">
+          <span class="primer-ex-badge">${escapeHtml(ex.context)}</span>
+          <div>${escapeHtml(ex.sentence).replace(escapeHtml(ex.highlight), `<strong>${escapeHtml(ex.highlight)}</strong>`)}</div>
+        </div>
+      `).join('');
+
+      primerEl.style.display = 'block';
+      primerEl.innerHTML = `
+        <div class="primer-header">
+          <div class="primer-title">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            <span>${escapeHtml(item.title)}</span>
+          </div>
+          <span class="primer-pill">Pre-Reading Primer</span>
+        </div>
+        <div class="primer-formula">${escapeHtml(item.formula)}</div>
+        <p class="primer-rule">${escapeHtml(item.rule)}</p>
+        <div class="primer-examples">
+          ${examplesHtml}
+        </div>
+        <button type="button" class="primer-expand-btn" id="primer-expand-btn" onclick="togglePrimerExtra()">
+          <span>Learn more & 3 extra examples</span>
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="primer-expanded-content" id="primer-expanded-content">
+          <div class="primer-deep-tip"><strong>Pedagogical tip:</strong> ${escapeHtml(item.deepTip)}</div>
+          <div class="primer-examples">
+            ${extraExamplesHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function togglePrimerExtra() {
+      const btn = document.getElementById('primer-expand-btn');
+      const box = document.getElementById('primer-expanded-content');
+      if (!btn || !box) return;
+      const isOpen = box.classList.contains('open');
+      box.classList.toggle('open', !isOpen);
+      btn.classList.toggle('open', !isOpen);
+      btn.querySelector('span').textContent = isOpen ? 'Learn more & 3 extra examples' : 'Collapse extra examples';
+    }
 
     // ── Views ──────────────────────────────────────────────────
     function showView(name) {
@@ -2418,21 +2904,31 @@
         });
       });
 
+      const focusInp = document.getElementById('focus-input');
       document.querySelectorAll('#focus-quick .quick-chip').forEach(btn => {
         btn.addEventListener('click', () => {
-          document.getElementById('focus-input').value = btn.dataset.focus;
+          if (focusInp) {
+            focusInp.value = btn.dataset.focus;
+            updateGrammarPrimer(btn.dataset.focus);
+          }
         });
       });
 
-      document.getElementById('topic-input').addEventListener('keydown', e => {
-        if (e.key === 'Enter') generateStory();
-      });
-      document.getElementById('focus-input').addEventListener('keydown', e => {
-        if (e.key === 'Enter') generateStory();
-      });
-      document.getElementById('chat-input').addEventListener('keydown', e => {
-        if (e.key === 'Enter') sendChat();
-      });
+      if (focusInp) {
+        focusInp.addEventListener('input', () => {
+          updateGrammarPrimer(focusInp.value);
+        });
+        focusInp.addEventListener('keydown', e => {
+          if (e.key === 'Enter') generateStory();
+        });
+      }
+
+      const topicInp = document.getElementById('topic-input');
+      if (topicInp) {
+        topicInp.addEventListener('keydown', e => {
+          if (e.key === 'Enter') generateStory();
+        });
+      }
     }
 
     // ── Generate ───────────────────────────────────────────────
@@ -2524,12 +3020,15 @@
 
         const data = await res.json();
         // New structured shape {title, story, ...} first; legacy Groq choices as fallback.
-        let title, body, suggested = [], focusExamples = [];
+        let title, body, suggested = [], focusExamples = [], quizQuestions = [];
         if (data && typeof data.story === 'string' && data.story.trim()) {
           title = (data.title || 'Story').trim();
           body = data.story.trim();
           suggested = Array.isArray(data.suggested_questions) ? data.suggested_questions.filter(Boolean).slice(0, 4) : [];
           focusExamples = Array.isArray(data.focus_examples) ? data.focus_examples : [];
+          quizQuestions = Array.isArray(data.quiz_questions) && data.quiz_questions.length
+            ? data.quiz_questions
+            : suggested.map((q, idx) => ({ id: `q${idx + 1}`, question: q, prompt_hint: lesson_focus ? `Answer using: ${lesson_focus}` : 'Answer in a complete sentence' }));
         } else {
           // robust content extraction (chat vs completion, gpt-oss reasoning)
           const rawContent =
@@ -2554,6 +3053,11 @@
           body = divIdx !== -1
             ? content.slice(divIdx + 3).trim()
             : content.trim();
+          quizQuestions = [
+            { id: 'q1', question: 'What happened at the beginning of the story?', prompt_hint: lesson_focus ? `Use ${lesson_focus}` : 'Complete sentence' },
+            { id: 'q2', question: 'What was the main discovery or event?', prompt_hint: lesson_focus ? `Use ${lesson_focus}` : 'Complete sentence' },
+            { id: 'q3', question: 'How did the situation resolve in the end?', prompt_hint: lesson_focus ? `Use ${lesson_focus}` : 'Complete sentence' }
+          ];
         }
 
         if (!body) throw new Error('Story content is empty.');
@@ -2566,6 +3070,7 @@
           id: storyId, title, body, genre: selectedGenre, level: selectedLevel,
           length: lengthKey, words: wordCountPre, lesson_focus,
           suggested_questions: suggested, focus_examples: focusExamples,
+          quiz_questions: quizQuestions,
           created_at: new Date().toISOString(),
         });
         setSession(storyId, { status: 'reading', progressPct: 0 });
@@ -2619,15 +3124,25 @@
       setCover(s.genre);
       renderStory(s.body);
       setupScrollProgress();
-      // Ask AI starts closed; reader owns the viewport.
+      // Targeted practice panel starts closed; reader owns the viewport.
+      document.getElementById('reading-area').classList.remove('practice-open');
       document.getElementById('reading-area').classList.remove('ask-open');
-      document.getElementById('ask-toggle').setAttribute('aria-pressed', 'false');
-      renderSuggested(s);
-      renderChatLog();
-      updateEvalGate();
+      const pToggle = document.getElementById('practice-toggle');
+      if (pToggle) pToggle.setAttribute('aria-pressed', 'false');
+      const aToggle = document.getElementById('ask-toggle');
+      if (aToggle) aToggle.setAttribute('aria-pressed', 'false');
+
+      renderPracticeQuestions(s);
+
       const prev = lastEval(storyId);
-      if (prev) renderEval(prev);
-      else document.getElementById('eval-card').style.display = 'none';
+      if (prev) {
+        renderEval(prev);
+        renderPracticeResults(prev);
+      } else {
+        document.getElementById('eval-card').style.display = 'none';
+        const resEl = document.getElementById('practice-results');
+        if (resEl) { resEl.style.display = 'none'; resEl.innerHTML = ''; }
+      }
       setSession(storyId, { status: prev ? 'evaluated' : 'reading' });
       renderLibrary();
       try {
@@ -2637,14 +3152,25 @@
       } catch {}
     }
 
-    function toggleAsk() {
+    function togglePractice() {
       const grid = document.getElementById('reading-area');
-      const open = !grid.classList.contains('ask-open');
+      const open = !grid.classList.contains('practice-open') && !grid.classList.contains('ask-open');
+      grid.classList.toggle('practice-open', open);
       grid.classList.toggle('ask-open', open);
-      document.getElementById('ask-toggle').setAttribute('aria-pressed', String(open));
+      const pBtn = document.getElementById('practice-toggle');
+      if (pBtn) pBtn.setAttribute('aria-pressed', String(open));
+      const aBtn = document.getElementById('ask-toggle');
+      if (aBtn) aBtn.setAttribute('aria-pressed', String(open));
       if (open) {
-        setTimeout(() => document.getElementById('chat-input').focus({ preventScroll: true }), 320);
+        setTimeout(() => {
+          const firstInp = document.getElementById('practice-ans-0');
+          if (firstInp) firstInp.focus({ preventScroll: true });
+        }, 280);
       }
+    }
+
+    function toggleAsk() {
+      togglePractice();
     }
 
     function fmtDate(iso) {
@@ -2709,31 +3235,11 @@
           + `</div><div class="row-excerpt"></div></div>`
           + `<div class="row-side"><div class="row-score"><div class="n">${score == null ? '–' : score}</div><div class="l">${escapeHtml(scoreLabel(score))}</div></div>`
           + `<div><div class="row-date">${escapeHtml(fmtDate(s.created_at))}</div>`
-          + `<div class="row-cta" style="margin-top:8px"><button class="continue-btn" type="button">${score == null && getMessages(s.id).length === 0 ? 'Read again →' : 'Continue →'}</button></div></div></div>`;
+          + `<div class="row-cta" style="margin-top:8px"><button class="continue-btn" type="button">${score == null ? 'Read & Practice →' : 'Review & Practice →'}</button></div></div></div>`;
         row.querySelector('h2').textContent = s.title;
         row.querySelector('.row-excerpt').textContent = excerpt;
         row.querySelector('.continue-btn').addEventListener('click', () => openStorySession(s.id));
         el.appendChild(row);
-      });
-    }
-
-    function renderSuggested(s) {
-      const col = document.getElementById('suggest-row');
-      const qs = (s.suggested_questions || []).slice(0, 4);
-      col.innerHTML = '';
-      if (!qs.length) return;
-      // open the panel automatically when there is something to discuss? No — reader stays clean.
-      qs.forEach((q) => {
-        const b = document.createElement('button');
-        b.className = 'suggest-q'; b.type = 'button'; b.textContent = q;
-        b.addEventListener('click', () => {
-          const grid = document.getElementById('reading-area');
-          if (!grid.classList.contains('ask-open')) toggleAsk();
-          const inp = document.getElementById('chat-input');
-          inp.value = q;
-          sendChat();
-        });
-        col.appendChild(b);
       });
     }
 
@@ -2781,91 +3287,12 @@
       return html;
     }
 
-    function renderChatLog() {
-      const logEl = document.getElementById('chat-log');
-      const msgs = currentStoryId ? getMessages(currentStoryId) : [];
-      logEl.innerHTML = '';
-      msgs.forEach((m) => {
-        const d = document.createElement('div');
-        d.className = 'chat-msg ' + m.role;
-        if (m.role === 'assistant') d.innerHTML = mdToHtml(m.text);
-        else d.textContent = m.text;
-        logEl.appendChild(d);
-      });
-      logEl.scrollTop = logEl.scrollHeight;
-      // Suggested questions live only until the first user message — after that
-      // the learner writes on their own, keeping the evaluation honest.
-      const hasUserMsg = msgs.some((m) => m.role === 'user');
-      const suggest = document.getElementById('suggest-row');
-      if (suggest && hasUserMsg) suggest.style.display = 'none';
-      else if (suggest && suggest.children.length) suggest.style.display = '';
-    }
-
-    function updateEvalGate() {
-      const btn = document.getElementById('eval-btn');
-      const hint = document.getElementById('eval-hint');
-      const n = currentStoryId ? getMessages(currentStoryId).filter((m) => m.role === 'user').length : 0;
-      const ready = n >= 4;
-      btn.classList.toggle('gated', !ready);
-      hint.textContent = ready
-        ? 'Ready — I can evaluate your English from this conversation.'
-        : `Keep chatting a little more to get a meaningful evaluation. (${n}/4 messages)`;
-    }
-
     function chatHeaders() {
       const typedKey = (document.getElementById('groq-key-input')?.value || '').trim();
       const groqKey = typedKey || getGroqKey();
       const h = { 'Content-Type': 'application/json' };
       if (groqKey) h['x-groq-api-key'] = groqKey;
       return h;
-    }
-
-    async function sendChat() {
-      const story = currentStory();
-      if (!story || isSending) return;
-      const inp = document.getElementById('chat-input');
-      const text = (inp.value || '').trim().slice(0, 1000);
-      if (!text) return;
-      const grid = document.getElementById('reading-area');
-      if (!grid.classList.contains('ask-open')) toggleAsk();
-      isSending = true;
-      const btn = document.getElementById('chat-send');
-      btn.disabled = true;
-      document.getElementById('chat-status').textContent = 'Thinking…';
-      if (chatAbort) chatAbort.abort();
-      chatAbort = new AbortController();
-      const userMsg = { id: newId(), role: 'user', text, created_at: new Date().toISOString() };
-      pushMessage(story.id, userMsg);
-      renderChatLog();
-      updateEvalGate();
-      inp.value = '';
-      try {
-        const history = getMessages(story.id).slice(-12).map((m) => ({ role: m.role, text: m.text }));
-        const idempotencyKey = newId();
-        const res = await fetch(CHAT_URL, {
-          method: 'POST',
-          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
-          body: JSON.stringify({ story: story.body, level: story.level, lesson_focus: story.lesson_focus || '', history: history.slice(0, -1), message: text, idempotencyKey }),
-          signal: chatAbort.signal,
-        });
-        if (!res.ok) {
-          if (res.status === 404) throw new Error('Chat needs the server — run with `vercel dev`.');
-          throw new Error(res.status === 409 ? 'Already sending — wait a moment.' : `Chat error ${await httpErr(res)}`);
-        }
-        const data = await res.json();
-        pushMessage(story.id, { id: newId(), role: 'assistant', text: (data.reply || '').trim(), created_at: new Date().toISOString() });
-        renderChatLog();
-        setSession(story.id, { status: 'chatting' });
-        document.getElementById('chat-status').textContent = '';
-      } catch (err) {
-        if (err?.name !== 'AbortError') {
-          document.getElementById('chat-status').textContent = err.message || 'Chat failed. Try again.';
-        }
-      } finally {
-        isSending = false;
-        btn.disabled = false;
-        if (document.getElementById('chat-status').textContent === 'Thinking…') document.getElementById('chat-status').textContent = '';
-      }
     }
 
     function ringSVG(score) {
@@ -2895,7 +3322,7 @@
         </div>`).join('');
       bodyEl.innerHTML =
         `<h3 class="eval-section-title" style="font-size:1.4rem">Your evaluation</h3>`
-        + `<div class="eval-top"><div class="score-ring">${ringSVG(e.score)}<div class="score-verdict">${escapeHtml(scoreLabel(e.score))}</div><div class="score-sub">Based on your messages in this conversation.</div></div>`
+        + `<div class="eval-top"><div class="score-ring">${ringSVG(e.score)}<div class="score-verdict">${escapeHtml(scoreLabel(e.score))}</div><div class="score-sub">Based on your answers in the targeted practice challenge.</div></div>`
         + `<div><h4 class="eval-section-title">Scores</h4><div class="cat-list">${catRow('comprehension', 'Comprehension')}${catRow('grammar', 'Grammar')}${catRow('vocabulary', 'Vocabulary')}${catRow('communication', 'Communication')}${s.lesson_focus != null ? catRow('lesson_focus', 'Lesson focus', true) : ''}</div>`
         + ((e.strengths || []).length ? `<ul class="strength-list">${e.strengths.map((x) => `<li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><span>${escapeHtml(x)}</span></li>`).join('')}</ul>` : '')
         + `</div>`
@@ -2903,50 +3330,238 @@
         + (e.lesson_focus_feedback?.feedback ? `<p class="eval-summary" style="margin-top:10px"><strong>${escapeHtml(e.lesson_focus_feedback.focus)}:</strong> ${escapeHtml(e.lesson_focus_feedback.feedback)}</p>` : '')
         + `</div></div>`
         + `<div class="eval-cols"><div><h4 class="eval-section-title">Common mistakes</h4>${mistakes || '<p class="eval-summary">No concrete errors found — solid work.</p>'}</div>`
-        + `<div><h4 class="eval-section-title">Recommendations</h4>${(e.recommendations || []).length ? `<ul class="rec-list">${e.recommendations.map((x) => `<li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><span>${escapeHtml(x)}</span></li>`).join('')}</ul>` : '<p class="eval-summary">Nothing specific — keep reading and chatting.</p>'}</div></div>`;
+        + `<div><h4 class="eval-section-title">Recommendations</h4>${(e.recommendations || []).length ? `<ul class="rec-list">${e.recommendations.map((x) => `<li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><span>${escapeHtml(x)}</span></li>`).join('')}</ul>` : '<p class="eval-summary">Nothing specific — keep reading and practicing.</p>'}</div></div>`;
     }
 
-    async function runEvaluation() {
+    function renderPracticeQuestions(s) {
+      const container = document.getElementById('practice-questions-list');
+      if (!container) return;
+      const questions = Array.isArray(s.quiz_questions) && s.quiz_questions.length
+        ? s.quiz_questions
+        : [
+            { id: 'q1', question: 'What happened at the beginning of the story?', prompt_hint: s.lesson_focus ? `Use ${s.lesson_focus}` : 'Answer in a full sentence' },
+            { id: 'q2', question: 'What was the main turning point or discovery?', prompt_hint: s.lesson_focus ? `Use ${s.lesson_focus}` : 'Answer in a full sentence' },
+            { id: 'q3', question: 'How did the situation resolve in the end?', prompt_hint: s.lesson_focus ? `Use ${s.lesson_focus}` : 'Answer in a full sentence' }
+          ];
+
+      const badge = document.getElementById('practice-focus-badge');
+      if (badge) {
+        badge.textContent = s.lesson_focus ? `Focus: ${s.lesson_focus}` : 'Practice Challenge';
+      }
+
+      const prev = lastEval(s.id);
+      const prevAnswers = (prev && Array.isArray(prev.answers)) ? prev.answers : [];
+
+      container.innerHTML = questions.map((q, idx) => {
+        const savedVal = prevAnswers[idx]?.answer || '';
+        return `
+          <div class="q-card">
+            <div class="q-card-head">
+              <span class="q-num">Question ${idx + 1} of ${questions.length}</span>
+              ${q.prompt_hint ? `<span class="q-hint">${escapeHtml(q.prompt_hint)}</span>` : ''}
+            </div>
+            <div class="q-text">${escapeHtml(q.question)}</div>
+            <textarea
+              id="practice-ans-${idx}"
+              class="q-input"
+              rows="2"
+              placeholder="Write your answer using the target structure..."
+              aria-label="Answer for question ${idx + 1}"
+            >${escapeHtml(savedVal)}</textarea>
+          </div>
+        `;
+      }).join('');
+
+      questions.forEach((_, idx) => {
+        const ta = document.getElementById(`practice-ans-${idx}`);
+        if (ta) {
+          ta.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+              e.preventDefault();
+              submitPracticeAnswers();
+            }
+          });
+        }
+      });
+    }
+
+    async function submitPracticeAnswers() {
       const story = currentStory();
       if (!story || isEvaluating) return;
+
+      const questions = Array.isArray(story.quiz_questions) && story.quiz_questions.length
+        ? story.quiz_questions
+        : [
+            { id: 'q1', question: 'What happened at the beginning of the story?', prompt_hint: story.lesson_focus || '' },
+            { id: 'q2', question: 'What was the main turning point or discovery?', prompt_hint: story.lesson_focus || '' },
+            { id: 'q3', question: 'How did the situation resolve in the end?', prompt_hint: story.lesson_focus || '' }
+          ];
+
+      const answers = questions.map((q, idx) => {
+        const el = document.getElementById(`practice-ans-${idx}`);
+        return {
+          question: q.question,
+          prompt_hint: q.prompt_hint || '',
+          answer: (el ? el.value : '').trim().slice(0, 1000)
+        };
+      });
+
+      const answered = answers.filter(a => a.answer.length > 0);
+      const totalWords = answered.map(a => a.answer).join(' ').split(/\s+/).filter(Boolean).length;
+      const statusEl = document.getElementById('practice-status');
+
+      if (!answered.length || totalWords < 5) {
+        if (statusEl) {
+          statusEl.textContent = 'Write at least one complete sentence (5+ words) using the target structure.';
+          statusEl.style.color = 'var(--coral)';
+        }
+        return;
+      }
+
       isEvaluating = true;
-      const btn = document.getElementById('eval-btn');
-      btn.disabled = true;
-      const prevLabel = btn.textContent;
-      btn.textContent = 'Evaluating…';
+      const btn = document.getElementById('practice-submit-btn');
+      const prevHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>Analyzing answers…</span><div class="press-ring" style="width:16px;height:16px;border-width:2px;margin:0" aria-hidden="true"></div>`;
+      }
+      if (statusEl) {
+        statusEl.textContent = 'Evaluating target structure, grammar, and story comprehension…';
+        statusEl.style.color = 'var(--muted)';
+      }
+
       if (evalAbort) evalAbort.abort();
       evalAbort = new AbortController();
+
       try {
-        const userMessages = getMessages(story.id).filter((m) => m.role === 'user').map((m) => m.text);
         const idempotencyKey = newId();
         const res = await fetch(EVAL_URL, {
           method: 'POST',
           headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
-          body: JSON.stringify({ story: story.body, lesson_focus: story.lesson_focus || '', userMessages, idempotencyKey }),
-          signal: evalAbort.signal,
+          body: JSON.stringify({
+            story: story.body,
+            lesson_focus: story.lesson_focus || '',
+            answers,
+            idempotencyKey
+          }),
+          signal: evalAbort.signal
         });
+
         if (!res.ok) {
-          if (res.status === 404) throw new Error('Evaluation needs the server — run with `vercel dev`.');
-          throw new Error(res.status === 409 ? 'Evaluation already running.' : `Evaluation error ${await httpErr(res)}`);
+          if (res.status === 404) throw new Error('Evaluation requires the local API server (`vercel dev`).');
+          throw new Error(res.status === 409 ? 'Evaluation already in progress.' : `Evaluation error: ${await httpErr(res)}`);
         }
+
         const data = await res.json();
         if (!data.evaluable) {
-          setError(data.message || 'Keep talking a little more so I can give you a meaningful evaluation.');
+          if (statusEl) {
+            statusEl.textContent = data.message || 'Please provide more detail in your answers.';
+            statusEl.style.color = 'var(--coral)';
+          }
           return;
         }
-        const record = { ...data, id: newId(), storyId: story.id, created_at: new Date().toISOString() };
+
+        const record = {
+          ...data,
+          id: newId(),
+          storyId: story.id,
+          answers,
+          created_at: new Date().toISOString()
+        };
         saveEval(record);
         setSession(story.id, { status: 'evaluated' });
+
+        if (statusEl) statusEl.textContent = '';
+        renderPracticeResults(record);
         renderEval(record);
         renderLibrary();
-        openStorySessionKeepScroll(story.id);
-        document.getElementById('eval-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        const resBox = document.getElementById('practice-results');
+        if (resBox) {
+          resBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
       } catch (err) {
-        if (err?.name !== 'AbortError') setError(err.message || 'Evaluation failed. Try again.');
+        if (err?.name !== 'AbortError') {
+          if (statusEl) {
+            statusEl.textContent = err.message || 'Evaluation failed. Please try again.';
+            statusEl.style.color = 'var(--coral)';
+          }
+          setError(err.message || 'Evaluation failed. Try again.');
+        }
       } finally {
         isEvaluating = false;
-        btn.disabled = false;
-        btn.textContent = prevLabel;
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = prevHtml || `<span>Check My Answers</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+        }
+      }
+    }
+
+    function renderPracticeResults(record) {
+      const container = document.getElementById('practice-results');
+      if (!container) return;
+      container.style.display = 'block';
+
+      const isMastered = (record.scores?.lesson_focus != null && record.scores.lesson_focus >= 75) ||
+        (Array.isArray(record.answers_feedback) && record.answers_feedback.length > 0 &&
+         record.answers_feedback.every(a => a.target_used_correctly));
+
+      const fbHtml = (record.answers_feedback || []).map((fb) => {
+        const isOk = fb.target_used_correctly;
+        return `
+          <div class="feedback-card ${isOk ? 'correct' : 'incorrect'}">
+            <div class="fb-badge ${isOk ? 'correct' : 'incorrect'}">
+              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                ${isOk ? '<path d="M20 6L9 17l-5-5"/>' : '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>'}
+              </svg>
+              <span>${isOk ? 'Target Structure Mastered ✓' : 'Needs Structure Refinement'}</span>
+            </div>
+            <div class="fb-orig"><strong>Your answer:</strong> ${escapeHtml(fb.original || '')}</div>
+            ${fb.correction ? `<div class="fb-correction"><strong>Model revision:</strong> ${escapeHtml(fb.correction)}</div>` : ''}
+            ${fb.feedback ? `<div class="fb-note">${escapeHtml(fb.feedback)}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="practice-results-header" style="text-align:center; margin-bottom:14px;">
+          <div class="score-ring" style="width:110px; height:110px; margin:0 auto 8px auto; display:flex; align-items:center; justify-content:center;">
+            ${ringSVG(record.score)}
+          </div>
+          <div class="score-verdict" style="font-size:1.1rem; font-weight:700; color:var(--ink);">
+            ${escapeHtml(scoreLabel(record.score))}
+          </div>
+          <div style="margin-top:6px;">
+            <span class="badge ${isMastered ? 'badge-accent' : 'badge-ink'}" style="font-weight:700; padding:4px 10px; border-radius:999px;">
+              ${isMastered ? 'Target Structure Mastered ✓' : 'Needs Target Practice'}
+            </span>
+          </div>
+          ${record.lesson_focus_feedback?.feedback ? `
+            <p class="fb-note" style="margin-top:10px; text-align:left; background:var(--surface-2); padding:10px 12px; border-radius:8px;">
+              <strong>${escapeHtml(record.lesson_focus_feedback.focus || 'Lesson focus')}:</strong> ${escapeHtml(record.lesson_focus_feedback.feedback)}
+            </p>
+          ` : ''}
+        </div>
+        <div class="practice-feedback-list">
+          ${fbHtml}
+        </div>
+        <button class="practice-retry-btn" type="button" onclick="resetPracticeInputs()">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span>Revise & Practice Again</span>
+        </button>
+      `;
+    }
+
+    function resetPracticeInputs() {
+      const firstInp = document.getElementById('practice-ans-0');
+      if (firstInp) {
+        firstInp.focus();
+        firstInp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      const st = document.getElementById('practice-status');
+      if (st) {
+        st.textContent = 'Edit your answers above and click Check My Answers to re-evaluate.';
+        st.style.color = 'var(--muted)';
       }
     }
 
@@ -3270,6 +3885,10 @@
       wireOptions();
       wireTextTools();
       updateCoverPreview();
+      const initialFocus = document.getElementById('focus-input');
+      if (initialFocus && initialFocus.value.trim()) {
+        updateGrammarPrimer(initialFocus.value);
+      }
       try {
         const savedFont = Number(localStorage.getItem(LS_FONT) || '18');
         if (savedFont >= 14 && savedFont <= 26) {
