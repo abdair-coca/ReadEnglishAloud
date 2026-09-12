@@ -34,6 +34,24 @@ function validateStoryJson(j, expected) {
     suggested_questions: Array.isArray(j.suggested_questions)
       ? j.suggested_questions.filter(isNonEmptyString).map((q) => String(q).slice(0, 240)).slice(0, 6)
       : [],
+    quiz_questions: Array.isArray(j.quiz_questions) && j.quiz_questions.length > 0
+      ? j.quiz_questions
+          .filter((q) => q && isNonEmptyString(q.question))
+          .slice(0, 3)
+          .map((q, idx) => ({
+            id: String(q.id || `q${idx + 1}`).slice(0, 10),
+            question: String(q.question).slice(0, 300),
+            prompt_hint: String(q.prompt_hint || '').slice(0, 150),
+          }))
+      : (Array.isArray(j.suggested_questions)
+          ? j.suggested_questions.filter(isNonEmptyString).slice(0, 3).map((q, idx) => ({
+              id: `q${idx + 1}`,
+              question: String(q).slice(0, 300),
+              prompt_hint: (expected?.lesson_focus || j.lesson_focus)
+                ? `Answer using: ${expected?.lesson_focus || j.lesson_focus}`
+                : 'Answer in a full sentence',
+            }))
+          : []),
   };
   return { ok: true, value: out, words };
 }
@@ -53,7 +71,7 @@ function validateEvalJson(j, lessonFocus) {
   };
   if (Object.values(scores).some((v) => v === null)) return { ok: false, error: 'bad subscores' };
   if (lessonFocus) {
-    scores.lesson_focus = clampScore(s.lesson_focus);
+    scores.lesson_focus = clampScore(s.lesson_focus != null ? s.lesson_focus : s.grammar);
     if (scores.lesson_focus === null) return { ok: false, error: 'bad focus score' };
   }
   const mistakes = Array.isArray(j.mistakes)
@@ -78,6 +96,19 @@ function validateEvalJson(j, lessonFocus) {
       mistakes,
       recommendations: Array.isArray(j.recommendations)
         ? j.recommendations.filter(isNonEmptyString).map((x) => String(x).slice(0, 300)).slice(0, 6)
+        : [],
+      answers_feedback: Array.isArray(j.answers_feedback)
+        ? j.answers_feedback
+            .filter((a) => a && typeof a === 'object')
+            .slice(0, 6)
+            .map((a, i) => ({
+              question_index: Number.isFinite(a.question_index) ? a.question_index : i,
+              target_used_correctly: Boolean(a.target_used_correctly),
+              comprehension_accurate: Boolean(a.comprehension_accurate),
+              original: String(a.original || '').slice(0, 300),
+              correction: String(a.correction || '').slice(0, 300),
+              feedback: String(a.feedback || '').slice(0, 500),
+            }))
         : [],
       lesson_focus_feedback: lessonFocus
         ? {

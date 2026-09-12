@@ -48,12 +48,12 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { story, lesson_focus, userMessages } = v.value;
+    const { story, lesson_focus, userMessages, answers } = v.value;
     const weights = lesson_focus ? CONFIG.rubric.withFocus : CONFIG.rubric.base;
     // NOTE: no response_format — gpt-oss via Groq rejects json_object with 400.
     const payload = {
       model: CONFIG.model,
-      messages: [{ role: 'user', content: evalUser({ story, lesson_focus, userMessages, weights }) }],
+      messages: [{ role: 'user', content: evalUser({ story, lesson_focus, userMessages, answers, weights }) }],
       temperature: CONFIG.temperatures.evaluation,
       max_completion_tokens: CONFIG.maxTokens.evaluation,
       top_p: 1,

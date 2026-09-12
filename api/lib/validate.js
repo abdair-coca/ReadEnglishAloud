@@ -94,6 +94,29 @@ function validateEvaluate(body, minMessages, minWords) {
   const story = typeof body?.story === 'string' ? body.story.slice(0, MAX_SNAPSHOT_CHARS) : '';
   if (!story.trim()) errors.push('missing story');
   const lesson_focus = sanitizeText(body?.lesson_focus, MAX_FOCUS);
+
+  // Check if this is the targeted production quiz challenge
+  if (Array.isArray(body?.answers)) {
+    const answers = body.answers
+      .filter((a) => a && typeof a === 'object')
+      .map((a) => ({
+        question: sanitizeText(a.question, 300),
+        answer: sanitizeText(a.answer, MAX_MESSAGE),
+        prompt_hint: sanitizeText(a.prompt_hint, 150),
+      }))
+      .filter((a) => a.answer.length > 0);
+
+    const words = answers.map((a) => a.answer).join(' ').split(/\s+/).filter(Boolean).length;
+    if (errors.length) return { ok: false, errors };
+    if (answers.length === 0 || words < 5) {
+      return {
+        ok: true,
+        value: { evaluable: false, story, lesson_focus, answers: [], words, usefulCount: answers.length },
+      };
+    }
+    return { ok: true, value: { evaluable: true, story, lesson_focus, answers, words, usefulCount: answers.length } };
+  }
+
   let userMessages = Array.isArray(body?.userMessages)
     ? body.userMessages.map((m) => sanitizeText(typeof m === 'string' ? m : m?.text, MAX_MESSAGE)).filter(Boolean)
     : [];
