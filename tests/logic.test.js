@@ -167,3 +167,56 @@ test('parseJsonSafe: fences + surrounding text recovered', () => {
   assert.equal(r2.ok, true);
   assert.equal(r2.recovered, true);
 });
+
+// ── Targeted Practice: Quiz & Answers Evaluation Tests ──
+test('story schema: parses quiz_questions and creates fallback', () => {
+  const story = 'word '.repeat(50);
+  const withQuiz = validateStoryJson({
+    title: 'Adventure',
+    story,
+    quiz_questions: [
+      { id: 'q1', question: 'What had he seen?', prompt_hint: 'Answer using: had seen' },
+      { id: 'q2', question: 'Why had she left?', prompt_hint: 'Answer using: had left' }
+    ]
+  }, { lesson_focus: 'Past Perfect' });
+  assert.equal(withQuiz.ok, true);
+  assert.equal(withQuiz.value.quiz_questions.length, 2);
+  assert.equal(withQuiz.value.quiz_questions[0].prompt_hint, 'Answer using: had seen');
+
+  // Fallback from suggested_questions
+  const fallback = validateStoryJson({
+    title: 'Adventure',
+    story,
+    suggested_questions: ['Where did she go?', 'Who did she meet?']
+  }, { lesson_focus: 'Past Simple' });
+  assert.equal(fallback.ok, true);
+  assert.equal(fallback.value.quiz_questions.length, 2);
+  assert.ok(fallback.value.quiz_questions[0].prompt_hint.includes('Past Simple'));
+});
+
+test('evaluate: validates answers from targeted practice quiz', () => {
+  const answers = [
+    { question: 'What had Mark done?', answer: 'Mark had finished his homework before leaving.', prompt_hint: 'had + V3' },
+    { question: 'Why had Sarah waited?', answer: 'She had waited because the bus was delayed.', prompt_hint: 'had + V3' }
+  ];
+  const v = validateEvaluate({ story: 'Story text. '.repeat(30), answers, lesson_focus: 'Past Perfect' }, 4, 40);
+  assert.equal(v.ok, true);
+  assert.equal(v.value.evaluable, true);
+  assert.equal(v.value.answers.length, 2);
+
+  const evalJson = validateEvalJson({
+    score: 90,
+    scores: { comprehension: 95, grammar: 85, vocabulary: 90, communication: 90 },
+    summary: 'Great use of Past Perfect!',
+    strengths: ['Accurate verb forms'],
+    mistakes: [],
+    recommendations: [],
+    answers_feedback: [
+      { question_index: 0, target_used_correctly: true, comprehension_accurate: true, original: answers[0].answer, correction: answers[0].answer, feedback: 'Spot on!' }
+    ]
+  }, 'Past Perfect');
+  assert.equal(evalJson.ok, true);
+  assert.equal(evalJson.value.answers_feedback.length, 1);
+  assert.equal(evalJson.value.answers_feedback[0].target_used_correctly, true);
+});
+
