@@ -18,30 +18,30 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  const v0 = validateEvaluate(req.body, CONFIG.evalMinUserMessages, CONFIG.evalMinUserWords);
-  if (!v0.ok) {
-    log('evaluate', { ok: false, validation: v0.errors });
-    return res.status(400).json({ error: 'invalid request', details: v0.errors });
+  if (typeof req.body === 'string') {
+    try { req.body = JSON.parse(req.body); } catch { req.body = {}; }
+  }
+  const v = validateEvaluate(req.body, CONFIG.evalMinUserMessages, CONFIG.evalMinUserWords);
+  if (!v.ok) {
+    log('evaluate', { ok: false, validation: v.errors });
+    return res.status(400).json({ error: 'invalid request', details: v.errors });
   }
   const apiKey =
     req.headers['x-groq-api-key'] || req.headers['x-groq-key'] || req.body?.groqApiKey || process.env.GROQ_API_KEY || null;
   if (!apiKey) {
     return res.status(500).json({ error: 'Groq API key missing. Add it in the UI or configure GROQ_API_KEY on the server.' });
   }
-  if (checkIdempotency(req.headers['idempotency-key'] || req.body?.idempotencyKey)) {
+  const idemKey = req.headers['idempotency-key'] || req.headers['Idempotency-Key'] || req.body?.idempotencyKey;
+  if (checkIdempotency(idemKey)) {
     return res.status(409).json({ error: 'duplicate request in progress' });
   }
-
-  const v = validateEvaluate(req.body, CONFIG.evalMinUserMessages, CONFIG.evalMinUserWords);
-  if (!v.ok) {
-    log('evaluate', { ok: false, validation: v.errors });
-    return res.status(400).json({ error: 'invalid request', details: v.errors });
-  }
-  // §16: no false scores on trivial conversation.
+  // §16: no false scores on trivial input.
   if (!v.value.evaluable) {
     return res.status(200).json({
       evaluable: false,
-      message: 'Keep talking a little more so I can give you a meaningful evaluation.',
+      message: v.value.answers !== undefined
+        ? 'Please write at least one complete sentence (5+ words) using the target structure before checking.'
+        : 'Keep talking a little more so I can give you a meaningful evaluation.',
       usefulCount: v.value.usefulCount,
       words: v.value.words,
     });

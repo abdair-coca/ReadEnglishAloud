@@ -30,13 +30,18 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  if (typeof req.body === 'string') {
+    try { req.body = JSON.parse(req.body); } catch { req.body = {}; }
+  }
+
   // Validate shape first so malformed requests get 400 even without a key.
   const isStructured = req.body && (req.body.genre || req.body.level || req.body.length);
+  let validated = null;
   if (isStructured) {
-    const early = validateGenerate(req.body);
-    if (!early.ok) {
-      log('story', { ok: false, validation: early.errors });
-      return res.status(400).json({ error: 'invalid request', details: early.errors });
+    validated = validateGenerate(req.body);
+    if (!validated.ok) {
+      log('story', { ok: false, validation: validated.errors });
+      return res.status(400).json({ error: 'invalid request', details: validated.errors });
     }
   }
 
@@ -45,19 +50,15 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Groq API key missing. Add it in the UI or configure GROQ_API_KEY on the server.' });
   }
 
-  if (checkIdempotency(req.headers['idempotency-key'] || req.body?.idempotencyKey)) {
+  const idemKey = req.headers['idempotency-key'] || req.headers['Idempotency-Key'] || req.body?.idempotencyKey;
+  if (checkIdempotency(idemKey)) {
     return res.status(409).json({ error: 'duplicate request in progress' });
   }
 
   try {
     // ── New structured path (§§2-4): {genre, level, length, topic?, lesson_focus?} ──
-    if (req.body && (req.body.genre || req.body.level || req.body.length)) {
-      const v = validateGenerate(req.body);
-      if (!v.ok) {
-        log('story', { ok: false, validation: v.errors });
-        return res.status(400).json({ error: 'invalid request', details: v.errors });
-      }
-      const { genre, level, length, topic, lesson_focus } = v.value;
+    if (isStructured && validated && validated.ok) {
+      const { genre, level, length, topic, lesson_focus } = validated.value;
       const words = LENGTHS[length].words;
       // NOTE: no response_format — gpt-oss via Groq rejects json_object with 400.
       // The prompt demands JSON-only; parseJsonSafe recovers fences/prose.

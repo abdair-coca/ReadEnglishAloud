@@ -17,24 +17,22 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  const early = validateChat(req.body, CONFIG.chatHistoryLimit);
-  if (!early.ok) {
-    log('chat', { ok: false, validation: early.errors });
-    return res.status(400).json({ error: 'invalid request', details: early.errors });
+  if (typeof req.body === 'string') {
+    try { req.body = JSON.parse(req.body); } catch { req.body = {}; }
+  }
+  const v = validateChat(req.body, CONFIG.chatHistoryLimit);
+  if (!v.ok) {
+    log('chat', { ok: false, validation: v.errors });
+    return res.status(400).json({ error: 'invalid request', details: v.errors });
   }
   const apiKey =
     req.headers['x-groq-api-key'] || req.headers['x-groq-key'] || req.body?.groqApiKey || process.env.GROQ_API_KEY || null;
   if (!apiKey) {
     return res.status(500).json({ error: 'Groq API key missing. Add it in the UI or configure GROQ_API_KEY on the server.' });
   }
-  if (checkIdempotency(req.headers['idempotency-key'] || req.body?.idempotencyKey)) {
+  const idemKey = req.headers['idempotency-key'] || req.headers['Idempotency-Key'] || req.body?.idempotencyKey;
+  if (checkIdempotency(idemKey)) {
     return res.status(409).json({ error: 'duplicate request in progress' });
-  }
-
-  const v = validateChat(req.body, CONFIG.chatHistoryLimit);
-  if (!v.ok) {
-    log('chat', { ok: false, validation: v.errors });
-    return res.status(400).json({ error: 'invalid request', details: v.errors });
   }
 
   try {
