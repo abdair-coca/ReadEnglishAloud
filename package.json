@@ -5,6 +5,8 @@
   "description": "EnglishAloud — AI-first English reading practice (Groq backend + vanilla frontend)",
   "type": "commonjs",
   "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
     "test": "node --test tests/logic.test.js tests/integration.test.js",
     "test:unit": "node --test tests/logic.test.js",
     "test:integration": "node --test tests/integration.test.js"
