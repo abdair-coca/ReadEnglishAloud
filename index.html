@@ -2942,6 +2942,39 @@
         return `${res.status}: ${t.slice(0, 300)}`;
       }
     }
+
+    function isLocalFile() {
+      return window.location.protocol === 'file:' || !window.location.host;
+    }
+
+    async function callGroqDirect(groqKey, messages, maxTokens = 2048, temperature = 0.6) {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${groqKey}`
+        },
+        body: JSON.stringify({
+          model: 'openai/gpt-oss-20b',
+          messages,
+          temperature,
+          max_completion_tokens: maxTokens,
+          top_p: 0.95
+        })
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        if (errText.includes('model_not_found') || errText.includes('does not exist')) {
+          throw new Error('Modelo no disponible en Groq — recargá y reintentá.');
+        }
+        if (errText.includes('Invalid API Key') || errText.includes('invalid_api_key')) {
+          throw new Error('Groq API key inválida. Revisala en la sección de abajo.');
+        }
+        throw new Error(`Groq API error ${res.status}: ${errText.slice(0, 200)}`);
+      }
+      return await res.json();
+    }
+
     async function generateStory() {
       if (isGenerating) return;
       isGenerating = true;
@@ -2977,48 +3010,86 @@
         const headers = { 'Content-Type': 'application/json' };
         if (groqKey) headers['x-groq-api-key'] = groqKey;
 
-        // New structured path. Legacy text format kept as fallback.
-        const idempotencyKey = newId();
-        const newBody = { genre: selectedGenre, level: selectedLevel, length: lengthKey, topic, lesson_focus, idempotencyKey };
-        let res = await fetch(API_URL, {
-          method: 'POST',
-          headers: { ...headers, 'Idempotency-Key': idempotencyKey },
-          body: JSON.stringify(newBody)
-        });
+        let data = null;
+        const isFile = isLocalFile();
 
-        // Fallback: if /api/generate not available (e.g. opening index.html directly without Vercel),
-        // call Groq directly from the browser using the user-provided key (legacy text prompt).
-        if (!res.ok && res.status === 404 && groqKey) {
-          const topicLine = topic ? ` The story should involve or touch on: "${topic}".` : '';
-          const focusLine = lesson_focus ? ` Lesson focus "${lesson_focus}" woven in naturally.` : '';
-          const prompt =
-            `Write an engaging English reading practice story with these specifications:\n- Genre: ${selectedGenre}\n- English level: ${selectedLevel}\n- Length: ${selectedLength}${topicLine}${focusLine}\n\nFormat your response EXACTLY as follows — nothing else:\nTITLE: [story title here]\n---\n[story paragraphs here, separated by blank lines]`;
-          const groqBody = {
-            model: 'openai/gpt-oss-20b',
-            messages: [{ role: 'user', content: prompt }],
-            temperature: 0.6,
-            max_completion_tokens: 2048,
-            top_p: 0.95
-          };
-          res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${groqKey}`
-            },
-            body: JSON.stringify(groqBody)
-          });
-        }
-
-        if (!res.ok) {
-          const info = await httpErr(res);
-          if (info.includes('model_not_found') || info.includes('does not exist')) {
-            throw new Error('Modelo no disponible en Groq — recargá y reintentá.');
+        if (isFile) {
+          if (!groqKey) {
+            goToKey();
+            throw new Error("Estás abriendo la app desde un archivo local (file://). Ingresá tu Groq API key abajo para generar historias sin servidor, o ejecutá 'npm start' en tu terminal.");
           }
-          throw new Error(`API error ${info}`);
-        }
+          const topicLine = topic ? `\n- Topic: "${topic}"` : '';
+          const focusLine = lesson_focus ? `\n- Lesson focus (CRITICAL): "${lesson_focus}". Weave in natural instances.` : '';
+          const prompt = `Write an engaging English reading practice story:
+- Genre: ${selectedGenre}
+- CEFR level: ${selectedLevel}
+- Target length: ${selectedLength}${topicLine}${focusLine}
 
-        const data = await res.json();
+Return ONLY valid JSON (no markdown fences, no commentary):
+{"title":"...","story":"... (paragraphs separated by \\n\\n)","level":"${selectedLevel}","genre":"${selectedGenre}","estimated_words":120,"lesson_focus":"${lesson_focus || ''}","focus_examples":[{"text":"...","reason":"..."}],"quiz_questions":[{"id":"q1","question":"...","prompt_hint":"..."},{"id":"q2","question":"...","prompt_hint":"..."},{"id":"q3","question":"...","prompt_hint":"..."}],"suggested_questions":["...","...","..."]}`;
+
+          const groqRes = await callGroqDirect(groqKey, [{ role: 'user', content: prompt }]);
+          const raw = groqRes?.choices?.[0]?.message?.content || '';
+          let parsed = null;
+          let clean = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+          try {
+            parsed = JSON.parse(clean);
+          } catch {
+            const sIdx = clean.indexOf('{');
+            const eIdx = clean.lastIndexOf('}');
+            if (sIdx !== -1 && eIdx > sIdx) {
+              try { parsed = JSON.parse(clean.slice(sIdx, eIdx + 1)); } catch {}
+            }
+          }
+          data = (parsed && typeof parsed.story === 'string') ? parsed : groqRes;
+        } else {
+          // HTTP server path with graceful direct Groq fallback
+          let res;
+          let netErr = false;
+          try {
+            const idempotencyKey = newId();
+            const newBody = { genre: selectedGenre, level: selectedLevel, length: lengthKey, topic, lesson_focus, idempotencyKey };
+            res = await fetch(API_URL, {
+              method: 'POST',
+              headers: { ...headers, 'Idempotency-Key': idempotencyKey },
+              body: JSON.stringify(newBody)
+            });
+          } catch (e) {
+            netErr = true;
+          }
+
+          if (netErr || (res && !res.ok && res.status === 404)) {
+            if (groqKey) {
+              const topicLine = topic ? `\n- Topic: "${topic}"` : '';
+              const focusLine = lesson_focus ? `\n- Lesson focus: "${lesson_focus}".` : '';
+              const prompt = `Write an engaging English reading practice story:
+- Genre: ${selectedGenre}
+- CEFR level: ${selectedLevel}
+- Target length: ${selectedLength}${topicLine}${focusLine}
+
+Return ONLY valid JSON:
+{"title":"...","story":"...","level":"${selectedLevel}","genre":"${selectedGenre}","estimated_words":120,"lesson_focus":"${lesson_focus || ''}","focus_examples":[{"text":"...","reason":"..."}],"quiz_questions":[{"id":"q1","question":"...","prompt_hint":"..."},{"id":"q2","question":"...","prompt_hint":"..."},{"id":"q3","question":"...","prompt_hint":"..."}],"suggested_questions":["...","...","..."]}`;
+              const groqRes = await callGroqDirect(groqKey, [{ role: 'user', content: prompt }]);
+              const raw = groqRes?.choices?.[0]?.message?.content || '';
+              let parsed = null;
+              let clean = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+              try { parsed = JSON.parse(clean); } catch {
+                const sIdx = clean.indexOf('{');
+                const eIdx = clean.lastIndexOf('}');
+                if (sIdx !== -1 && eIdx > sIdx) {
+                  try { parsed = JSON.parse(clean.slice(sIdx, eIdx + 1)); } catch {}
+                }
+              }
+              data = (parsed && typeof parsed.story === 'string') ? parsed : groqRes;
+            } else {
+              throw new Error("El servidor local no está corriendo. Ejecutá 'npm start' en tu terminal o ingresá tu Groq API key abajo para generar historias directamente.");
+            }
+          } else if (!res.ok) {
+            throw new Error(await httpErr(res));
+          } else {
+            data = await res.json();
+          }
+        }
         // New structured shape {title, story, ...} first; legacy Groq choices as fallback.
         let title, body, suggested = [], focusExamples = [], quizQuestions = [];
         if (data && typeof data.story === 'string' && data.story.trim()) {
@@ -3434,25 +3505,88 @@
       evalAbort = new AbortController();
 
       try {
-        const idempotencyKey = newId();
-        const res = await fetch(EVAL_URL, {
-          method: 'POST',
-          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
-          body: JSON.stringify({
-            story: story.body,
-            lesson_focus: story.lesson_focus || '',
-            answers,
-            idempotencyKey
-          }),
-          signal: evalAbort.signal
-        });
+        let data = null;
+        const isFile = isLocalFile();
+        const typedKey = (document.getElementById('groq-key-input')?.value || '').trim();
+        const groqKey = typedKey || getGroqKey();
 
-        if (!res.ok) {
-          if (res.status === 404) throw new Error('Evaluation requires the local API server (`vercel dev`).');
-          throw new Error(res.status === 409 ? 'Evaluation already in progress.' : `Evaluation error: ${await httpErr(res)}`);
+        const buildDirectEval = async () => {
+          const qaList = answers.map((a, i) => `Q${i + 1}: ${a.question}\nTarget Hint: ${a.prompt_hint || story.lesson_focus || 'Target grammar'}\nLearner Answer: ${a.answer}`).join('\n\n');
+          const prompt = `You are an expert English assessor. The learner completed a 3-question production challenge based on the story.
+Target Structure: "${story.lesson_focus || 'Grammar & Story Comprehension'}".
+
+STORY:
+<<<${story.body}>>>
+
+LEARNER PRODUCTION CHALLENGE:
+${qaList}
+
+Evaluate each of the learner's answers:
+1. Did they answer factually based on the story?
+2. Did they correctly construct and use the target structure?
+3. Provide a natural, encouraging correction for any error.
+
+Return ONLY valid JSON (no markdown fences, no commentary):
+{"score":85,"scores":{"comprehension":85,"grammar":85,"vocabulary":85,"communication":85${story.lesson_focus ? ',"lesson_focus":85' : ''}},"summary":"...","strengths":["..."],"mistakes":[{"original":"...","correction":"...","category":"grammar","explanation":"...","severity":"low"}],"recommendations":["..."],"answers_feedback":[{"question_index":0,"target_used_correctly":true,"comprehension_accurate":true,"original":"...","correction":"...","feedback":"..."}]${story.lesson_focus ? ',"lesson_focus_feedback":{"feedback":"...","examples":["..."]}' : ''}}`;
+
+          const groqRes = await callGroqDirect(groqKey, [{ role: 'user', content: prompt }], 2048, 0.3);
+          const raw = groqRes?.choices?.[0]?.message?.content || '';
+          let parsed = null;
+          let clean = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+          try {
+            parsed = JSON.parse(clean);
+          } catch {
+            const sIdx = clean.indexOf('{');
+            const eIdx = clean.lastIndexOf('}');
+            if (sIdx !== -1 && eIdx > sIdx) {
+              try { parsed = JSON.parse(clean.slice(sIdx, eIdx + 1)); } catch {}
+            }
+          }
+          if (parsed && typeof parsed.score === 'number') {
+            return { ...parsed, evaluable: true };
+          }
+          throw new Error('No se pudo analizar la evaluación de Groq.');
+        };
+
+        if (isFile) {
+          if (!groqKey) {
+            goToKey();
+            throw new Error("Estás en modo local (file://). Ingresá tu Groq API key abajo para evaluar respuestas, o ejecutá 'npm start' en tu terminal.");
+          }
+          data = await buildDirectEval();
+        } else {
+          const idempotencyKey = newId();
+          let res;
+          let netErr = false;
+          try {
+            res = await fetch(EVAL_URL, {
+              method: 'POST',
+              headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
+              body: JSON.stringify({
+                story: story.body,
+                lesson_focus: story.lesson_focus || '',
+                answers,
+                idempotencyKey
+              }),
+              signal: evalAbort.signal
+            });
+          } catch (e) {
+            if (e?.name === 'AbortError') throw e;
+            netErr = true;
+          }
+
+          if (netErr || (res && !res.ok && res.status === 404)) {
+            if (groqKey) {
+              data = await buildDirectEval();
+            } else {
+              throw new Error("El servidor local no está corriendo. Ejecutá 'npm start' en tu terminal o ingresá tu Groq API key.");
+            }
+          } else if (!res.ok) {
+            throw new Error(res.status === 409 ? 'Evaluation already in progress.' : `Evaluation error: ${await httpErr(res)}`);
+          } else {
+            data = await res.json();
+          }
         }
-
-        const data = await res.json();
         if (!data.evaluable) {
           if (statusEl) {
             statusEl.textContent = data.message || 'Please provide more detail in your answers.';
@@ -3632,13 +3766,57 @@
         ? `Translate "${text}" to Spanish and briefly explain its use in this story. Keep it short.`
         : `Explain what "${text}" means in the context of this story, in simple English (2-3 short sentences).`;
       showVocab(text.length > 42 ? text.slice(0, 42) + '…' : text, 'Thinking…', window.innerWidth / 2 - 160, 220);
+
+      const typedKey = (document.getElementById('groq-key-input')?.value || '').trim();
+      const groqKey = typedKey || getGroqKey();
+      const isFile = isLocalFile();
+
+      const callDirect = async () => {
+        const sys = `You are EnglishAloud, a friendly English tutor. Level: ${story.level || 'B1'}. Explain clearly and concisely (under 60 words).`;
+        const userPrompt = `Story:\n"${story.body}"\n\nQuestion about "${text}":\n${msg}`;
+        const groqRes = await callGroqDirect(groqKey, [
+          { role: 'system', content: sys },
+          { role: 'user', content: userPrompt }
+        ], 300, 0.4);
+        const reply = groqRes?.choices?.[0]?.message?.content || '';
+        showVocab(text.length > 42 ? text.slice(0, 42) + '…' : text, mdToHtml(reply.trim()), window.innerWidth / 2 - 160, 220);
+      };
+
+      if (isFile) {
+        if (!groqKey) {
+          showVocab(text.length > 42 ? text.slice(0, 42) + '…' : text, 'Ingresá tu Groq API key abajo para consultar a la IA sin servidor, o ejecutá <code>npm start</code> en la terminal.', window.innerWidth / 2 - 160, 220);
+          return;
+        }
+        try {
+          await callDirect();
+        } catch (err) {
+          showVocab('Hmm', escapeHtml(err.message || 'Could not reach the AI.'), window.innerWidth / 2 - 160, 220);
+        }
+        return;
+      }
+
       try {
         const idempotencyKey = newId();
-        const res = await fetch(CHAT_URL, {
-          method: 'POST',
-          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
-          body: JSON.stringify({ story: story.body, level: story.level, lesson_focus: story.lesson_focus || '', history: [], message: msg, idempotencyKey }),
-        });
+        let res;
+        let netErr = false;
+        try {
+          res = await fetch(CHAT_URL, {
+            method: 'POST',
+            headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
+            body: JSON.stringify({ story: story.body, level: story.level, lesson_focus: story.lesson_focus || '', history: [], message: msg, idempotencyKey }),
+          });
+        } catch (e) {
+          netErr = true;
+        }
+
+        if (netErr || (res && !res.ok && res.status === 404)) {
+          if (groqKey) {
+            await callDirect();
+            return;
+          }
+          throw new Error('Servidor local no disponible. Iniciá npm start o guardá tu Groq API key.');
+        }
+
         if (!res.ok) throw new Error(`AI error ${res.status}`);
         const data = await res.json();
         showVocab(text.length > 42 ? text.slice(0, 42) + '…' : text, mdToHtml((data.reply || '').trim()), window.innerWidth / 2 - 160, 220);
@@ -3655,13 +3833,57 @@
         showVocab(word, 'Open a story to get context-aware definitions.', x, y);
         return;
       }
+
+      const typedKey = (document.getElementById('groq-key-input')?.value || '').trim();
+      const groqKey = typedKey || getGroqKey();
+      const isFile = isLocalFile();
+
+      const callDirect = async () => {
+        const sys = `You are EnglishAloud, a friendly English tutor. Level: ${story.level || 'B1'}. Explain clearly and concisely (under 60 words).`;
+        const userPrompt = `Story:\n"${story.body}"\n\nWhat does "${word}" mean in this context? Provide a short definition plus one tiny example. Under 60 words.`;
+        const groqRes = await callGroqDirect(groqKey, [
+          { role: 'system', content: sys },
+          { role: 'user', content: userPrompt }
+        ], 300, 0.4);
+        const reply = groqRes?.choices?.[0]?.message?.content || '';
+        showVocab(word, mdToHtml(reply.trim()), x, y);
+      };
+
+      if (isFile) {
+        if (!groqKey) {
+          showVocab(word, 'Ingresá tu Groq API key abajo para ver definiciones sin servidor, o ejecutá <code>npm start</code> en la terminal.', x, y);
+          return;
+        }
+        try {
+          await callDirect();
+        } catch (err) {
+          showVocab(word, escapeHtml(err.message || 'Could not reach the AI.'), x, y);
+        }
+        return;
+      }
+
       try {
         const idempotencyKey = newId();
-        const res = await fetch(CHAT_URL, {
-          method: 'POST',
-          headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
-          body: JSON.stringify({ story: story.body, level: story.level, lesson_focus: '', history: [], message: `What does "${word}" mean in the context of this story? Give a short definition plus one tiny example. Under 60 words.`, idempotencyKey }),
-        });
+        let res;
+        let netErr = false;
+        try {
+          res = await fetch(CHAT_URL, {
+            method: 'POST',
+            headers: { ...chatHeaders(), 'Idempotency-Key': idempotencyKey },
+            body: JSON.stringify({ story: story.body, level: story.level, lesson_focus: '', history: [], message: `What does "${word}" mean in the context of this story? Give a short definition plus one tiny example. Under 60 words.`, idempotencyKey }),
+          });
+        } catch (e) {
+          netErr = true;
+        }
+
+        if (netErr || (res && !res.ok && res.status === 404)) {
+          if (groqKey) {
+            await callDirect();
+            return;
+          }
+          throw new Error('Servidor local no disponible. Iniciá npm start o guardá tu Groq API key.');
+        }
+
         if (!res.ok) throw new Error(`AI error ${res.status}`);
         const data = await res.json();
         showVocab(word, mdToHtml((data.reply || '').trim()), x, y);
@@ -3902,6 +4124,10 @@
         if (currentStoryId) openStorySessionKeepScroll(currentStoryId);
       });
       renderLibrary();
+      if (isLocalFile() && !getGroqKey()) {
+        const kd = document.getElementById('key-details');
+        if (kd) kd.open = true;
+      }
       // Deep link ?story=id → reader, else create.
       let target = null;
       try {
