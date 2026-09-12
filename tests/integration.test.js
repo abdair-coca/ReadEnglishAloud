@@ -2,13 +2,8 @@
 
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
-const http = require('node:http');
-const fs = require('node:fs');
 const path = require('node:path');
-
-const generateHandler = require('../api/generate');
-const chatHandler = require('../api/chat');
-const evaluateHandler = require('../api/evaluate');
+const { createServer } = require('../server');
 
 let server = null;
 let baseUrl = '';
@@ -38,58 +33,7 @@ const mockGroqResponse = (content, status = 200) => async () => ({
 });
 
 before(async () => {
-  const indexPath = path.join(__dirname, '..', 'index.html');
-  const indexHtml = fs.readFileSync(indexPath, 'utf8');
-
-  server = http.createServer(async (req, res) => {
-    // Read body chunks
-    const chunks = [];
-    for await (const chunk of req) {
-      chunks.push(chunk);
-    }
-    const rawBody = Buffer.concat(chunks).toString('utf8');
-    let parsedBody = {};
-    if (rawBody) {
-      try { parsedBody = JSON.parse(rawBody); } catch { parsedBody = rawBody; }
-    }
-    req.body = parsedBody;
-
-    // Attach express/vercel response helpers
-    res.status = (code) => {
-      res.statusCode = code;
-      return res;
-    };
-    res.json = (data) => {
-      res.setHeader('Content-Type', 'application/json; charset=utf-8');
-      res.end(JSON.stringify(data));
-      return res;
-    };
-
-    const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-
-    if (url.pathname === '/' || url.pathname === '/index.html') {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.end(indexHtml);
-      return;
-    }
-
-    if (url.pathname === '/api/generate') {
-      return generateHandler(req, res);
-    }
-
-    if (url.pathname === '/api/chat') {
-      return chatHandler(req, res);
-    }
-
-    if (url.pathname === '/api/evaluate') {
-      return evaluateHandler(req, res);
-    }
-
-    res.statusCode = 404;
-    res.json({ error: 'not found' });
-  });
-
+  server = createServer();
   await new Promise((resolve) => {
     server.listen(0, '127.0.0.1', () => {
       const addr = server.address();
@@ -118,11 +62,52 @@ test('integration: GET / serves index.html with interactive SLA elements', async
   assert.ok(html.includes('id="reading-area"'));
 });
 
-test('integration: GET /nonexistent returns 404', async () => {
+test('integration: GET /nonexistent returns 404 HTML with CORS header', async () => {
   const res = await fetch(`${baseUrl}/nonexistent`);
   assert.equal(res.status, 404);
+  assert.equal(res.headers.get('access-control-allow-origin'), '*');
+  const text = await res.text();
+  assert.ok(text.includes('404 Not Found'));
+});
+
+test('integration: GET /api/nonexistent returns 404 JSON with CORS header', async () => {
+  const res = await fetch(`${baseUrl}/api/nonexistent`);
+  assert.equal(res.status, 404);
+  assert.equal(res.headers.get('access-control-allow-origin'), '*');
   const data = await res.json();
-  assert.equal(data.error, 'not found');
+  assert.equal(data.error, 'Endpoint not found');
+});
+
+// ── CORS & Preflight Contract ──
+test('integration: CORS preflight OPTIONS returns 204 with required headers', async () => {
+  const res = await fetch(`${baseUrl}/api/generate`, {
+    method: 'OPTIONS',
+    headers: {
+      'Origin': 'http://example.com',
+      'Access-Control-Request-Method': 'POST',
+      'Access-Control-Request-Headers': 'Content-Type, x-groq-api-key, Idempotency-Key'
+    }
+  });
+  assert.equal(res.status, 204);
+  assert.equal(res.headers.get('access-control-allow-origin'), '*');
+  assert.ok(res.headers.get('access-control-allow-methods').includes('POST'));
+  assert.ok(res.headers.get('access-control-allow-headers').includes('x-groq-api-key'));
+  assert.ok(res.headers.get('access-control-allow-headers').includes('Idempotency-Key'));
+});
+
+// ── Static Asset Serving & Security ──
+test('integration: GET /docs/assets/banner.svg returns SVG asset with correct MIME type', async () => {
+  const res = await fetch(`${baseUrl}/docs/assets/banner.svg`);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('content-type'), 'image/svg+xml');
+  assert.equal(res.headers.get('access-control-allow-origin'), '*');
+  const svgText = await res.text();
+  assert.ok(svgText.includes('<svg'));
+});
+
+test('integration: directory traversal in /docs/ is blocked with 404', async () => {
+  const res = await fetch(`${baseUrl}/docs/../../package.json`);
+  assert.equal(res.status, 404);
 });
 
 // ── HTTP Method Validation ──
@@ -427,3 +412,92 @@ test('integration: upstream malformed JSON returns 502 with preview', async () =
     assert.ok(data.preview);
   }, mockGroqResponse('Not a JSON string at all {{{'));
 });
+
+test('integration: upstream Groq timeout returns 504 Gateway Timeout', async () => {
+  await withFetch(async () => {
+    const res = await fetch(`${baseUrl}/api/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-groq-api-key': 'gsk_test',
+      },
+      body: JSON.stringify({
+        genre: 'Mystery',
+        level: 'B1',
+        length: 'short'
+      }),
+    });
+    assert.equal(res.status, 504);
+    const data = await res.json();
+    assert.equal(data.error, 'provider timeout');
+    assert.equal(data.code, 'provider_timeout');
+  }, async () => {
+    const err = new Error('The operation was aborted');
+    err.name = 'AbortError';
+    throw err;
+  });
+});
+
+test('integration: accepts API key via alternate header x-groq-key', async () => {
+  const mockStoryJson = JSON.stringify({
+    title: 'A Quick Tale',
+    story: 'Leo walked slowly into the bustling village square as the morning sun rose over the hills. He carried a small wooden box full of fresh apples and sweet pears to share with the neighborhood children who waited eagerly by the fountain.',
+    genre: 'Adventure',
+    level: 'A1',
+    estimated_words: 42,
+    quiz_questions: [{ id: 'q1', question: 'Where did Leo walk?', prompt_hint: 'Into the square' }]
+  });
+
+  await withFetch(async () => {
+    const res = await fetch(`${baseUrl}/api/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-groq-key': 'gsk_alternate_key',
+      },
+      body: JSON.stringify({ genre: 'Adventure', level: 'A1', length: 'short' }),
+    });
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.title, 'A Quick Tale');
+  }, mockGroqResponse(mockStoryJson));
+});
+
+test('integration: accepts API key via body.groqApiKey property', async () => {
+  const mockStoryJson = JSON.stringify({
+    title: 'Body Key Tale',
+    story: 'Maya unlocked the library door and found a quiet table near the tall arched windows. She opened her notebook and began writing down all the strange clues she had gathered during her investigation in the archives yesterday evening. Every clue seemed to point directly toward the abandoned lighthouse by the rocky coast.',
+    genre: 'Mystery',
+    level: 'A2',
+    estimated_words: 55,
+    quiz_questions: [{ id: 'q1', question: 'What did Maya unlock?', prompt_hint: 'The door' }]
+  });
+
+  await withFetch(async () => {
+    const res = await fetch(`${baseUrl}/api/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        genre: 'Mystery',
+        level: 'A2',
+        length: 'short',
+        groqApiKey: 'gsk_body_key'
+      }),
+    });
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.title, 'Body Key Tale');
+  }, mockGroqResponse(mockStoryJson));
+});
+
+test('integration: frontend contains file:// standalone protocol guard and direct Groq client fallback', async () => {
+  const res = await fetch(`${baseUrl}/`);
+  const html = await res.text();
+  assert.ok(html.includes('isLocalFile()'), 'Must include isLocalFile function');
+  assert.ok(html.includes('callGroqDirect'), 'Must include callGroqDirect client fallback');
+  assert.ok(html.includes('api.groq.com/openai/v1/chat/completions'), 'Must include Groq endpoint for direct browser calls');
+  assert.ok(html.includes('file://'), 'Must inform user about file:// behavior or guidance');
+});
+
