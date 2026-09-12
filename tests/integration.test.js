@@ -57,6 +57,9 @@ test('integration: GET / serves index.html with interactive SLA elements', async
   const html = await res.text();
   assert.ok(html.includes('EnglishAloud'));
   assert.ok(html.includes('id="grammar-primer"'));
+  assert.ok(html.includes('id="story-lesson-card"'));
+  assert.ok(html.includes('id="story-finish-cta"'));
+  assert.ok(html.includes('id="practice-target-strip"'));
   assert.ok(html.includes('id="practice-card"'));
   assert.ok(html.includes('id="practice-questions-list"'));
   assert.ok(html.includes('id="reading-area"'));
@@ -499,5 +502,15 @@ test('integration: frontend contains file:// standalone protocol guard and direc
   assert.ok(html.includes('callGroqDirect'), 'Must include callGroqDirect client fallback');
   assert.ok(html.includes('api.groq.com/openai/v1/chat/completions'), 'Must include Groq endpoint for direct browser calls');
   assert.ok(html.includes('file://'), 'Must inform user about file:// behavior or guidance');
+});
+
+test('integration: default focus-input is populated and synchronized with reader lesson review', async () => {
+  const res = await fetch(`${baseUrl}/`);
+  const html = await res.text();
+  assert.ok(html.includes('value="Past Perfect"'), 'Default lesson focus must be Past Perfect');
+  assert.ok(html.includes('renderStoryLessonPrimer(s)'), 'Must invoke renderStoryLessonPrimer in openStorySession');
+  assert.ok(html.includes('id="story-lesson-card"'), 'Must render story lesson card in story-card');
+  assert.ok(html.includes('id="story-finish-cta"'), 'Must render production CTA at story end');
+  assert.ok(html.includes('id="practice-target-strip"'), 'Must render target strip in practice panel');
 });
 

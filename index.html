@@ -1165,6 +1165,177 @@
       margin-bottom: 10px;
     }
 
+    /* ── Story Lesson Focus Card (Reader Pre-Reading Review) ── */
+    .story-lesson-card {
+      margin: 14px 0 18px 0;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 16px 18px;
+      animation: primerEnter 0.28s var(--ease) both;
+    }
+
+    .story-lesson-card .primer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .story-lesson-card .primer-toggle-btn {
+      background: #fff;
+      border: 1px solid var(--line-soft);
+      color: var(--ink-2);
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .story-lesson-card .primer-toggle-btn:hover {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .story-lesson-card.minimized .story-primer-collapsible {
+      display: none;
+    }
+
+    .story-instances-box {
+      margin-top: 12px;
+      padding: 10px 13px;
+      background: #fff;
+      border: 1px dashed var(--accent);
+      border-radius: 8px;
+    }
+
+    .story-instances-head {
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent-deep);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .story-instances-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .story-instance-item {
+      font-size: 0.84rem;
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    .story-instance-item em {
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      font-style: normal;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    .practice-target-strip {
+      background: #fff;
+      border: 1px solid var(--line-soft);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      color: var(--ink-2);
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .practice-target-strip code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 700;
+      color: var(--accent-deep);
+      background: var(--surface-2);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .story-finish-cta {
+      margin-top: 28px;
+      padding: 16px 20px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: view-in 0.3s var(--ease) both;
+    }
+
+    .finish-cta-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--r-full);
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .finish-cta-content {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .finish-cta-title {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .finish-cta-desc {
+      font-size: 0.82rem;
+      color: var(--ink-2);
+    }
+
+    .finish-cta-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--r-pill);
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .finish-cta-btn:hover {
+      background: var(--accent-deep);
+      transform: translateY(-1px);
+    }
+
     /* ── Targeted Practice Panel (Production) ──────────────── */
     .practice-panel {
       display: none;
@@ -2259,14 +2430,14 @@
           </div>
 
           <div class="field-group">
-            <label class="field-label" for="focus-input">Lesson Focus <span class="opt">optional</span></label>
-            <input id="focus-input" class="text-field" type="text" placeholder="Past Perfect, phrasal verbs, travel English…" maxlength="80" autocomplete="off">
+            <label class="field-label" for="focus-input">Lesson Focus <span class="opt">target structure</span></label>
+            <input id="focus-input" class="text-field" type="text" value="Past Perfect" placeholder="Past Perfect, phrasal verbs, travel English…" maxlength="80" autocomplete="off">
             <div class="quick-row" id="focus-quick">
-              <button class="quick-chip" type="button" data-focus="Past Perfect">Past Perfect</button>
-              <button class="quick-chip" type="button" data-focus="Phrasal verbs">Phrasal verbs</button>
-              <button class="quick-chip" type="button" data-focus="Conditionals">Conditionals</button>
-              <button class="quick-chip" type="button" data-focus="Travel vocabulary">Travel vocabulary</button>
-              <button class="quick-chip" type="button" data-focus="Linking words">Linking words</button>
+              <button class="quick-chip active" type="button" data-focus="Past Perfect" aria-pressed="true">Past Perfect</button>
+              <button class="quick-chip" type="button" data-focus="Phrasal verbs" aria-pressed="false">Phrasal verbs</button>
+              <button class="quick-chip" type="button" data-focus="Conditionals" aria-pressed="false">Conditionals</button>
+              <button class="quick-chip" type="button" data-focus="Travel vocabulary" aria-pressed="false">Travel vocabulary</button>
+              <button class="quick-chip" type="button" data-focus="Linking words" aria-pressed="false">Linking words</button>
             </div>
             <div class="field-hint">The story will naturally include this topic, and the evaluation will focus on it.</div>
             <div class="grammar-primer" id="grammar-primer" style="display:none;" aria-live="polite"></div>
@@ -2284,9 +2455,9 @@
 
           <div class="examples-row">
             <span>Try an example:</span>
-            <button class="quick-chip" type="button" onclick="setExample('Mystery', 'a mystery in a small town')">A mystery in a small town</button>
-            <button class="quick-chip" type="button" onclick="setExample('Science Fiction', 'a sci-fi story about AI')">A sci-fi story about AI</button>
-            <button class="quick-chip" type="button" onclick="setExample('Romance', 'a love story at university')">A love story at university</button>
+            <button class="quick-chip" type="button" onclick="setExample('Mystery', 'a mystery in a small town', 'Past Perfect')">A mystery in a small town</button>
+            <button class="quick-chip" type="button" onclick="setExample('Science Fiction', 'a sci-fi story about AI', 'Conditionals')">A sci-fi story about AI</button>
+            <button class="quick-chip" type="button" onclick="setExample('Romance', 'a love story at university', 'Phrasal verbs')">A love story at university</button>
           </div>
 
           <details class="key-details" id="key-details">
@@ -2353,6 +2524,7 @@
               <div class="story-head">
                 <h2 class="story-title" id="story-title">—</h2>
               </div>
+              <div class="story-lesson-card" id="story-lesson-card" style="display:none;" aria-live="polite"></div>
               <div class="story-tools">
                 <button class="tool-btn" id="tts-btn" title="Read aloud" aria-pressed="false" onclick="toggleTTS()">
                   <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5z"/><path d="M16 9a4.2 4.2 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>
@@ -2378,6 +2550,19 @@
               </div>
               <div class="story-body">
                 <div id="story-text"></div>
+                <div class="story-finish-cta" id="story-finish-cta" style="display:none;">
+                  <div class="finish-cta-icon">
+                    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                  </div>
+                  <div class="finish-cta-content">
+                    <div class="finish-cta-title">Finished reading? Time for Production!</div>
+                    <div class="finish-cta-desc">Answer 3 questions using <strong id="finish-cta-focus">the target structure</strong> to test your mastery.</div>
+                  </div>
+                  <button class="finish-cta-btn" type="button" onclick="togglePractice()">
+                    <span>Start Practice</span>
+                    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
+                </div>
               </div>
               <div class="progress-thin" id="progress-bar" style="display:none">
                 <div class="progress-track" aria-hidden="true">
@@ -2399,7 +2584,8 @@
                   <span class="practice-pill" id="practice-focus-badge">Practice Challenge</span>
                 </div>
                 <h3>Targeted Practice</h3>
-                <p>Answer these 3 story questions using the target structure to build lasting retention.</p>
+                <p id="practice-head-desc">Answer these 3 story questions using the target structure to build lasting retention.</p>
+                <div id="practice-target-strip" class="practice-target-strip" style="display:none;"></div>
               </div>
 
               <div class="practice-questions-list" id="practice-questions-list">
@@ -2708,6 +2894,129 @@
       btn.querySelector('span').textContent = isOpen ? 'Learn more & 3 extra examples' : 'Collapse extra examples';
     }
 
+    function renderStoryLessonPrimer(s) {
+      const card = document.getElementById('story-lesson-card');
+      if (!card) return;
+      const focus = (s.lesson_focus || '').trim();
+      if (!focus) {
+        card.style.display = 'none';
+        card.innerHTML = '';
+        return;
+      }
+
+      const item = findGrammarTopic(focus);
+      const focusExamples = Array.isArray(s.focus_examples) ? s.focus_examples : [];
+      let instancesHtml = '';
+      if (focusExamples.length > 0) {
+        instancesHtml = `
+          <div class="story-instances-box">
+            <div class="story-instances-head">
+              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span>Target structures in this story:</span>
+            </div>
+            <ul class="story-instances-list">
+              ${focusExamples.map(fe => `
+                <li class="story-instance-item">
+                  <em>“${escapeHtml(fe.text)}”</em>${fe.reason ? ` <span style="color:var(--muted)">(${escapeHtml(fe.reason)})</span>` : ''}
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
+      if (!item) {
+        card.style.display = 'block';
+        card.classList.remove('minimized');
+        card.innerHTML = `
+          <div class="primer-header">
+            <div class="primer-title">
+              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              <span>Pre-Reading Lesson: <strong>${escapeHtml(focus)}</strong></span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="primer-pill">Lesson Focus</span>
+              <button type="button" class="primer-toggle-btn" id="story-primer-toggle" onclick="toggleStoryPrimer()" aria-label="Toggle lesson visibility">
+                <span id="story-primer-toggle-label">Minimize</span>
+              </button>
+            </div>
+          </div>
+          <div class="story-primer-collapsible" id="story-primer-collapsible">
+            <p class="primer-rule">This story focuses on <strong>${escapeHtml(focus)}</strong>. Notice how this structure appears in the narrative before answering the 3 practice questions.</p>
+            ${instancesHtml}
+          </div>
+        `;
+        return;
+      }
+
+      const examplesHtml = item.examples.map(ex => `
+        <div class="primer-ex-card">
+          <span class="primer-ex-badge">${escapeHtml(ex.context)}</span>
+          <div>${escapeHtml(ex.sentence).replace(escapeHtml(ex.highlight), `<strong>${escapeHtml(ex.highlight)}</strong>`)}</div>
+        </div>
+      `).join('');
+
+      const extraExamplesHtml = item.extraExamples.map(ex => `
+        <div class="primer-ex-card">
+          <span class="primer-ex-badge">${escapeHtml(ex.context)}</span>
+          <div>${escapeHtml(ex.sentence).replace(escapeHtml(ex.highlight), `<strong>${escapeHtml(ex.highlight)}</strong>`)}</div>
+        </div>
+      `).join('');
+
+      card.style.display = 'block';
+      card.classList.remove('minimized');
+      card.innerHTML = `
+        <div class="primer-header">
+          <div class="primer-title">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            <span>Pre-Reading Lesson: <strong>${escapeHtml(item.title)}</strong></span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="primer-pill">Lesson Focus</span>
+            <button type="button" class="primer-toggle-btn" id="story-primer-toggle" onclick="toggleStoryPrimer()" aria-label="Toggle lesson visibility">
+              <span id="story-primer-toggle-label">Minimize</span>
+            </button>
+          </div>
+        </div>
+        <div class="story-primer-collapsible" id="story-primer-collapsible">
+          <div class="primer-formula">${escapeHtml(item.formula)}</div>
+          <p class="primer-rule">${escapeHtml(item.rule)}</p>
+          <div class="primer-examples">
+            ${examplesHtml}
+          </div>
+          ${instancesHtml}
+          <button type="button" class="primer-expand-btn" id="story-primer-expand-btn" onclick="toggleStoryPrimerExtra()">
+            <span>Learn more & 3 extra examples</span>
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="primer-expanded-content" id="story-primer-expanded-content">
+            <div class="primer-deep-tip"><strong>Pedagogical tip:</strong> ${escapeHtml(item.deepTip)}</div>
+            <div class="primer-examples">
+              ${extraExamplesHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleStoryPrimer() {
+      const card = document.getElementById('story-lesson-card');
+      const label = document.getElementById('story-primer-toggle-label');
+      if (!card || !label) return;
+      const isMin = card.classList.toggle('minimized');
+      label.textContent = isMin ? 'Show Lesson Review' : 'Minimize';
+    }
+
+    function toggleStoryPrimerExtra() {
+      const btn = document.getElementById('story-primer-expand-btn');
+      const box = document.getElementById('story-primer-expanded-content');
+      if (!btn || !box) return;
+      const isOpen = box.classList.contains('open');
+      box.classList.toggle('open', !isOpen);
+      btn.classList.toggle('open', !isOpen);
+      btn.querySelector('span').textContent = isOpen ? 'Learn more & 3 extra examples' : 'Collapse extra examples';
+    }
+
     // ── Views ──────────────────────────────────────────────────
     function showView(name) {
       currentView = name;
@@ -2730,7 +3039,7 @@
       }
     }
 
-    function setExample(genre, topic) {
+    function setExample(genre, topic, focus = 'Past Perfect') {
       document.querySelectorAll('#genre-grid .genre-card').forEach((b) => {
         const on = b.dataset.val === genre;
         b.classList.toggle('active', on);
@@ -2738,6 +3047,16 @@
         if (on) selectedGenre = b.dataset.val;
       });
       document.getElementById('topic-input').value = topic;
+      const fInp = document.getElementById('focus-input');
+      if (fInp) {
+        fInp.value = focus;
+        document.querySelectorAll('#focus-quick .quick-chip').forEach(b => {
+          const match = b.dataset.focus.toLowerCase() === focus.toLowerCase();
+          b.classList.toggle('active', match);
+          b.setAttribute('aria-pressed', String(match));
+        });
+        updateGrammarPrimer(focus);
+      }
       updateCoverPreview();
       generateStory();
     }
@@ -2907,6 +3226,12 @@
       const focusInp = document.getElementById('focus-input');
       document.querySelectorAll('#focus-quick .quick-chip').forEach(btn => {
         btn.addEventListener('click', () => {
+          document.querySelectorAll('#focus-quick .quick-chip').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
           if (focusInp) {
             focusInp.value = btn.dataset.focus;
             updateGrammarPrimer(btn.dataset.focus);
@@ -2916,7 +3241,13 @@
 
       if (focusInp) {
         focusInp.addEventListener('input', () => {
-          updateGrammarPrimer(focusInp.value);
+          const val = focusInp.value.trim();
+          updateGrammarPrimer(val);
+          document.querySelectorAll('#focus-quick .quick-chip').forEach(b => {
+            const match = b.dataset.focus.toLowerCase() === val.toLowerCase();
+            b.classList.toggle('active', match);
+            b.setAttribute('aria-pressed', String(match));
+          });
         });
         focusInp.addEventListener('keydown', e => {
           if (e.key === 'Enter') generateStory();
@@ -3193,7 +3524,14 @@ Return ONLY valid JSON:
         + (last ? `<span class="badge">eval ${last.score}</span>` : '');
       document.getElementById('story-title').textContent = s.title;
       setCover(s.genre);
+      renderStoryLessonPrimer(s);
       renderStory(s.body);
+      const ctaEl = document.getElementById('story-finish-cta');
+      const ctaFocus = document.getElementById('finish-cta-focus');
+      if (ctaEl && ctaFocus) {
+        ctaFocus.textContent = s.lesson_focus || 'target grammar structures';
+        ctaEl.style.display = 'flex';
+      }
       setupScrollProgress();
       // Targeted practice panel starts closed; reader owns the viewport.
       document.getElementById('reading-area').classList.remove('practice-open');
@@ -3418,6 +3756,20 @@ Return ONLY valid JSON:
       const badge = document.getElementById('practice-focus-badge');
       if (badge) {
         badge.textContent = s.lesson_focus ? `Focus: ${s.lesson_focus}` : 'Practice Challenge';
+      }
+
+      const item = findGrammarTopic(s.lesson_focus);
+      const stripEl = document.getElementById('practice-target-strip');
+      if (stripEl) {
+        if (item) {
+          stripEl.innerHTML = `<span>Target Formula:</span> <code>${escapeHtml(item.formula)}</code>`;
+          stripEl.style.display = 'flex';
+        } else if (s.lesson_focus) {
+          stripEl.innerHTML = `<span>Target Focus:</span> <code>${escapeHtml(s.lesson_focus)}</code>`;
+          stripEl.style.display = 'flex';
+        } else {
+          stripEl.style.display = 'none';
+        }
       }
 
       const prev = lastEval(s.id);
